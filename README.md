@@ -1,3 +1,10 @@
+# Cult of The Lamb Mod: Collection
+![image](https://i.imgur.com/uc9pBua.png)
+
+- Currently features only a few stuff, such as bringing back the Chef, Food Storage, Kitchen, Bigger Shrine, Instant Soul Collection, Skip Intro Cutscene
+
+
+
 ## Chef & Food Storage
 - This mod adds in the Chef role for followers, as well as Food Storage I and II. Only food storage I is tested and works with the Chef and Kitchen
 - Assign a Chef by talking to a follower > work > chef
