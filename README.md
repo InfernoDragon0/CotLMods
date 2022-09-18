@@ -29,3 +29,6 @@ Chef Role's logic has been slightly modified from vanilla with the following cha
 ## Requirements
 - BepInEx Pack
 - COTL API
+
+## Download Link
+https://cult-of-the-lamb.thunderstore.io/package/InfernoDragon0/CotLMiniMods/
