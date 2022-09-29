@@ -1,4 +1,4 @@
-﻿using COTL_API.Structures;
+﻿using COTL_API.CustomStructures;
 using System;
 using System.Collections.Generic;
 using System.Text;

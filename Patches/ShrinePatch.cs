@@ -15,6 +15,7 @@ namespace CotLTemplateMod.Patches
         [HarmonyPostfix]
         public static void SoulMax_Override(ref int __result)
         {
+            if (!Plugin.biggerShrine.Value) return;
             __result = 2000;
         }
 
@@ -32,6 +33,7 @@ namespace CotLTemplateMod.Patches
         [HarmonyPrefix]
         public static void DepositSoul_More(FollowerTask_Pray __instance)
         {
+            if (!Plugin.biggerShrine.Value) return;
             __instance._shrine.SoulCount += 1;
         }
 
@@ -40,6 +42,7 @@ namespace CotLTemplateMod.Patches
         [HarmonyPostfix]
         public static void GivePlayerSoul_CollectAll(BuildingShrine __instance)
         {
+            if (!Plugin.oneClickShrineCollection.Value) return;
             Plugin.Log.LogInfo("collecting souls " + __instance.StructureBrain.SoulCount);
             for (int i = 0; i < __instance.StructureBrain.SoulCount; i++)
             {

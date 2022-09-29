@@ -1,10 +1,10 @@
-﻿using COTL_API.Structures;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Lamb.UI;
 using Lamb.UI.BuildMenu;
 using Lamb.UI.FollowerInteractionWheel;
 using MMTools;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -17,6 +17,8 @@ namespace CotLTemplateMod.Patches
     internal class FoodStructurePatch
     {
         public static Follower follower1; //temp follower storage for the kitchen
+        private static Coroutine _dissentBubbleCoroutine; //for the bubble
+
 
         [HarmonyPatch(typeof(FollowerCategory), "GetStructuresForCategory")]
         [HarmonyPostfix]
@@ -32,11 +34,14 @@ namespace CotLTemplateMod.Patches
             }
         }
 
-        [HarmonyPatch(typeof(StructuresData), "GetUnlocked")] //temporary unlock
+        [HarmonyPatch(typeof(StructuresData), "GetUnlocked")] //unlock kitchen and food storage structures
         [HarmonyPrefix]
         private static void StructuresData_GetUnlocked(StructureBrain.TYPES Types)
         {
-            if (!DataManager.Instance.UnlockedStructures.Contains(Types)) DataManager.Instance.UnlockedStructures.Add(Types);
+            if (!DataManager.Instance.UnlockedStructures.Contains(Types) && (Types == StructureBrain.TYPES.KITCHEN || Types == StructureBrain.TYPES.KITCHEN_II || Types ==  StructureBrain.TYPES.FOOD_STORAGE || Types == StructureBrain.TYPES.FOOD_STORAGE_2))
+            {
+                DataManager.Instance.UnlockedStructures.Add(Types);
+            }
             if (!DataManager.Instance.RevealedStructures.Contains(Types)) DataManager.Instance.RevealedStructures.Add(Types);
         }
 
@@ -83,10 +88,12 @@ namespace CotLTemplateMod.Patches
         [HarmonyPostfix]
         private static void FollowerCommandGroups_GiveWorkerCommands(ref List<CommandItem> __result)
         {
+            if (!Plugin.chefJob.Value) return;
             FollowerCommandItems.FollowerRoleCommandItem followerRoleCommandItem = new FollowerCommandItems.FollowerRoleCommandItem();
             followerRoleCommandItem.Command = FollowerCommands.Cook_2;
             followerRoleCommandItem.FollowerTaskType = FollowerTaskType.Cook;
-            Plugin.Log.LogInfo(followerRoleCommandItem);
+
+            
             __result.Add(followerRoleCommandItem);
 
         }
@@ -127,13 +134,22 @@ namespace CotLTemplateMod.Patches
             return true;
         }
 
-        //Enable devotion progress as cooking progress bar (there is no progress bar for the chef in vanilla)
-        [HarmonyPatch(typeof(FollowerTask_Cook), "OnDoingBegin")]
-        [HarmonyPrefix]
-        private static void FollowerTask_Cook_OnDoingBegin(Follower follower)
+        [HarmonyPatch(typeof(FollowerTask_Cook), "Setup")]
+        [HarmonyPostfix]
+        private static void FollowerTask_Cook_Setup(Follower follower)
         {
             follower1 = follower;
-            follower1.UIFollowerPrayingProgress.Show();
+            _dissentBubbleCoroutine = follower.StartCoroutine(DissentBubbleRoutine(follower));
+        }
+
+        //Enable cooking indicator (there is no progress bar for the chef in vanilla)
+        [HarmonyPatch(typeof(FollowerTask_Cook), "OnDoingBegin")]
+        [HarmonyPrefix]
+        private static void FollowerTask_Cook_OnDoingBegin(Follower follower) //TODO change to worshipperbubble "food"?
+        {
+            follower1 = follower;
+            if (_dissentBubbleCoroutine == null && follower1 != null)
+                _dissentBubbleCoroutine = follower1.StartCoroutine(DissentBubbleRoutine(follower1));
         }
 
         //Enable devotion progress as cooking progress bar (there is no progress bar for the chef in vanilla)
@@ -142,7 +158,18 @@ namespace CotLTemplateMod.Patches
         private static bool FollowerTask_Cook_TaskTick(FollowerTask_Cook __instance, float deltaGameTime)
         {
             if (__instance.State != FollowerTaskState.Doing || (__instance.kitchenStructure.Data.QueuedMeals.Count <= 0 && __instance.kitchenStructure.Data.CurrentCookingMeal == null))
+            {
+                //Plugin.Log.LogInfo("Closing bubble");
+                if (_dissentBubbleCoroutine != null)
+                {
+                    follower1.WorshipperBubble.StopCoroutine(_dissentBubbleCoroutine);
+                    _dissentBubbleCoroutine = null;
+                    follower1.WorshipperBubble.Close();
+                    Plugin.Log.LogInfo("closed bubble");
+                }
                 return false;
+
+            }
 
             if (__instance.kitchenStructure.Data.CurrentCookingMeal == null)
                 __instance.kitchenStructure.Data.CurrentCookingMeal = __instance.kitchenStructure.Data.QueuedMeals[0];
@@ -152,14 +179,23 @@ namespace CotLTemplateMod.Patches
                 if (follower1 != null)
                 {
                     follower1.TimedAnimation("Reactions/react-laugh", 3.33f, (System.Action)(() => __instance.ProgressTask()));
-                    follower1.UIFollowerPrayingProgress.Flash();
                 }
                 __instance.MealFinishedCooking();
 
             }
             
             else
+            {
+                if (_dissentBubbleCoroutine == null && follower1 != null)
+                {
+                    _dissentBubbleCoroutine = follower1.StartCoroutine(DissentBubbleRoutine(follower1));
+                    follower1.SetBodyAnimation("action", true);
+
+                }
+
                 __instance.kitchenStructure.Data.CurrentCookingMeal.CookedTime += deltaGameTime * __instance._brain.Info.ProductivityMultiplier;
+
+            }
 
             return false;
         }
@@ -170,8 +206,14 @@ namespace CotLTemplateMod.Patches
         private static void FollowerTask_Cook_Cleanup(Follower follower)
         {
             Plugin.Log.LogInfo("Follower has been cleaned up");
+            if (_dissentBubbleCoroutine != null)
+            {
+                follower.WorshipperBubble.StopCoroutine(_dissentBubbleCoroutine);
+                _dissentBubbleCoroutine = null;
+                follower.WorshipperBubble.Close();
+            }
             follower1 = null;
-            follower.UIFollowerPrayingProgress.Hide();
+
 
         }
 
@@ -226,6 +268,75 @@ namespace CotLTemplateMod.Patches
                 
 
             return false;
+        }
+
+        //All you can eat buffet
+        [HarmonyPatch(typeof(Meal), "EatRoutine", MethodType.Enumerator)]
+        [HarmonyPostfix]
+        private static void Meal_EatRoutine_EatMore()
+        {
+            if (!Plugin.playerEatMore.Value) return;
+            DataManager.instance.PlayerEaten = false;
+            Plugin.Log.LogInfo("now you can eat more!");
+        }
+
+        //(non vanilla) Kitchen reduces the cost of recipes by 50%, rounded down, minimum cost 1
+        [HarmonyPatch(typeof(CookingData), "GetRecipe")]
+        [HarmonyPostfix]
+        private static void CookingData_RecipeDiscount(ref List<List<InventoryItem>> __result)
+        {
+            if (!Plugin.kitchenDiscount.Value) return;
+            if (Interaction_Kitchen.Kitchens.Count == 0) return;
+            
+            if (Interaction_Kitchen.Kitchens[0].StructureInfo.Type == StructureBrain.TYPES.KITCHEN)
+            {
+                foreach (List<InventoryItem> data1 in __result) //it do be like that
+                {
+                    foreach (InventoryItem data2 in data1)
+                    {
+                        data2.quantity = (data2.quantity / 2) < 1 ? 1 : (data2.quantity / 2);
+                    }
+                }
+                //Plugin.Log.LogInfo("edited prices");
+            }
+            else
+            {
+                Plugin.Log.LogInfo("kitchen found but not a kitchen, is a " + Interaction_Kitchen.Kitchens[0].StructureInfo.Type.ToString());
+            }
+            
+        }
+
+        //Move the chef backwards from the pot
+        [HarmonyPatch(typeof(FollowerTask_Cook), "UpdateDestination")]
+        [HarmonyPostfix]
+        private static void FollowerTask_Cook_UpdateDestination(FollowerTask_Cook __instance, ref Vector3 __result)
+        {
+            __result = __instance.kitchenStructure.Data.Position + new Vector3(0.0f, 2.521f);
+        }
+
+        //Let the waiter serve
+        [HarmonyPatch(typeof(FollowerBrain), "CheckEatTask")]
+        [HarmonyPostfix]
+        private static void FollowerBrain_CheckEatTask(ref FollowerTask __result)
+        {
+            if (!Plugin.waiterJob.Value) return;
+            __result = null;
+        }
+
+        private static IEnumerator DissentBubbleRoutine(Follower follower) //for the bubble
+        {
+            float bubbleTimer = 0.3f;
+            while (true)
+            {
+                if ((double)(bubbleTimer -= Time.deltaTime) < 0.0)
+                {
+                    WorshipperBubble.SPEECH_TYPE Type = WorshipperBubble.SPEECH_TYPE.FOOD;
+                    follower.WorshipperBubble.gameObject.SetActive(true);
+                    follower.WorshipperBubble.Play(Type);
+                    bubbleTimer = (4 + UnityEngine.Random.Range(0, 2));
+                }
+                yield return null;
+            }
         }
 
     }

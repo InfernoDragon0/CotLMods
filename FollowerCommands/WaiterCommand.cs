@@ -1,34 +1,39 @@
 ﻿using COTL_API.CustomFollowerCommand;
+using COTL_API.Helpers;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace CotLTemplateMod.CustomFollowerCommands
 {
-    internal class ExampleFollowerCommand : CustomFollowerCommand
-    {
-        public override string InternalName => "Example_Follower_Command";
 
-        public override Sprite CommandIcon => base.CommandIcon;
+    internal class WaiterCommand : CustomFollowerCommand
+    {
+        public override string InternalName => "Waiter_Command";
+
+        public override Sprite CommandIcon => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/waiter.png"));
 
         public override string GetTitle(Follower follower)
         {
-            return "Example Follower Command";
+            return "Waiter";
         }
 
         public override string GetDescription(Follower follower)
         {
-            return "This is an example follower command";
+            return "Serves food to other followers";
         }
 
         public override void Execute(interaction_FollowerInteraction interaction,
             FollowerCommands finalCommand)
         {
-            interaction.follower.Brain.MakeOld();
 
             interaction.StartCoroutine(interaction.FrameDelayCallback(delegate
             {
                 interaction.eventListener.PlayFollowerVO(interaction.generalAcknowledgeVO);
-                interaction.follower.Brain.HardSwapToTask(new FollowerTask_Vomit());
+                interaction.follower.Brain.HardSwapToTask(new WaiterTask());
             }));
+            interaction.Close();
         }
     }
 }

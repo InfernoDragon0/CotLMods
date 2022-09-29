@@ -15,6 +15,7 @@ namespace CotLTemplateMod.Patches
         [HarmonyPrefix]
         public static void LoadMainMenu_RemoveSplash()
         {
+            if (!Plugin.skipSplash.Value) return;
             MMTransition.Play(MMTransition.TransitionType.ChangeSceneAutoResume, MMTransition.Effect.BlackFade, "Main Menu", 1f, "", (System.Action)null);
             return;
         }
