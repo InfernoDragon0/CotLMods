@@ -8,21 +8,22 @@ using UnityEngine;
 namespace CotLTemplateMod.CustomFollowerCommands
 {
 
-    internal class WaiterCommand : CustomFollowerCommand
+    internal class FisherCommand : CustomFollowerCommand
     {
-        public override string InternalName => "Waiter_Command";
+        public override string InternalName => "Fisher_Command";
 
-        public override Sprite CommandIcon => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/waiter.png"));
+        public override Sprite CommandIcon => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));
         public override List<FollowerCommandCategory> Categories { get; } = new List<FollowerCommandCategory> { FollowerCommandCategory.GIVE_WORKER_COMMAND };
+
 
         public override string GetTitle(Follower follower)
         {
-            return "Waiter";
+            return "Fisher";
         }
 
         public override string GetDescription(Follower follower)
         {
-            return "Serves food to other followers";
+            return "Go fishing in the fishing hut";
         }
 
         public override void Execute(interaction_FollowerInteraction interaction,
@@ -32,7 +33,16 @@ namespace CotLTemplateMod.CustomFollowerCommands
             interaction.StartCoroutine(interaction.FrameDelayCallback(delegate
             {
                 interaction.eventListener.PlayFollowerVO(interaction.generalAcknowledgeVO);
-                interaction.follower.Brain.HardSwapToTask(new WaiterTask());
+                foreach (StructureBrain structureBrain in StructureManager.StructuresAtLocation(FollowerLocation.Base))
+                {
+                    if (structureBrain is ITaskProvider && (structureBrain is Structures_FishingHut))
+                    {
+                        if (!structureBrain.ReservedForTask)
+                            interaction.follower.Brain.HardSwapToTask(new FisherTask(structureBrain.Data.ID));
+                    }
+                        
+                }
+                //interaction.follower.Brain.HardSwapToTask(new FollowerTask_Fisherman());
             }));
             interaction.Close();
         }

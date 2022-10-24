@@ -9,9 +9,9 @@ using UnityEngine;
 
 namespace CotLMiniMods.Structures
 {
-    internal class FridgeStructure : CustomStructure
+    internal class SprinklerStructure : CustomStructure
     {
-        public override string InternalName => "Fridge_Structure";
+        public override string InternalName => "Sprinkler_Structure";
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cotlpc.png"));
 
     }

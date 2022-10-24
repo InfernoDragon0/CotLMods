@@ -7,6 +7,10 @@ using Random = UnityEngine.Random;
 
 namespace CotLTemplateMod.CustomFollowerCommands
 {
+    //TODO: Waiter v2
+    //The waiter shall be given tips (2 - 6 gold based on the food type)
+    //The waiter shall now teleport the food to the follower instead of walking back to the kitchen to take food
+    //Food served by waiters doubles the satiation amount
     internal class WaiterTask : CustomTask
     {
         public override string InternalName => "Waiter_Task";
@@ -15,12 +19,13 @@ namespace CotLTemplateMod.CustomFollowerCommands
         public Follower victim;
         public bool sendingFood = false;
         public bool backToKitchen = false;
+        
 
         public override bool BlockTaskChanges => true;
         public override Vector3 UpdateDestination(Follower follower)
         {
             if (nextMeal != null && victim != null) return this.victim.Brain.LastPosition;
-            if (nextMeal != null) return this.nextMeal.Data.Position;
+            if (nextMeal != null) return follower.Brain.LastPosition;//return this.nextMeal.Data.Position;
             else if (nextMeal == null && Interaction_Kitchen.Kitchens.Count > 0) return Interaction_Kitchen.Kitchens[0].Position - ((Vector3)Random.insideUnitCircle * 2f);
             else return base.UpdateDestination(follower);
         }
@@ -51,7 +56,7 @@ namespace CotLTemplateMod.CustomFollowerCommands
             {
                 //if still too far, such as the other follower moved away
                 float num = Vector3.Distance(victim.transform.position, follower.transform.position);
-                if ((double)num > 10.0) //sometimes chasing breaks the waiter so a bigger acceptable radius is easier on the task
+                if ((double)num > 7.0) //sometimes chasing breaks the waiter so a bigger acceptable radius is easier on the task
                 {
                     Plugin.Log.LogInfo("victim moved, chasing..");
                     this.ClearDestination();
@@ -59,7 +64,7 @@ namespace CotLTemplateMod.CustomFollowerCommands
                 }
                 else
                 {
-                    follower.TimedAnimation("Buildings/add-stone", 0.9166667f, () => //temporary anim or Farming/add-berries
+                    follower.TimedAnimation("Farming/add-berries", 0.9166667f, () => //temporary anim or Farming/add-berries Buildings/add-stone
                     {
                         Plugin.Log.LogInfo("dunked food on victim");
                         follower.SimpleAnimator.ResetAnimationsToDefaults();
@@ -70,13 +75,21 @@ namespace CotLTemplateMod.CustomFollowerCommands
                         if (victim.Brain._directInfoAccess.ID == follower.Brain._directInfoAccess.ID)
                         {
                             Plugin.Log.LogInfo("Self eating");
-                            this._brain.Stats.Satiation += CookingData.GetSatationAmount(CookingData.GetMealFromStructureType(nextMeal.Data.Type));
+                            this._brain.Stats.Satiation += CookingData.GetSatationAmount(CookingData.GetMealFromStructureType(nextMeal.Data.Type)) * 2;
                             nextMeal.Data.Eaten = true;
                         }
                         else
                         {
                             try
                             {
+                                //extra bonus satiation for being served
+                                this._brain.Stats.Satiation += CookingData.GetSatationAmount(CookingData.GetMealFromStructureType(nextMeal.Data.Type));
+
+                                //free gold
+                                ResourceCustomTarget.Create(follower.gameObject, victim.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
+                                InventoryItem.Spawn(InventoryItem.ITEM_TYPE.BLACK_GOLD, 2, victim.transform.position);
+
+                                //eat meal
                                 victim.Brain.HardSwapToTask(new EatWaiterTask(nextMeal.Data.ID));
 
                             }
@@ -90,7 +103,7 @@ namespace CotLTemplateMod.CustomFollowerCommands
                         nextMeal = null;
                         victim = null;
                         sendingFood = false;
-                        this.SetState(FollowerTaskState.GoingTo);
+                        FindNextMeal();
 
                     });
                 }
@@ -136,11 +149,15 @@ namespace CotLTemplateMod.CustomFollowerCommands
                     newSkin.AddSkin(follower.Spine.Skeleton.Data.FindSkin(CookingData.GetMealSkin(nextMeal.Data.Type)));
                     follower.OverridingOutfit = true;
                     follower.Spine.skeleton.SetSkin(newSkin);
-                    follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "Food/food_eat"); //temporary or Farming/run-berries
+                    follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "Food/food_eat"); //temporary or Farming/run-berries Food/food_eat
 
-                    FindNextMealVictim();
+                    //FindNextMealVictim();
+                    if (this._currentDestination.HasValue) //clear if have destination
+                    {
+                        this.ClearDestination();
+                    }
+                    this.SetState(FollowerTaskState.GoingTo);
 
-                    
                 }
             }
         }
@@ -169,13 +186,16 @@ namespace CotLTemplateMod.CustomFollowerCommands
                 }
             }
             if (victim == null)
-            {
+            {//TODO: make it so that they dont dunk on the same person
                 FollowerBrain fb = FollowerManager.GetHungriestFollowerBrain();
                 victim = FollowerManager.FindFollowerByID(fb._directInfoAccess.ID);
             }
             Plugin.Log.LogInfo("victim found = " + victim.Brain._directInfoAccess.Name);
-            this.ClearDestination();
-            this.SetState(FollowerTaskState.GoingTo);
+            if (this._currentDestination.HasValue) //clear if have destination
+            {
+                this.ClearDestination();
+                this.SetState(FollowerTaskState.GoingTo);
+            }
 
         }
 
@@ -189,9 +209,13 @@ namespace CotLTemplateMod.CustomFollowerCommands
                 {
                     if (nextMeal == null)
                     {
-                        Plugin.Log.LogInfo("found food, walking to food");
+                        Plugin.Log.LogInfo("found food, finding a next victim");
                         nextMeal = structuresMeal;
                         backToKitchen = false;
+
+                        if (victim == null)
+                            FindNextMealVictim();
+
 
                         if (this._currentDestination.HasValue) //clear if have destination
                         {

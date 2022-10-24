@@ -1,14 +1,18 @@
-﻿using HarmonyLib;
+﻿using COTL_API.Helpers;
+using DG.Tweening;
+using HarmonyLib;
 using Lamb.UI;
 using Lamb.UI.BuildMenu;
 using Lamb.UI.FollowerInteractionWheel;
 using MMTools;
+using src.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
+using static PlacementRegion;
 using Random = UnityEngine.Random;
 
 namespace CotLTemplateMod.Patches
@@ -19,6 +23,8 @@ namespace CotLTemplateMod.Patches
         public static Follower follower1; //temp follower storage for the kitchen
         private static Coroutine _dissentBubbleCoroutine; //for the bubble
 
+        //There is Interaction_FoodStorage with no label, and add a interact to update
+
 
         [HarmonyPatch(typeof(FollowerCategory), "GetStructuresForCategory")]
         [HarmonyPostfix]
@@ -26,11 +32,14 @@ namespace CotLTemplateMod.Patches
         {
             if (category == FollowerCategory.Category.Food)
             {
-                Plugin.Log.LogInfo("Add food storage");
+                Plugin.Log.LogInfo("Add food storage and fishing");
                 __result.Add(StructureBrain.TYPES.FOOD_STORAGE);
                 __result.Add(StructureBrain.TYPES.FOOD_STORAGE_2);
                 __result.Add(StructureBrain.TYPES.KITCHEN);
                 __result.Add(StructureBrain.TYPES.KITCHEN_II);
+                //__result.Add(StructureBrain.TYPES.FISHING_SPOT);
+                __result.Add(StructureBrain.TYPES.FISHING_HUT);
+                //__result.Add(StructureBrain.TYPES.FISHING_HUT_2);
             }
         }
 
@@ -38,7 +47,7 @@ namespace CotLTemplateMod.Patches
         [HarmonyPrefix]
         private static void StructuresData_GetUnlocked(StructureBrain.TYPES Types)
         {
-            if (!DataManager.Instance.UnlockedStructures.Contains(Types) && (Types == StructureBrain.TYPES.KITCHEN || Types == StructureBrain.TYPES.KITCHEN_II || Types ==  StructureBrain.TYPES.FOOD_STORAGE || Types == StructureBrain.TYPES.FOOD_STORAGE_2))
+            if (!DataManager.Instance.UnlockedStructures.Contains(Types) && (Types == StructureBrain.TYPES.KITCHEN || Types == StructureBrain.TYPES.KITCHEN_II || Types ==  StructureBrain.TYPES.FOOD_STORAGE || Types == StructureBrain.TYPES.FOOD_STORAGE_2 || Types == StructureBrain.TYPES.FISHING_HUT /*|| Types == StructureBrain.TYPES.FISHING_HUT_2*/))
             {
                 DataManager.Instance.UnlockedStructures.Add(Types);
             }
@@ -49,7 +58,7 @@ namespace CotLTemplateMod.Patches
         [HarmonyPrefix]
         private static void UpgradeSystem_GetUnlocked(UpgradeSystem.Type Type)
         {
-            if (!DataManager.Instance.UnlockedUpgrades.Contains(Type) && (Type == UpgradeSystem.Type.Building_FoodStorage || Type == UpgradeSystem.Type.Building_FoodStorage2 || Type == UpgradeSystem.Type.Building_Kitchen || Type == UpgradeSystem.Type.Building_KitchenII))
+            if (!DataManager.Instance.UnlockedUpgrades.Contains(Type) && (Type == UpgradeSystem.Type.Building_FoodStorage || Type == UpgradeSystem.Type.Building_FoodStorage2 || Type == UpgradeSystem.Type.Building_Kitchen || Type == UpgradeSystem.Type.Building_KitchenII || Type == UpgradeSystem.Type.Building_FishingHut2))
             {
                 DataManager.Instance.UnlockedUpgrades.Add(Type);
             }
@@ -59,7 +68,7 @@ namespace CotLTemplateMod.Patches
         [HarmonyPrefix] //temporary override cost
         private static bool StructuresData_GetCost(ref List<StructuresData.ItemCost> __result, StructureBrain.TYPES Type)
         {
-            if (Type == StructureBrain.TYPES.FOOD_STORAGE || Type == StructureBrain.TYPES.KITCHEN)
+            if (Type == StructureBrain.TYPES.FOOD_STORAGE || Type == StructureBrain.TYPES.KITCHEN || Type == StructureBrain.TYPES.FISHING_HUT_2)
             {
                 __result = new List<StructuresData.ItemCost>()
                             {
@@ -167,21 +176,37 @@ namespace CotLTemplateMod.Patches
                     follower1.WorshipperBubble.Close();
                     Plugin.Log.LogInfo("closed bubble");
                 }
+
+                if (Interaction_Kitchen.Kitchens.Count > 0) //turn off the fire
+                {
+                    Interaction_Kitchen.Kitchens[0].ShowCooking(false);
+                }
+
                 return false;
 
             }
 
             if (__instance.kitchenStructure.Data.CurrentCookingMeal == null)
+            {
                 __instance.kitchenStructure.Data.CurrentCookingMeal = __instance.kitchenStructure.Data.QueuedMeals[0];
+                follower1.SetBodyAnimation("action", true);
+                if (Interaction_Kitchen.Kitchens.Count > 0) //turn on the fire
+                {
+                    Plugin.Log.LogInfo("turning on fire");
+                    Interaction_Kitchen.Kitchens[0].ShowCooking(true);
+                }
+            }
 
             else if (__instance.kitchenStructure.Data.CurrentCookingMeal.CookedTime >= __instance.kitchenStructure.Data.CurrentCookingMeal.CookingDuration)
             {
                 if (follower1 != null)
                 {
-                    follower1.TimedAnimation("Reactions/react-laugh", 3.33f, (System.Action)(() => __instance.ProgressTask()));
-                }
-                __instance.MealFinishedCooking();
+                    follower1.TimedAnimation("Reactions/react-laugh", 3.33f, (System.Action)(() => { 
+                        __instance.ProgressTask();
+                    }));
+                    __instance.MealFinishedCooking();
 
+                }
             }
             
             else
@@ -189,8 +214,6 @@ namespace CotLTemplateMod.Patches
                 if (_dissentBubbleCoroutine == null && follower1 != null)
                 {
                     _dissentBubbleCoroutine = follower1.StartCoroutine(DissentBubbleRoutine(follower1));
-                    follower1.SetBodyAnimation("action", true);
-
                 }
 
                 __instance.kitchenStructure.Data.CurrentCookingMeal.CookedTime += deltaGameTime * __instance._brain.Info.ProductivityMultiplier;
@@ -288,7 +311,7 @@ namespace CotLTemplateMod.Patches
             if (!Plugin.kitchenDiscount.Value) return;
             if (Interaction_Kitchen.Kitchens.Count == 0) return;
             
-            if (Interaction_Kitchen.Kitchens[0].StructureInfo.Type == StructureBrain.TYPES.KITCHEN)
+            if (Interaction_Kitchen.Kitchens[0].StructureInfo.Type == StructureBrain.TYPES.KITCHEN || Interaction_Kitchen.Kitchens[0].StructureInfo.Type == StructureBrain.TYPES.KITCHEN_II)
             {
                 foreach (List<InventoryItem> data1 in __result) //it do be like that
                 {
@@ -314,7 +337,7 @@ namespace CotLTemplateMod.Patches
             __result = __instance.kitchenStructure.Data.Position + new Vector3(0.0f, 2.521f);
         }
 
-        //Let the waiter serve
+        //TODO: if there is no waiter, then the followers will go to the food
         [HarmonyPatch(typeof(FollowerBrain), "CheckEatTask")]
         [HarmonyPostfix]
         private static void FollowerBrain_CheckEatTask(ref FollowerTask __result)
@@ -337,6 +360,183 @@ namespace CotLTemplateMod.Patches
                 }
                 yield return null;
             }
+        }
+
+
+        //this patch to enable movable kitchen
+        [HarmonyPatch(typeof(PlacementRegion), "GetHoveredStructure")]
+        [HarmonyPostfix]
+        private static void PlacementRegion_GetHoveredStructure(PlacementRegion __instance, ref Structure __result)
+        {
+            PlacementTile tileAtWorldPosition = __instance.GetClosestTileAtWorldPosition(__instance.PlacementPosition);
+            if (tileAtWorldPosition == null)
+            {
+                return;
+            }
+
+            PlacementRegion.TileGridTile tileGridTile = __instance.GetTileGridTile(tileAtWorldPosition.GridPosition.x, tileAtWorldPosition.GridPosition.y);
+
+            Structure hoveredStructure = null;
+
+            if (tileGridTile.ObjectOnTile == StructureBrain.TYPES.KITCHEN || tileGridTile.ObjectOnTile == StructureBrain.TYPES.KITCHEN_II)
+            {
+                foreach (Structure structure in Structure.Structures)
+                {
+                    if (structure.Type == StructureBrain.TYPES.COOKING_FIRE || structure.Type == StructureBrain.TYPES.KITCHEN || structure.Type == StructureBrain.TYPES.KITCHEN_II) //dont know why the kitchen upgrade doesnt make it into a cooking fire
+                    {
+                        if (structure.Brain != null && tileGridTile != null && structure.Brain.Data != null && structure.Brain.Data.ID == tileGridTile.ObjectID)
+                        {
+                            hoveredStructure = structure;
+                            break;
+                        }
+                        if (hoveredStructure == null || structure != null && structure.Brain != null && structure.Brain.Data != null && tileGridTile != null && (double)Vector3.Distance(structure.Brain.Data.Position, tileGridTile.WorldPosition) < (double)Vector3.Distance(hoveredStructure.Brain.Data.Position, tileGridTile.WorldPosition))
+                            hoveredStructure = structure;
+                    }
+                    
+                }
+                __result = hoveredStructure;
+            }
+        }
+
+        //this patch to upgrade to kitchen 2
+        [HarmonyPatch(typeof(Interaction_Kitchen), "Start")]
+        [HarmonyPostfix]
+        private static void Interaction_Kitchen_Start(Interaction_Kitchen __instance)
+        {
+            Plugin.Log.LogInfo("starting reassignment");
+            if (__instance.StructureInfo.Type == StructureBrain.TYPES.KITCHEN)
+            {
+                Plugin.Log.LogInfo("Reassigned as kitchen");
+                __instance.structure.Type = StructureBrain.TYPES.KITCHEN;
+            }
+
+            /*if (__instance.StructureInfo.Type == StructureBrain.TYPES.KITCHEN_II)
+            {
+                Plugin.Log.LogInfo("Reassigned as cooking fire");
+                __instance.structure.Type = StructureBrain.TYPES.COOKING_FIRE;
+            }*/
+        }
+
+        //this patch to skip cooking fire kitchen 2
+        [HarmonyPatch(typeof(Interaction_Kitchen), "ShowCooking")]
+        [HarmonyPrefix]
+        private static bool Interaction_Kitchen_ShowCooking(Interaction_Kitchen __instance)
+        {
+
+            if (__instance.StructureInfo.Type == StructureBrain.TYPES.KITCHEN_II)
+            {
+                //Plugin.Log.LogInfo("skip fire changes");
+                return false;
+            }
+            return true;
+        }
+
+        //this patch to skip some animations for kitchen 2
+        [HarmonyPatch(typeof(Interaction_Kitchen), "CookAll")]
+        [HarmonyPrefix]
+        private static bool Interaction_Kitchen_CookAll(Interaction_Kitchen __instance)
+        {
+
+            if (__instance.StructureInfo.Type == StructureBrain.TYPES.KITCHEN_II)
+            {
+                GameManager.GetInstance().OnConversationNew();
+                GameManager.GetInstance().OnConversationNext(PlayerFarming.Instance.CameraBone);
+
+                PlayerFarming.Instance.GoToAndStop(__instance.StructureInfo.Position + new Vector3(0.1f, 2.5f), __instance.transform.parent.gameObject, GoToCallback: ((System.Action)(() =>
+                {
+                    __instance._uiCookingMinigameOverlayController = MonoSingleton<UIManager>.Instance.CookingMinigameOverlayControllerTemplate.Instantiate<UICookingMinigameOverlayController>();
+                    __instance._uiCookingMinigameOverlayController.Initialise(__instance.StructureInfo, __instance);
+                    __instance._uiCookingMinigameOverlayController.OnCook += new System.Action(__instance.OnCook);
+                    __instance._uiCookingMinigameOverlayController.OnUnderCook += new System.Action(__instance.OnUnderCook);
+                    __instance._uiCookingMinigameOverlayController.OnBurn += new System.Action(__instance.OnBurn);
+                    __instance.state.CURRENT_STATE = StateMachine.State.CustomAction0;
+                })));
+                return false;
+            }
+            return true;
+        }
+
+        //this patch to skip some animations for kitchen 2 on finish
+        [HarmonyPatch(typeof(Interaction_Kitchen), "MealFinishedCooking")]
+        [HarmonyPrefix]
+        private static bool Interaction_Kitchen_MealFinishedCooking(Interaction_Kitchen __instance)
+        {
+
+            if (__instance.StructureInfo.Type == StructureBrain.TYPES.KITCHEN_II)
+            {
+                Structures_FoodStorage foodStorage = Structures_FoodStorage.GetAvailableFoodStorage(__instance.StructureInfo.Position, __instance.StructureInfo.Location);
+                InventoryItem.ITEM_TYPE mealType = __instance.structure.Structure_Info.QueuedMeals[0].MealType;
+                ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.CookFirstMeal);
+                DataManager.Instance.CookedFirstFood = true;
+
+
+                if (mealType == InventoryItem.ITEM_TYPE.MEAL_POOP)
+                {
+                    ++DataManager.Instance.PoopMealsCreated;
+                    if (DataManager.Instance.PoopMealsCreated == UnityEngine.Random.Range(5, 12) && !DataManager.GetFollowerSkinUnlocked("Poop"))
+                        __instance.StartCoroutine(__instance.CreatePoopSkin());
+                    else if (DataManager.Instance.PoopMealsCreated >= 12 && !DataManager.GetFollowerSkinUnlocked("Poop"))
+                        __instance.StartCoroutine(__instance.CreatePoopSkin());
+                }
+                bool flag = false;
+
+                if (foodStorage != null && __instance.StructureInfo != null)
+                {
+                    foreach (Interaction_FoodStorage foodStorage1 in Interaction_FoodStorage.FoodStorages)
+                    {
+
+                        Interaction_FoodStorage s = foodStorage1;
+                        if (s != null && s.StructureInfo.ID == foodStorage.Data.ID && s.gameObject != null && __instance.transform != null)
+                        {
+
+                            ResourceCustomTarget.Create(s.gameObject, __instance.StructureInfo.Position, mealType, (System.Action)(() =>
+                            {
+                                AudioManager.Instance.PlayOneShot("event:/followers/pop_in", __instance.transform.position);
+                                foodStorage.DepositItemUnstacked(mealType);
+                                s.UpdateFoodDisplayed();
+                                s.transform.DOPunchScale(Vector3.one * 0.25f, 0.25f, 2).SetEase<Tweener>(Ease.InOutBack);
+                                foreach (Follower follower in Follower.Followers)
+                                    follower.Brain.CheckChangeTask();
+                            }));
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!flag)
+                {
+                    InventoryItem.Spawn(mealType, 1, __instance.StructureInfo.Position, UnityEngine.Random.Range(9, 11), (System.Action<PickUp>)(pickUp =>
+                    {
+                        Meal component = pickUp.GetComponent<Meal>();
+                        component.CreateStructureLocation = __instance.StructureInfo.Location;
+                        component.CreateStructureOnStop = true;
+                    }));
+                }
+                else
+                {
+                    foreach (Follower follower in Follower.Followers)
+                        follower.Brain.CheckChangeTask();
+                }
+
+                CookingData.CookedMeal(mealType);
+                ++DataManager.Instance.MealsCooked;
+                ObjectiveManager.CheckObjectives(Objectives.TYPES.COOK_MEALS);
+
+                __instance.StructureInfo.QueuedMeals.RemoveAt(0);
+                __instance.StructureInfo.CurrentCookingMeal = null;
+
+                return false;
+            }
+            return true;
+        }
+
+        //extra slots
+        [HarmonyPatch(typeof(RecipeQueue), nameof(RecipeQueue.RecipeLimit))]
+        [HarmonyPostfix]
+        public static void RecipeQueue_RecipeLimit(RecipeQueue __instance, ref int __result)
+        {
+            __result = 12 + (__instance._kitchenData.Type == StructureBrain.TYPES.KITCHEN_II ? 3 : 0);
         }
 
     }
