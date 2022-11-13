@@ -4,7 +4,10 @@ Or [Nexus Mods](https://www.nexusmods.com/cultofthelamb/mods/12)
 
 ![text](https://i.imgur.com/o37tDKr.gif)
 
-# What's New
+# Microsite
+Read more about this mod at [CotL Mini Mods Site](https://cotlminimod.infernodragon.net/)
+
+# Previous changes (read the microsite for the latest updates)
 ## Follower Management Device (v1.0.7)
 ![text](https://i.imgur.com/U3yNhxF.png)
 - A new device for you to build in your base
