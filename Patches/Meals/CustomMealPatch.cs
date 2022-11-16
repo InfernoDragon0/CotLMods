@@ -148,7 +148,7 @@ namespace CotLMiniMods.Patches.Meals
             if (CustomMealManager.FoodTypes.ContainsKey(mealType))
             {
                 Plugin.Log.LogInfo("Getting meals structure custom " + mealType);
-                __result = StructureBrain.TYPES.MEAL; //TODO
+                //__result = StructureBrain.TYPES.MEAL; //TODO, so that it can be used for meal quests etc
             }
 
         }

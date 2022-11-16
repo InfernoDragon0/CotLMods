@@ -3,6 +3,7 @@ using CotLMiniMods.Interactions;
 using CotLMiniMods.Structures;
 using CotLTemplateMod;
 using HarmonyLib;
+using src.UI.Menus;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,12 +23,36 @@ namespace CotLMiniMods.Patches
 
             if (!CustomStructureManager.CustomStructures.ContainsKey(__instance.Type)) return;
 
-            //temporary until someone adds it to the api
+            //TODO: make a custom_structure_with_interaction or something and add component through that instead
             if (CustomStructureManager.CustomStructures[__instance.Type] is HRManagementStructure)
             {
-                Plugin.Log.LogInfo("adding interaction for candle debug");
+                Plugin.Log.LogInfo("adding interaction for HR");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_HR>();
+            }
+            else if (CustomStructureManager.CustomStructures[__instance.Type] is CrystalMineStructure)
+            {
+                Plugin.Log.LogInfo("adding interaction for crystal");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_CrystalMine>();
+            }
+            else if (CustomStructureManager.CustomStructures[__instance.Type] is BoneMineStructure)
+            {
+                Plugin.Log.LogInfo("adding interaction for bone");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_CrystalMine>();
+            }
+            else if (CustomStructureManager.CustomStructures[__instance.Type] is SilkMineStructure)
+            {
+                Plugin.Log.LogInfo("adding interaction for web");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_CrystalMine>();
+            }
+            else if (CustomStructureManager.CustomStructures[__instance.Type] is WishingWellStructure)
+            {
+                Plugin.Log.LogInfo("adding interaction for wish");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_Wish>();
             }
 
             Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructures[__instance.Type].GetType());
@@ -35,5 +60,6 @@ namespace CotLMiniMods.Patches
 
             
         }
+
     }
 }

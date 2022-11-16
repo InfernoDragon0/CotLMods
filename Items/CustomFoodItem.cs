@@ -9,6 +9,7 @@ namespace CotLMiniMods.Items
 {
     internal class CustomFoodItem : CustomInventoryItem
     {
+        public override InventoryItem.ITEM_TYPE ItemPickUpToImitate => InventoryItem.ITEM_TYPE.MEAL;
         public virtual List<List<InventoryItem>> Recipe => new List<List<InventoryItem>>()
         {
           new List<InventoryItem>()

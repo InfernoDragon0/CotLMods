@@ -1,5 +1,7 @@
 ﻿using COTL_API.CustomFollowerCommand;
 using COTL_API.Helpers;
+using CotLMiniMods.CCommands.Tasks;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

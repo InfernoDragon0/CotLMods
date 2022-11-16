@@ -1,11 +1,14 @@
 ﻿using COTL_API.Tasks;
+using CotLMiniMods.Structures;
+using CotLTemplateMod;
+using CotLTemplateMod.CustomFollowerCommands;
 using Spine;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace CotLTemplateMod.CustomFollowerCommands
+namespace CotLMiniMods.CCommands.Tasks
 {
     //TODO: Waiter v2
     //The waiter shall be given tips (2 - 6 gold based on the food type)
@@ -17,16 +20,18 @@ namespace CotLTemplateMod.CustomFollowerCommands
 
         public Structures_Meal nextMeal;
         public Follower victim;
+        public Follower waiter;
+
         public bool sendingFood = false;
         public bool backToKitchen = false;
-        
-
-        public override bool BlockTaskChanges => true;
+        public int _resourceStationId;
+        public WaiterDeskStructure _resourceStation;
+        /*public override bool BlockTaskChanges => true;*/
         public override Vector3 UpdateDestination(Follower follower)
         {
-            if (nextMeal != null && victim != null) return this.victim.Brain.LastPosition;
+            if (nextMeal != null && victim != null) return victim.Brain.LastPosition;
             if (nextMeal != null) return follower.Brain.LastPosition;//return this.nextMeal.Data.Position;
-            else if (nextMeal == null && Interaction_Kitchen.Kitchens.Count > 0) return Interaction_Kitchen.Kitchens[0].Position - ((Vector3)Random.insideUnitCircle * 2f);
+            else if (nextMeal == null && Interaction_Kitchen.Kitchens.Count > 0) return Interaction_Kitchen.Kitchens[0].Position - (Vector3)Random.insideUnitCircle * 2f;
             else return base.UpdateDestination(follower);
         }
 
@@ -34,12 +39,14 @@ namespace CotLTemplateMod.CustomFollowerCommands
         {
             base.Setup(follower);
             follower.SetHat(HatType.Chef);
+            follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "Food/food-run"); //temporary or Farming/run-berries Food/food_eat
+            waiter = follower;
         }
 
         public override void OnStart()
         {
             //this.SetState(FollowerTaskState.WaitingForLocation);
-            this.SetState(FollowerTaskState.GoingTo);
+            SetState(FollowerTaskState.GoingTo);
         }
 
         public override void TaskTick(float deltaGameTime)
@@ -47,6 +54,15 @@ namespace CotLTemplateMod.CustomFollowerCommands
             if (nextMeal == null) //loop for finding meals
             {
                 FindNextMeal();
+            }
+
+            if (nextMeal == null) //if still null, then end
+            {
+                Plugin.Log.LogInfo("no more next meal");
+                waiter.SetHat(HatType.None);
+                waiter.SimpleAnimator.ResetAnimationsToDefaults();
+                waiter.OverridingOutfit = false;
+                Complete();
             }
         }
 
@@ -59,8 +75,8 @@ namespace CotLTemplateMod.CustomFollowerCommands
                 if ((double)num > 7.0) //sometimes chasing breaks the waiter so a bigger acceptable radius is easier on the task
                 {
                     Plugin.Log.LogInfo("victim moved, chasing..");
-                    this.ClearDestination();
-                    this.SetState(FollowerTaskState.GoingTo);
+                    ClearDestination();
+                    SetState(FollowerTaskState.GoingTo);
                 }
                 else
                 {
@@ -75,7 +91,7 @@ namespace CotLTemplateMod.CustomFollowerCommands
                         if (victim.Brain._directInfoAccess.ID == follower.Brain._directInfoAccess.ID)
                         {
                             Plugin.Log.LogInfo("Self eating");
-                            this._brain.Stats.Satiation += CookingData.GetSatationAmount(CookingData.GetMealFromStructureType(nextMeal.Data.Type)) * 2;
+                            _brain.Stats.Satiation += CookingData.GetSatationAmount(CookingData.GetMealFromStructureType(nextMeal.Data.Type)) * 2;
                             nextMeal.Data.Eaten = true;
                         }
                         else
@@ -83,7 +99,7 @@ namespace CotLTemplateMod.CustomFollowerCommands
                             try
                             {
                                 //extra bonus satiation for being served
-                                this._brain.Stats.Satiation += CookingData.GetSatationAmount(CookingData.GetMealFromStructureType(nextMeal.Data.Type));
+                                _brain.Stats.Satiation += CookingData.GetSatationAmount(CookingData.GetMealFromStructureType(nextMeal.Data.Type));
 
                                 //free gold
                                 ResourceCustomTarget.Create(follower.gameObject, victim.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
@@ -107,18 +123,18 @@ namespace CotLTemplateMod.CustomFollowerCommands
 
                     });
                 }
-                
+
             }
             else //grab the food
             {
                 if (nextMeal == null)
                 {
                     Plugin.Log.LogInfo("no meal available");
-                    if (this._currentDestination.HasValue && !backToKitchen) //go back to base and wait for food
+                    if (_currentDestination.HasValue && !backToKitchen) //go back to base and wait for food
                     {
                         backToKitchen = true;
-                        this.ClearDestination();
-                        this.SetState(FollowerTaskState.GoingTo);
+                        ClearDestination();
+                        SetState(FollowerTaskState.GoingTo);
                     }
                 }
 
@@ -130,7 +146,7 @@ namespace CotLTemplateMod.CustomFollowerCommands
                         nextMeal = null;
                         victim = null;
                         sendingFood = false;
-                        this.SetState(FollowerTaskState.GoingTo);
+                        SetState(FollowerTaskState.GoingTo);
                         return;
                     }
 
@@ -149,14 +165,14 @@ namespace CotLTemplateMod.CustomFollowerCommands
                     newSkin.AddSkin(follower.Spine.Skeleton.Data.FindSkin(CookingData.GetMealSkin(nextMeal.Data.Type)));
                     follower.OverridingOutfit = true;
                     follower.Spine.skeleton.SetSkin(newSkin);
-                    follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "Food/food_eat"); //temporary or Farming/run-berries Food/food_eat
+                    follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "Food/food-run"); //temporary or Farming/run-berries Food/food_eat
 
                     //FindNextMealVictim();
-                    if (this._currentDestination.HasValue) //clear if have destination
+                    if (_currentDestination.HasValue) //clear if have destination
                     {
-                        this.ClearDestination();
+                        ClearDestination();
                     }
-                    this.SetState(FollowerTaskState.GoingTo);
+                    SetState(FollowerTaskState.GoingTo);
 
                 }
             }
@@ -164,13 +180,50 @@ namespace CotLTemplateMod.CustomFollowerCommands
 
         public WaiterTask()
         {
+            foreach (StructureBrain structureBrain in StructureManager.StructuresAtLocation(FollowerLocation.Base))
+            {
+                if (structureBrain is WaiterDeskStructure && !structureBrain.ReservedForTask)
+                {
+                    _resourceStationId = structureBrain.Data.ID;
+                    _resourceStation = StructureManager.GetStructureByID<WaiterDeskStructure>(_resourceStationId);
+                    FindNextMeal();
+
+                    return;
+                }
+
+            }
+            Complete();
+
+        }
+
+        public WaiterTask(int id)
+        {
+            _resourceStationId = id;
+            _resourceStation = StructureManager.GetStructureByID<WaiterDeskStructure>(_resourceStationId);
             FindNextMeal();
+        }
+
+        public override void ClaimReservations()
+        {
+
+            if (_resourceStation == null)
+                return;
+            _resourceStation.ReservedForTask = true;
+        }
+
+        public override void ReleaseReservations()
+        {
+
+            if (_resourceStation == null)
+                return;
+            _resourceStation.ReservedForTask = false;
         }
 
         public override void Cleanup(Follower follower)
         {
             follower.SetHat(HatType.None);
             follower.SimpleAnimator.ResetAnimationsToDefaults();
+            follower.OverridingOutfit = false;
             base.Cleanup(follower);
         }
 
@@ -182,7 +235,7 @@ namespace CotLTemplateMod.CustomFollowerCommands
                 if (objective is Objectives_EatMeal && ((Objectives_EatMeal)objective).MealType == nextMeal.Data.Type)
                 {
                     victim = FollowerManager.FindFollowerByID(objective.Follower);
-                    
+
                 }
             }
             if (victim == null)
@@ -191,10 +244,10 @@ namespace CotLTemplateMod.CustomFollowerCommands
                 victim = FollowerManager.FindFollowerByID(fb._directInfoAccess.ID);
             }
             Plugin.Log.LogInfo("victim found = " + victim.Brain._directInfoAccess.Name);
-            if (this._currentDestination.HasValue) //clear if have destination
+            if (_currentDestination.HasValue) //clear if have destination
             {
-                this.ClearDestination();
-                this.SetState(FollowerTaskState.GoingTo);
+                ClearDestination();
+                SetState(FollowerTaskState.GoingTo);
             }
 
         }
@@ -217,12 +270,12 @@ namespace CotLTemplateMod.CustomFollowerCommands
                             FindNextMealVictim();
 
 
-                        if (this._currentDestination.HasValue) //clear if have destination
+                        if (_currentDestination.HasValue) //clear if have destination
                         {
-                            this.ClearDestination();
-                            this.SetState(FollowerTaskState.GoingTo);
+                            ClearDestination();
+                            SetState(FollowerTaskState.GoingTo);
                         }
-                        
+
 
                         //itemType = CookingData.GetMealFromStructureType(structuresMeal.Data.Type);
                         break;
@@ -234,7 +287,7 @@ namespace CotLTemplateMod.CustomFollowerCommands
             {
                 //from the food storage
                 //TODO
-                foreach (Structures_FoodStorage structuresFoodStorage in StructureManager.GetAllStructuresOfType<Structures_FoodStorage>(this.Location))
+                foreach (Structures_FoodStorage structuresFoodStorage in StructureManager.GetAllStructuresOfType<Structures_FoodStorage>(Location))
                 {
                     foreach (InventoryItem inventoryItem in structuresFoodStorage.Data.Inventory)
                     {
@@ -250,10 +303,10 @@ namespace CotLTemplateMod.CustomFollowerCommands
                                 StructureManager.BuildStructure(structuresFoodStorage.Data.Location, StructuresData.GetInfoByType(mealStructureType, 0), position, Vector2Int.one);
                                 break;
                             }
-                            
+
                         }
                     }
-                    
+
                 }
             }
         }

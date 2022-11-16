@@ -8,6 +8,9 @@ using BepInEx.Configuration;
 using CotLMiniMods.Meals;
 using COTL_API.CustomStructures;
 using CotLMiniMods.Structures;
+using CotLMiniMods.Patches.Rituals;
+using CotLMiniMods.Rituals;
+using CotLMiniMods.Patches.Structures;
 
 namespace CotLTemplateMod
 {
@@ -18,7 +21,7 @@ namespace CotLTemplateMod
     {
         public const string PluginGuid = "InfernoDragon0.cotl.CotLChef";
         public const string PluginName = "CotLChef";
-        public const string PluginVer = "1.0.7";
+        public const string PluginVer = "1.0.9";
 
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
@@ -26,8 +29,18 @@ namespace CotLTemplateMod
         internal static string PluginPath;
 
         internal static HRManagementStructure HRManagementStructure;
+        internal static CrystalMineStructure CrystalMineStructure;
+        internal static BoneMineStructure BoneMineStructure;
+        internal static SilkMineStructure SilkMineStructure;
+        internal static WishingWellStructure WishingWellStructure;
         internal static WaiterCommand waiterTask;
         internal static FisherCommand fisherTask;
+        internal static DivorceCommand DivorceCommand;
+        internal static FlipCoinCommand FlipCoinCommand;
+        internal static KnucklebonesCommand KnucklebonesCommand;
+        internal static BoneMineCommand BoneMineCommand;
+        internal static SilkMineCommand SilkMineCommand;
+        internal static CrystalMineCommand CrystalMineCommand;
 
         //configs
         internal static ConfigEntry<bool> biggerShrine;
@@ -44,6 +57,8 @@ namespace CotLTemplateMod
         internal static ConfigEntry<bool> waiterJob;
 
         internal static ConfigEntry<bool> customFood;
+        internal static ConfigEntry<bool> customStructures;
+        internal static ConfigEntry<bool> customRituals;
 
         private void Awake()
         {
@@ -65,6 +80,8 @@ namespace CotLTemplateMod
             fisherJob = Config.Bind("", "fisherJob", true, "Allows you to command followers to fish (different loot table).");
             waiterJob = Config.Bind("", "waiterJob", true, "Allows followers to take on the waiter role. If you enable this, followers will not walk towards food, but wait for someone to serve.");
             customFood = Config.Bind("", "customFood", false, "Adds custom food (partial implementation, not ready yet).");
+            customStructures = Config.Bind("", "customStructures", true, "Adds Custom Structures.");
+            customRituals = Config.Bind("", "customRituals", true, "Adds Custom Rituals.");
 
             if (waiterJob.Value)
             {
@@ -83,9 +100,53 @@ namespace CotLTemplateMod
                 CustomMealManager.AddAll();
             }
 
-            HRManagementStructure = new HRManagementStructure();
-            CustomStructureManager.Add(HRManagementStructure);
+            if (customStructures.Value)
+            {
+                HRManagementStructure = new HRManagementStructure();
+                CustomStructureManager.Add(HRManagementStructure);
 
+                CrystalMineStructure = new CrystalMineStructure();
+                CustomStructureManager.Add(CrystalMineStructure);
+
+                WishingWellStructure = new WishingWellStructure();
+                CustomStructureManager.Add(WishingWellStructure);
+
+                BoneMineStructure = new BoneMineStructure();
+                CustomStructureManager.Add(BoneMineStructure);
+
+                SilkMineStructure = new SilkMineStructure();
+                CustomStructureManager.Add(SilkMineStructure);
+                
+                CustomStructureManager.Add(new WaiterDeskStructure());
+                CustomStructureManager.Add(new ChefDeskStructure());
+
+                BoneMineCommand = new BoneMineCommand();
+                CustomFollowerCommandManager.Add(BoneMineCommand);
+
+                SilkMineCommand = new SilkMineCommand();
+                CustomFollowerCommandManager.Add(SilkMineCommand);
+
+                CrystalMineCommand = new CrystalMineCommand();
+                CustomFollowerCommandManager.Add(CrystalMineCommand);
+            }   
+
+            
+
+            DivorceCommand = new DivorceCommand();
+            CustomFollowerCommandManager.Add(DivorceCommand);
+
+            FlipCoinCommand = new FlipCoinCommand();
+            CustomFollowerCommandManager.Add(FlipCoinCommand);
+
+            KnucklebonesCommand = new KnucklebonesCommand();
+            CustomFollowerCommandManager.Add(KnucklebonesCommand);
+
+            if (customRituals.Value)
+            {
+                CustomRitualManager.Add(new DistributionRitual());
+                CustomRitualManager.Add(new RitualFrenzyRitual());
+                CustomRitualManager.Add(new FusionRitual());
+            }
         }
 
         private void OnEnable()
