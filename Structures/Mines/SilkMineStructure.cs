@@ -9,7 +9,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace CotLMiniMods.Structures
+namespace CotLMiniMods.Structures.Mines
 {
     internal class SilkMineStructure : CustomStructure, ITaskProvider
     {
@@ -33,10 +33,10 @@ namespace CotLMiniMods.Structures
 
         public void GetAvailableTasks(ScheduledActivity activity, SortedList<float, FollowerTask> sortedTasks)
         {
-            if (activity != ScheduledActivity.Work || this.ReservedForTask || this.Data.Inventory.Count >= this.ResourceMax)
+            if (activity != ScheduledActivity.Work || ReservedForTask || Data.Inventory.Count >= ResourceMax)
                 return;
-            
-            FollowerTask_SilkMiner taskResourceStation = new FollowerTask_SilkMiner(this.Data.ID);
+
+            FollowerTask_SilkMiner taskResourceStation = new FollowerTask_SilkMiner(Data.ID);
             sortedTasks.Add(taskResourceStation.Priorty, taskResourceStation);
         }
 

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace CotLMiniMods.Structures
+namespace CotLMiniMods.Structures.Proxies
 {
     internal class WaiterDeskStructure : CustomStructure, ITaskProvider
     {
@@ -51,10 +51,10 @@ namespace CotLMiniMods.Structures
                 }
             }
 
-            if (activity != ScheduledActivity.Work || this.ReservedForTask || count == 0)
-            return;
+            if (activity != ScheduledActivity.Work || ReservedForTask || count == 0)
+                return;
 
-            WaiterTask taskResourceStation = new WaiterTask(this.Data.ID);
+            WaiterTask taskResourceStation = new WaiterTask(Data.ID);
             sortedTasks.Add(taskResourceStation.Priorty, taskResourceStation);
         }
 

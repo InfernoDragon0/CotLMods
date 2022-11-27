@@ -350,9 +350,9 @@ namespace CotLTemplateMod.Patches
             {
                 StructureBrain.TYPES structure = structurebrain.Data.Type;
                 
-                if (CustomStructureManager.CustomStructures.ContainsKey(structure))
+                if (CustomStructureManager.CustomStructureList.ContainsKey(structure))
                 {
-                    if (CustomStructureManager.CustomStructures[structure].InternalName == "Waiter_Desk_Structure")
+                    if (CustomStructureManager.CustomStructureList[structure].InternalName == "Waiter_Desk_Structure")
                     {
                         __result = null;
                         return;
@@ -459,6 +459,7 @@ namespace CotLTemplateMod.Patches
             return true;
         }
 
+
         //this patch to skip some animations for kitchen 2 on finish
         [HarmonyPatch(typeof(Interaction_Kitchen), "MealFinishedCooking")]
         [HarmonyPrefix]
@@ -476,10 +477,10 @@ namespace CotLTemplateMod.Patches
                 if (mealType == InventoryItem.ITEM_TYPE.MEAL_POOP)
                 {
                     ++DataManager.Instance.PoopMealsCreated;
-                    if (DataManager.Instance.PoopMealsCreated == UnityEngine.Random.Range(5, 12) && !DataManager.GetFollowerSkinUnlocked("Poop"))
+                    /*if (DataManager.Instance.PoopMealsCreated == UnityEngine.Random.Range(5, 12) && !DataManager.GetFollowerSkinUnlocked("Poop"))
                         __instance.StartCoroutine(__instance.CreatePoopSkin());
                     else if (DataManager.Instance.PoopMealsCreated >= 12 && !DataManager.GetFollowerSkinUnlocked("Poop"))
-                        __instance.StartCoroutine(__instance.CreatePoopSkin());
+                        __instance.StartCoroutine(__instance.CreatePoopSkin());*/
                 }
                 bool flag = false;
 

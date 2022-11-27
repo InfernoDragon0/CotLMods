@@ -10,7 +10,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace CotLMiniMods.Structures
+namespace CotLMiniMods.Structures.Mines
 {
     internal class CrystalMineStructure : CustomStructure, ITaskProvider
     {
@@ -34,10 +34,10 @@ namespace CotLMiniMods.Structures
 
         public void GetAvailableTasks(ScheduledActivity activity, SortedList<float, FollowerTask> sortedTasks)
         {
-            if (activity != ScheduledActivity.Work || this.ReservedForTask || this.Data.Inventory.Count >= this.ResourceMax)
+            if (activity != ScheduledActivity.Work || ReservedForTask || Data.Inventory.Count >= ResourceMax)
                 return;
-            
-            FollowerTask_CrystalMiner taskResourceStation = new FollowerTask_CrystalMiner(this.Data.ID);
+
+            FollowerTask_CrystalMiner taskResourceStation = new FollowerTask_CrystalMiner(Data.ID);
             sortedTasks.Add(taskResourceStation.Priorty, taskResourceStation);
         }
 

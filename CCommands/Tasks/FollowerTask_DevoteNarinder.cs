@@ -1,35 +1,35 @@
 ﻿using COTL_API.Tasks;
-using CotLMiniMods.Structures.Mines;
+using CotLMiniMods.Structures.Productivity;
 using CotLTemplateMod;
-using Spine;
 using UnityEngine;
+using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace CotLMiniMods.CCommands.Tasks
 {
-    internal class FollowerTask_SilkMiner : CustomTask
+    internal class FollowerTask_DevoteNarinder : CustomTask
     {
-        public override string InternalName => "FollowerTask_SilkMiner";
+        public override string InternalName => "FollowerTask_DevoteNarinder";
         private int _resourceStationID;
-        private SilkMineStructure _resourceStation;
+        private Structures_LuckyNarinder _resourceStation;
         public override int UsingStructureID => this._resourceStationID;
         public override bool BlockSocial => true;
         public override FollowerLocation Location => this._resourceStation.Data.Location;
         public override float Priorty => 20f;
 
-        public FollowerTask_SilkMiner(int resourceStationID)
+        public FollowerTask_DevoteNarinder(int resourceStationID)
         {
             this._resourceStationID = resourceStationID;
-            this._resourceStation = StructureManager.GetStructureByID<SilkMineStructure>(this._resourceStationID);
+            this._resourceStation = StructureManager.GetStructureByID<Structures_LuckyNarinder>(this._resourceStationID);
         }
 
-        public FollowerTask_SilkMiner()
+        public FollowerTask_DevoteNarinder()
         {
             foreach (StructureBrain structureBrain in StructureManager.StructuresAtLocation(FollowerLocation.Base))
             {
-                if (structureBrain is SilkMineStructure && !structureBrain.ReservedForTask)
+                if (structureBrain is Structures_LuckyNarinder && !structureBrain.ReservedForTask)
                 {
                     this._resourceStationID = structureBrain.Data.ID;
-                    this._resourceStation = StructureManager.GetStructureByID<SilkMineStructure>(this._resourceStationID);
+                    this._resourceStation = StructureManager.GetStructureByID<Structures_LuckyNarinder>(this._resourceStationID);
                     return;
                 }
                     
@@ -48,8 +48,8 @@ namespace CotLMiniMods.CCommands.Tasks
                 case FollowerRole.Worshipper:
                 case FollowerRole.Farmer:
                 case FollowerRole.Monk:
-                    return PriorityCategory.Low;
                 case FollowerRole.Lumberjack:
+                    return PriorityCategory.Low;
                 case FollowerRole.Worker:
                     return PriorityCategory.WorkPriority;
                 default:
@@ -77,20 +77,20 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override Vector3 UpdateDestination(Follower follower)
         {
-            return this._resourceStation.Data.Position;
+            return this._resourceStation.Data.Position + new Vector3(-1.5f, 0f);
         }
+        
         public override void Setup(Follower follower)
         {
             base.Setup(follower);
-            follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "mining");
-            Plugin.Log.LogInfo("the follower " + follower.Brain._directInfoAccess.Name + " is working on a silk mine");
+            follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "pray"); //devotion anim
+            Plugin.Log.LogInfo("the follower " + follower.Brain._directInfoAccess.Name + " is devoting to narinder");
         }
 
         public override void OnStart()
         {
             TimeManager.OnNewPhaseStarted += new System.Action(this.OnNewPhaseStarted);
             this.SetState(FollowerTaskState.GoingTo);
-
         }
         public override void OnArrive()
         {
@@ -105,20 +105,38 @@ namespace CotLMiniMods.CCommands.Tasks
 
             this._resourceStation.Data.Progress += deltaGameTime * this._brain.Info.ProductivityMultiplier;
 
-            if (this._resourceStation.Data.Progress < 125)
+            if (this._resourceStation.Data.Progress < 100)
                 return;
 
             this._resourceStation.Data.Progress = 0.0f;
 
-            if (this._resourceStation.Data.Inventory.Count >= this._resourceStation.ResourceMax)
-                return;
-
-            this._resourceStation.Data.Inventory.Add(new InventoryItem(InventoryItem.ITEM_TYPE.SPIDER_WEB));
 
             Follower followerById = FollowerManager.FindFollowerByID(this._brain.Info.ID);
-            followerById.TimedAnimation("Reactions/react-laugh", 3.33f, (System.Action)(() => {
-                
-            }));
+
+            if (this._brain.Info.ID == 666) //narinder does not gain faith but gain loyalty
+            {
+                followerById.TimedAnimation("devotion/devotion-collect-flame", 2.0f, (System.Action)(() => {
+                    followerById.Brain.Stats.Adoration = followerById.Brain.Stats.MAX_ADORATION;
+                    followerById.AdorationUI.BarController.SetBarSize(followerById.Brain.Stats.Adoration / followerById.Brain.Stats.MAX_ADORATION, false, true);
+                    followerById.Brain.AddAdoration(followerById, FollowerBrain.AdorationActions.InspireLvl1, () =>
+                    {
+                        
+                    });
+                    
+                    //to also drop give Strange Material at a chance on v1.1.1
+                    this.End();
+                }));
+            }
+            
+            else
+            {
+                followerById.TimedAnimation("Reactions/react-laugh", 3.33f, (System.Action)(() => {
+                    CultFaithManager.AddThought(Thought.ReactDecoration, this._brain.Info.ID, 1f); //SEASON 1 v1.1.0
+                    //to also drop give Strange Material at a chance on v1.1.1
+                }));
+            }
+
+            
         }
 
         public override void Cleanup(Follower follower)
@@ -132,14 +150,16 @@ namespace CotLMiniMods.CCommands.Tasks
         public override void OnIdleBegin(Follower follower)
         {
             base.OnIdleBegin(follower);
-            follower.SetHat(HatType.Miner);
+            follower.SetHat(HatType.FaithEnforcer);
+            follower.State.facingAngle = Utils.GetAngle(follower.transform.position, this._resourceStation.Data.Position);
 
         }
 
         public override void OnDoingBegin(Follower follower)
         {
             base.OnDoingBegin(follower);
-            follower.SetHat(HatType.Miner);
+            follower.SetHat(HatType.FaithEnforcer);
+            follower.State.facingAngle = Utils.GetAngle(follower.transform.position, this._resourceStation.Data.Position);
         }
         private void OnNewPhaseStarted() => this.End();
     }

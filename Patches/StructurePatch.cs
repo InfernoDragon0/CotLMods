@@ -1,6 +1,7 @@
 ﻿using COTL_API.CustomStructures;
 using CotLMiniMods.Interactions;
 using CotLMiniMods.Structures;
+using CotLMiniMods.Structures.Mines;
 using CotLTemplateMod;
 using HarmonyLib;
 using src.UI.Menus;
@@ -21,41 +22,41 @@ namespace CotLMiniMods.Patches
         public static void Structure_Start(Structure __instance)
         {
 
-            if (!CustomStructureManager.CustomStructures.ContainsKey(__instance.Type)) return;
+            if (!CustomStructureManager.CustomStructureList.ContainsKey(__instance.Type)) return;
 
             //TODO: make a custom_structure_with_interaction or something and add component through that instead
-            if (CustomStructureManager.CustomStructures[__instance.Type] is HRManagementStructure)
+            if (CustomStructureManager.CustomStructureList[__instance.Type] is HRManagementStructure)
             {
                 Plugin.Log.LogInfo("adding interaction for HR");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_HR>();
             }
-            else if (CustomStructureManager.CustomStructures[__instance.Type] is CrystalMineStructure)
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is CrystalMineStructure)
             {
                 Plugin.Log.LogInfo("adding interaction for crystal");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_CrystalMine>();
             }
-            else if (CustomStructureManager.CustomStructures[__instance.Type] is BoneMineStructure)
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is BoneMineStructure)
             {
                 Plugin.Log.LogInfo("adding interaction for bone");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_CrystalMine>();
             }
-            else if (CustomStructureManager.CustomStructures[__instance.Type] is SilkMineStructure)
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is SilkMineStructure)
             {
                 Plugin.Log.LogInfo("adding interaction for web");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_CrystalMine>();
             }
-            else if (CustomStructureManager.CustomStructures[__instance.Type] is WishingWellStructure)
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is WishingWellStructure)
             {
                 Plugin.Log.LogInfo("adding interaction for wish");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_Wish>();
             }
 
-            Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructures[__instance.Type].GetType());
+            Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructureList[__instance.Type].GetType());
 
 
             

@@ -1,5 +1,5 @@
 ﻿using COTL_API.Tasks;
-using CotLMiniMods.Structures;
+using CotLMiniMods.Structures.Proxies;
 using CotLTemplateMod;
 using Spine;
 using System.Collections;

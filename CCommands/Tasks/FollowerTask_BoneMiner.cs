@@ -1,5 +1,5 @@
 ﻿using COTL_API.Tasks;
-using CotLMiniMods.Structures;
+using CotLMiniMods.Structures.Mines;
 using CotLTemplateMod;
 using Spine;
 using UnityEngine;
@@ -61,7 +61,6 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override void ClaimReservations()
         {
-
             if (this._resourceStation == null)
                 return;
             this._resourceStation.ReservedForTask = true;
@@ -69,7 +68,6 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override void ReleaseReservations()
         {
-
             if (this._resourceStation == null)
                 return;
             this._resourceStation.ReservedForTask = false;

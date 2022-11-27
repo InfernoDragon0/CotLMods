@@ -1,10 +1,11 @@
 ﻿using COTL_API.Tasks;
-using CotLMiniMods.Structures;
+using CotLMiniMods.Structures.Proxies;
 using CotLTemplateMod;
 using CotLTemplateMod.CustomFollowerCommands;
 using Spine;
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -26,7 +27,12 @@ namespace CotLMiniMods.CCommands.Tasks
         public bool backToKitchen = false;
         public int _resourceStationId;
         public WaiterDeskStructure _resourceStation;
-        /*public override bool BlockTaskChanges => true;*/
+
+        public override bool BlockSocial => true;
+        public override bool BlockReactTasks => true;
+        public override bool BlockTaskChanges => true;
+
+        public override float Priorty => 20f;
         public override Vector3 UpdateDestination(Follower follower)
         {
             if (nextMeal != null && victim != null) return victim.Brain.LastPosition;
@@ -35,16 +41,38 @@ namespace CotLMiniMods.CCommands.Tasks
             else return base.UpdateDestination(follower);
         }
 
+        public override PriorityCategory GetPriorityCategory(
+          FollowerRole FollowerRole,
+          WorkerPriority WorkerPriority,
+          FollowerBrain brain)
+        {
+            switch (FollowerRole)
+            {
+                case FollowerRole.Worshipper:
+                case FollowerRole.Farmer:
+                case FollowerRole.Monk:
+                case FollowerRole.Lumberjack:
+                    return PriorityCategory.Low;
+                case FollowerRole.Worker:
+                    return PriorityCategory.Low;
+                case FollowerRole.Chef:
+                    return PriorityCategory.WorkPriority;
+                default:
+                    return PriorityCategory.Low;
+            }
+        }
+
         public override void Setup(Follower follower)
         {
             base.Setup(follower);
             follower.SetHat(HatType.Chef);
-            follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "Food/food-run"); //temporary or Farming/run-berries Food/food_eat
+            follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "Food/food-run");
             waiter = follower;
         }
 
         public override void OnStart()
         {
+            TimeManager.OnNewPhaseStarted += new System.Action(this.OnNewPhaseStarted);
             //this.SetState(FollowerTaskState.WaitingForLocation);
             SetState(FollowerTaskState.GoingTo);
         }
@@ -62,7 +90,7 @@ namespace CotLMiniMods.CCommands.Tasks
                 waiter.SetHat(HatType.None);
                 waiter.SimpleAnimator.ResetAnimationsToDefaults();
                 waiter.OverridingOutfit = false;
-                Complete();
+                this.End();
             }
         }
 
@@ -213,10 +241,21 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override void ReleaseReservations()
         {
+            if (nextMeal != null)
+            {
+                nextMeal.ReservedForTask = false; //prevent softlocking the food for followers
+            }
 
             if (_resourceStation == null)
                 return;
             _resourceStation.ReservedForTask = false;
+
+            
+        }
+
+        public void OnNewPhaseStarted()
+        {
+            this.End();
         }
 
         public override void Cleanup(Follower follower)

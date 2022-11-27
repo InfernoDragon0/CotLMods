@@ -10,7 +10,11 @@ using COTL_API.CustomStructures;
 using CotLMiniMods.Structures;
 using CotLMiniMods.Patches.Rituals;
 using CotLMiniMods.Rituals;
-using CotLMiniMods.Patches.Structures;
+using CotLMiniMods.Structures.Mines;
+using CotLMiniMods.Structures.Proxies;
+using CotLMiniMods.Structures.Productivity;
+using CotLMiniMods.Items;
+using COTL_API.CustomInventory;
 
 namespace CotLTemplateMod
 {
@@ -21,7 +25,7 @@ namespace CotLTemplateMod
     {
         public const string PluginGuid = "InfernoDragon0.cotl.CotLChef";
         public const string PluginName = "CotLChef";
-        public const string PluginVer = "1.0.9";
+        public const string PluginVer = "1.1.0";
 
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
@@ -41,6 +45,14 @@ namespace CotLTemplateMod
         internal static BoneMineCommand BoneMineCommand;
         internal static SilkMineCommand SilkMineCommand;
         internal static CrystalMineCommand CrystalMineCommand;
+        
+        internal static WaiterDeskStructure WaiterDeskStructure;
+        internal static ChefDeskStructure ChefDeskStructure;
+        internal static Structures_LuckyNarinder Structures_LuckyNarinder;
+        internal static Structures_StudyTable Structures_StudyTable;
+        internal static Structures_Telescope Structures_Telescope;
+
+        internal static InventoryItem.ITEM_TYPE StrangeMaterialItem;
 
         //configs
         internal static ConfigEntry<bool> biggerShrine;
@@ -116,9 +128,21 @@ namespace CotLTemplateMod
 
                 SilkMineStructure = new SilkMineStructure();
                 CustomStructureManager.Add(SilkMineStructure);
-                
-                CustomStructureManager.Add(new WaiterDeskStructure());
-                CustomStructureManager.Add(new ChefDeskStructure());
+
+                WaiterDeskStructure = new WaiterDeskStructure();
+                CustomStructureManager.Add(WaiterDeskStructure);
+
+                ChefDeskStructure = new ChefDeskStructure();
+                CustomStructureManager.Add(ChefDeskStructure);
+
+                Structures_LuckyNarinder = new Structures_LuckyNarinder();
+                CustomStructureManager.Add(Structures_LuckyNarinder);
+
+                Structures_StudyTable = new Structures_StudyTable();
+                CustomStructureManager.Add(Structures_StudyTable);
+
+                Structures_Telescope = new Structures_Telescope();
+                CustomStructureManager.Add(Structures_Telescope);
 
                 BoneMineCommand = new BoneMineCommand();
                 CustomFollowerCommandManager.Add(BoneMineCommand);
@@ -128,6 +152,9 @@ namespace CotLTemplateMod
 
                 CrystalMineCommand = new CrystalMineCommand();
                 CustomFollowerCommandManager.Add(CrystalMineCommand);
+
+                StrangeMaterialItem = CustomItemManager.Add(new StrangeMaterialItem());
+
             }   
 
             

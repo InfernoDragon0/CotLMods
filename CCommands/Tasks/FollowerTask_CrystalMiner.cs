@@ -1,5 +1,5 @@
 ﻿using COTL_API.Tasks;
-using CotLMiniMods.Structures;
+using CotLMiniMods.Structures.Mines;
 using CotLTemplateMod;
 using Spine;
 using UnityEngine;

@@ -12,14 +12,14 @@ namespace CotLMiniMods.Patches.Structures
     [HarmonyPatch]
     public class StructurePatches
     {
-        [HarmonyPatch(typeof(StructureBrain), "CreateBrain")]
+        /*[HarmonyPatch(typeof(StructureBrain), "CreateBrain")]
         [HarmonyPrefix]
         private static bool StructureBrain_CreateBrain(ref StructureBrain __result, StructuresData data)
         {
-            if (!CustomStructureManager.CustomStructures.ContainsKey(data.Type)) return true;
+            if (!CustomStructureManager.CustomStructureList.ContainsKey(data.Type)) return true;
             Plugin.Log.LogInfo("CAN OVVERIDE BRAIN");
             //StructureBrain structureBrain = new StructureBrain();
-            Type t = CustomStructureManager.CustomStructures[data.Type].GetType();
+            Type t = CustomStructureManager.CustomStructureList[data.Type].GetType();
             StructureBrain structureBrain = Activator.CreateInstance(t) as StructureBrain;
 
             StructureBrain.ApplyConfigToData(data);
@@ -28,6 +28,6 @@ namespace CotLMiniMods.Patches.Structures
             StructureManager.StructuresAtLocation(data.Location).Add(structureBrain);
             __result = structureBrain;
             return false;
-        }
+        }*/
     }
 }

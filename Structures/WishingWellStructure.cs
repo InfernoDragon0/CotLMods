@@ -27,12 +27,12 @@ namespace CotLMiniMods.Structures
         };
 
         public override FollowerCategory.Category Category => FollowerCategory.Category.Misc;
-        public override Categories Categories => Categories.ECONOMY;
+        public override Categories StructureCategories => Categories.ECONOMY;
 
-        public override void OnAdded()
+        /*public override void OnAdded()
         {
             base.OnAdded();
-        }
+        }*/
 
     }
 }
