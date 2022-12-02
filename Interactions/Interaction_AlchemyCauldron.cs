@@ -38,12 +38,10 @@ namespace CotLMiniMods.Interactions
                 ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, this.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
                 ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, this.transform.position, Plugin.StrangeMaterialItem, null);
 
-
                 //generate a random necklace
                 int rand = Random.Range(45, 50);
                 InventoryItem.Spawn((InventoryItem.ITEM_TYPE)rand, 1, this.Position);
 
-                GameManager.GetInstance().OnConversationNew();
                 this.Activated = false;
             }
             
