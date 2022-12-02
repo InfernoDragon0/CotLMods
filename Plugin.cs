@@ -173,6 +173,7 @@ namespace CotLTemplateMod
                 CustomRitualManager.Add(new DistributionRitual());
                 CustomRitualManager.Add(new RitualFrenzyRitual());
                 CustomRitualManager.Add(new FusionRitual());
+                CustomRitualManager.Add(new YouthRitual());
             }
         }
 
