@@ -34,9 +34,4 @@
       </Reference>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Structures\EnergyGenerators\" />
-      <Folder Include="Structures\Machines\" />
-    </ItemGroup>
-
 </Project>
