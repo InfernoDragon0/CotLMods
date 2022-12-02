@@ -18,7 +18,7 @@ namespace CotLMiniMods.Structures
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "Endless Pit of Gluttony";
-        public override string GetLocalizedDescription() => "A machine that produces Strange Energy from dead followers.";
+        public override string GetLocalizedDescription() => "A pit that emits Strange Energy from dead followers.";
 
         public override List<StructuresData.ItemCost> Cost => new()
         {
@@ -29,9 +29,32 @@ namespace CotLMiniMods.Structures
         public override FollowerCategory.Category Category => FollowerCategory.Category.Misc;
         public override Categories StructureCategories => Categories.ECONOMY;
 
+        public int currentEnergy = 0;
+        public int maxEnergy = 1000;
+        public int energyPerFollower = 1;
+
         public override void OnAdded()
         {
-            base.OnAdded();
+            TimeManager.OnNewPhaseStarted += new System.Action(this.OnNewPhaseStarted);
+        }
+
+        public override void OnRemoved()
+        {
+            TimeManager.OnNewPhaseStarted -= new System.Action(this.OnNewPhaseStarted);
+
+        }
+
+        public void OnNewPhaseStarted()
+        {
+            Plugin.Log.LogInfo("Add more energy");
+            if (this.currentEnergy + this.Data.Inventory.Count > this.maxEnergy)
+            {
+                this.currentEnergy = this.maxEnergy;
+            }
+            else
+            {
+                this.currentEnergy += this.Data.Inventory.Count;
+            }
         }
 
     }
