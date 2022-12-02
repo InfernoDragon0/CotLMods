@@ -13,7 +13,7 @@ namespace CotLMiniMods.Items
     {
         public override string InternalName => "Strange_Material";
         public override string LocalizedName() { return "Strange Material"; }
-        public override string LocalizedDescription() { return "A strange material, I wonder what this does.."; }
+        public override string LocalizedDescription() { return "An unstable material that is harvested from an unknown source. Seems really interested in gold."; }
 
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));
         public override Sprite InventoryIcon { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));

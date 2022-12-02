@@ -51,8 +51,10 @@ namespace CotLTemplateMod
         internal static Structures_LuckyNarinder Structures_LuckyNarinder;
         internal static Structures_StudyTable Structures_StudyTable;
         internal static Structures_Telescope Structures_Telescope;
+        internal static Structures_AlchemyCauldron Structures_AlchemyCauldron;
 
         internal static InventoryItem.ITEM_TYPE StrangeMaterialItem;
+        internal static InventoryItem.ITEM_TYPE StrangeEnergyItem;
 
         //configs
         internal static ConfigEntry<bool> biggerShrine;
@@ -143,6 +145,9 @@ namespace CotLTemplateMod
 
                 Structures_Telescope = new Structures_Telescope();
                 CustomStructureManager.Add(Structures_Telescope);
+                
+                Structures_AlchemyCauldron = new Structures_AlchemyCauldron();
+                CustomStructureManager.Add(Structures_AlchemyCauldron);
 
                 BoneMineCommand = new BoneMineCommand();
                 CustomFollowerCommandManager.Add(BoneMineCommand);
@@ -154,6 +159,7 @@ namespace CotLTemplateMod
                 CustomFollowerCommandManager.Add(CrystalMineCommand);
 
                 StrangeMaterialItem = CustomItemManager.Add(new StrangeMaterialItem());
+                StrangeEnergyItem = CustomItemManager.Add(new StrangeEnergyItem());
 
             }   
 

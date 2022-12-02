@@ -55,6 +55,12 @@ namespace CotLMiniMods.Patches
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_Wish>();
             }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_AlchemyCauldron)
+            {
+                Plugin.Log.LogInfo("adding interaction for alchemy cauldron");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_AlchemyCauldron>();
+            }
 
             Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructureList[__instance.Type].GetType());
 
