@@ -25,18 +25,13 @@ namespace CotLTemplateMod
     {
         public const string PluginGuid = "InfernoDragon0.cotl.CotLChef";
         public const string PluginName = "CotLChef";
-        public const string PluginVer = "1.1.0";
+        public const string PluginVer = "1.1.2";
 
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
 
         internal static string PluginPath;
 
-        internal static HRManagementStructure HRManagementStructure;
-        internal static CrystalMineStructure CrystalMineStructure;
-        internal static BoneMineStructure BoneMineStructure;
-        internal static SilkMineStructure SilkMineStructure;
-        internal static WishingWellStructure WishingWellStructure;
         internal static WaiterCommand waiterTask;
         internal static FisherCommand fisherTask;
         internal static DivorceCommand DivorceCommand;
@@ -46,18 +41,26 @@ namespace CotLTemplateMod
         internal static SilkMineCommand SilkMineCommand;
         internal static CrystalMineCommand CrystalMineCommand;
         
+        internal static HRManagementStructure HRManagementStructure;
+        internal static CrystalMineStructure CrystalMineStructure;
+        internal static BoneMineStructure BoneMineStructure;
+        internal static SilkMineStructure SilkMineStructure;
+        internal static WishingWellStructure WishingWellStructure;
         internal static WaiterDeskStructure WaiterDeskStructure;
         internal static ChefDeskStructure ChefDeskStructure;
         internal static Structures_LuckyNarinder Structures_LuckyNarinder;
         internal static Structures_StudyTable Structures_StudyTable;
         internal static Structures_Telescope Structures_Telescope;
         internal static Structures_AlchemyCauldron Structures_AlchemyCauldron;
+        internal static Structures_EndlessPit Structures_EndlessPit;
 
         internal static InventoryItem.ITEM_TYPE StrangeMaterialItem;
         internal static InventoryItem.ITEM_TYPE StrangeEnergyItem;
 
         //configs
         internal static ConfigEntry<bool> biggerShrine;
+        internal static ConfigEntry<int> shrineSize;
+        
         internal static ConfigEntry<bool> oneClickShrineCollection;
         internal static ConfigEntry<bool> skipSplash;
         internal static ConfigEntry<bool> kitchenDiscount;
@@ -69,6 +72,7 @@ namespace CotLTemplateMod
         internal static ConfigEntry<bool> chefJob;
         internal static ConfigEntry<bool> fisherJob;
         internal static ConfigEntry<bool> waiterJob;
+        internal static ConfigEntry<bool> reaperJob;
 
         internal static ConfigEntry<bool> customFood;
         internal static ConfigEntry<bool> customStructures;
@@ -82,6 +86,7 @@ namespace CotLTemplateMod
             PluginPath = Path.GetDirectoryName(Info.Location);
 
             biggerShrine = Config.Bind("", "biggerShrine", true, "Increases max capacity of shrine");
+            shrineSize = Config.Bind("", "shrineSize", 2000, "Max capacity of shrine");
             oneClickShrineCollection = Config.Bind("", "oneClickShrineCollection", true, "Instantly collect all souls in one click from shrine");
             skipSplash = Config.Bind("", "skipSplash", true, "Skips the splash screen");
             kitchenDiscount = Config.Bind("", "kitchenDiscount", true, "Enables a 50% food discount on Kitchen 1");
@@ -149,6 +154,9 @@ namespace CotLTemplateMod
                 Structures_AlchemyCauldron = new Structures_AlchemyCauldron();
                 CustomStructureManager.Add(Structures_AlchemyCauldron);
 
+                Structures_EndlessPit = new Structures_EndlessPit();
+                CustomStructureManager.Add(Structures_EndlessPit);
+
                 BoneMineCommand = new BoneMineCommand();
                 CustomFollowerCommandManager.Add(BoneMineCommand);
 
@@ -157,6 +165,8 @@ namespace CotLTemplateMod
 
                 CrystalMineCommand = new CrystalMineCommand();
                 CustomFollowerCommandManager.Add(CrystalMineCommand);
+
+                
 
                 StrangeMaterialItem = CustomItemManager.Add(new StrangeMaterialItem());
                 StrangeEnergyItem = CustomItemManager.Add(new StrangeEnergyItem());

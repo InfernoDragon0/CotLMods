@@ -1,5 +1,6 @@
 ﻿using COTL_API.CustomStructures;
 using COTL_API.Helpers;
+using CotLMiniMods.CCommands.Tasks;
 using CotLMiniMods.Interactions;
 using CotLTemplateMod;
 using Lamb.UI.BuildMenu;
@@ -11,7 +12,7 @@ using UnityEngine;
 
 namespace CotLMiniMods.Structures
 {
-    internal class Structures_EndlessPit : CustomStructure
+    internal class Structures_EndlessPit : CustomStructure, ITaskProvider
     {
         public override string InternalName => "Structures_EndlessPit";
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cotlpc.png"));
@@ -57,5 +58,32 @@ namespace CotLMiniMods.Structures
             }
         }
 
+        public void GetAvailableTasks(ScheduledActivity activity, SortedList<float, FollowerTask> sortedTasks)
+        {
+            var count = 0;
+            foreach (Structures_DeadWorshipper deadWorshipper in StructureManager.GetAllStructuresOfType<Structures_DeadWorshipper>(FollowerLocation.Base))
+            {
+                if (!deadWorshipper.Data.Rotten && !deadWorshipper.ReservedForTask)
+                {
+                    count++;
+                }
+            }
+
+            if (activity != ScheduledActivity.Work || ReservedForTask || count == 0)
+                return;
+
+            FollowerTask_Reaper taskResourceStation = new FollowerTask_Reaper(Data.ID);
+            sortedTasks.Add(taskResourceStation.Priorty, taskResourceStation);
+        }
+
+        public FollowerTask GetOverrideTask(FollowerBrain brain)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CheckOverrideComplete()
+        {
+            return true;
+        }
     }
 }
