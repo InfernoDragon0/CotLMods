@@ -121,10 +121,9 @@ namespace CotLMiniMods.CCommands.Tasks
                 followerById.AdorationUI.BarController.SetBarSize(followerById.Brain.Stats.Adoration / followerById.Brain.Stats.MAX_ADORATION, false, true);
                 followerById.StartCoroutine(followerById.Brain.AddAdorationIE(followerById, FollowerBrain.AdorationActions.InspireLvl1, null)); //SEASON 1 v1.1.0
                 
-                //to also convert Strange Materials to [REDACTED] v1.1.1
-                if (this._resourceStation.Data.Inventory.Count > 0)
+                if (this._resourceStation.Data.Inventory.Count > 0) //1.1.2
                 {
-                    InventoryItem.Spawn((InventoryItem.ITEM_TYPE)this._resourceStation.Data.Inventory[0].type, 1, followerById.transform.position);
+                    InventoryItem.Spawn((InventoryItem.ITEM_TYPE)this._resourceStation.Data.Inventory[0].type, 3, followerById.transform.position);
                     this._resourceStation.Data.Inventory.RemoveAt(0);
                 }
             }));

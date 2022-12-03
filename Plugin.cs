@@ -103,7 +103,7 @@ namespace CotLMiniMods
             customStructures = Config.Bind("", "customStructures", true, "Adds Custom Structures.");
             customRituals = Config.Bind("", "customRituals", true, "Adds Custom Rituals.");
 
-            ConfigListener.AddConfigEntries();
+            //ConfigListener.AddConfigEntries();
 
             if (waiterJob.Value)
             {

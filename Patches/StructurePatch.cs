@@ -2,6 +2,7 @@
 using CotLMiniMods.Interactions;
 using CotLMiniMods.Structures;
 using CotLMiniMods.Structures.Mines;
+using CotLMiniMods.Structures.Productivity;
 using CotLTemplateMod;
 using HarmonyLib;
 using src.UI.Menus;
@@ -60,6 +61,18 @@ namespace CotLMiniMods.Patches
                 Plugin.Log.LogInfo("adding interaction for alchemy cauldron");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_AlchemyCauldron>();
+            }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_StudyTable)
+            {
+                Plugin.Log.LogInfo("adding interaction for alchemy cauldron");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_StudyTable>();
+            }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_EndlessPit)
+            {
+                Plugin.Log.LogInfo("adding interaction for alchemy cauldron");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_EndlessPit>();
             }
 
             Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructureList[__instance.Type].GetType());

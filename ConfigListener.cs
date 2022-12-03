@@ -13,25 +13,25 @@ namespace CotLMiniMods
         {
             //add these to the bepinex config manager
             //BOOLs for tasks
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Chef Job", Plugin.chefJob, null);
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Waiter Job", Plugin.waiterJob, null);
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Fisher Job", Plugin.fisherJob, null);
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Reaper Job", Plugin.reaperJob, null);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Chef Job", Plugin.chefJob);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Waiter Job", Plugin.waiterJob);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Fisher Job", Plugin.fisherJob);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Reaper Job", Plugin.reaperJob);
             
             //Bools that add custom stuff
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Custom Food", Plugin.customFood, null);
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Custom Rituals", Plugin.customRituals, null);
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Custom Structures", Plugin.customStructures, null);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Custom Food", Plugin.customFood);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Custom Rituals", Plugin.customRituals);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Enable Custom Structures", Plugin.customStructures);
 
             //Bools for fight repeat
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Death Cat Repeat", Plugin.deathCatRepeat, null);
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Shrimp Chef Repeat", Plugin.shrimpChefRepeat, null);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Death Cat Repeat", Plugin.deathCatRepeat);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Shrimp Chef Repeat", Plugin.shrimpChefRepeat);
 
             //Bools for others tuff
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Player Eat unlimited", Plugin.playerEatMore, null);
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Kitchen Discount", Plugin.kitchenDiscount, null);
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Skip Splash", Plugin.skipSplash, null);
-            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","One Click Shrine Collection", Plugin.oneClickShrineCollection, null);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Player Eat unlimited", Plugin.playerEatMore);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Kitchen Discount", Plugin.kitchenDiscount);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","Skip Splash", Plugin.skipSplash);
+            CustomSettingsManager.AddBepInExConfig("CotLMiniMods","One Click Shrine Collection", Plugin.oneClickShrineCollection);
 
 
             //int values

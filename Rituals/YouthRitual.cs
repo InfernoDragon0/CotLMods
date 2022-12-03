@@ -17,7 +17,10 @@ namespace CotLMiniMods.Rituals
     {
         public override string InternalName { get; } = "Youth_Ritual";
         public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_leveling.png"));
-        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.BLACK_GOLD, 1000), new StructuresData.ItemCost(Plugin.StrangeMaterialItem, 10) };
+        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { 
+            new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.BLACK_GOLD, 1000), 
+            new StructuresData.ItemCost(Plugin.StrangeMaterialItem, 10) 
+        };
 
         public override string GetLocalizedName => "Youth Ritual";
         public override string GetLocalizedDescription => "Infusing the power of the Strange Material to make all old followers young again. Doubles life expectancy of the affected followers.";
@@ -61,11 +64,10 @@ namespace CotLMiniMods.Rituals
                     oldBrain.Info.LifeExpectancy *= 2;
                     oldBrain.RemoveCurseState(Thought.OldAge);
                     Follower f = FollowerManager.FindFollowerByID(oldBrain.Info.ID);
-                    oldBrain.ResetStats();
-                    f.SetOutfit(FollowerOutfitType.Follower, false);
-
                     f.TimedAnimation("Reactions/react-determined2", 2f, () =>
                     {
+                        oldBrain.ResetStats();
+                        f.SetOutfit(FollowerOutfitType.Follower, false);
                     });
                     yield return new WaitForSeconds(0.2f);
                     

@@ -124,7 +124,7 @@ namespace CotLMiniMods.CCommands.Tasks
                     Plugin.Log.LogInfo("hidden interaction 2");
                     followerById.TimedAnimation("Hungry/get-hungry", 0.5f, (System.Action)(() =>
                     {
-                        InventoryItem.Spawn(Plugin.StrangeMaterialItem, 1, followerById.transform.position);
+                        InventoryItem.Spawn(Plugin.StrangeMaterialItem, 5, followerById.transform.position);
                     }));
                 }
                 else

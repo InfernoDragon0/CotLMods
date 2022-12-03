@@ -36,8 +36,7 @@ namespace CotLMiniMods.Interactions
             {
                 this.Activated = true;
                 Inventory.ChangeItemQuantity(InventoryItem.ITEM_TYPE.BLACK_GOLD, -100);
-                ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, this.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
-                ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, this.transform.position, Plugin.StrangeMaterialItem, null);
+                ResourceCustomTarget.Create(this.gameObject, PlayerFarming.Instance.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
                 this.Structure.Inventory.Add(new InventoryItem(Plugin.StrangeMaterialItem));
                 this.Activated = false;
             }
