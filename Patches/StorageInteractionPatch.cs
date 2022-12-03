@@ -7,7 +7,7 @@ using System.Text;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace CotLTemplateMod.Patches
+namespace CotLMiniMods.Patches
 {
     [HarmonyPatch]
     internal class StorageInteractionPatch

@@ -15,8 +15,9 @@ using CotLMiniMods.Structures.Proxies;
 using CotLMiniMods.Structures.Productivity;
 using CotLMiniMods.Items;
 using COTL_API.CustomInventory;
+using CotLMiniMods.CustomFollowerCommands;
 
-namespace CotLTemplateMod
+namespace CotLMiniMods
 {
     [BepInPlugin(PluginGuid, PluginName, PluginVer)]
     [BepInDependency("io.github.xhayper.COTL_API")]
@@ -101,6 +102,8 @@ namespace CotLTemplateMod
             customFood = Config.Bind("", "customFood", false, "Adds custom food (partial implementation, not ready yet).");
             customStructures = Config.Bind("", "customStructures", true, "Adds Custom Structures.");
             customRituals = Config.Bind("", "customRituals", true, "Adds Custom Rituals.");
+
+            ConfigListener.AddConfigEntries();
 
             if (waiterJob.Value)
             {

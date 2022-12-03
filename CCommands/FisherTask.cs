@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace CotLTemplateMod.CustomFollowerCommands
+namespace CotLMiniMods.CustomFollowerCommands
 {
     internal class FisherTask: CustomTask
     {

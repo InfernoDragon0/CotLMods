@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace CotLTemplateMod.CustomFollowerCommands
+namespace CotLMiniMods.CustomFollowerCommands
 {
 
     internal class WaiterCommand : CustomFollowerCommand

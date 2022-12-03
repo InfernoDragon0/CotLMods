@@ -9,7 +9,7 @@ using UnityEngine;
 using src.Extensions;
 using System;
 
-namespace CotLTemplateMod.CustomFollowerCommands
+namespace CotLMiniMods.CustomFollowerCommands
 {
 
     internal class KnucklebonesCommand : CustomFollowerCommand

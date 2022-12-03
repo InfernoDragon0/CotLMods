@@ -8,7 +8,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace CotLTemplateMod.Patches
+namespace CotLMiniMods.Patches
 {
     [HarmonyPatch]
     internal class BuildIconSpritePatch

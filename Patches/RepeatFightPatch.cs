@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CotLTemplateMod.Patches
+namespace CotLMiniMods.Patches
 {
     [HarmonyPatch]
     internal class RepeatFightPatch

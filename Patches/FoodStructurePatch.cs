@@ -14,10 +14,8 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
-using static PlacementRegion;
-using Random = UnityEngine.Random;
 
-namespace CotLTemplateMod.Patches
+namespace CotLMiniMods.Patches
 {
     [HarmonyPatch]
     internal class FoodStructurePatch

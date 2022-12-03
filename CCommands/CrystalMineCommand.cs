@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using CotLMiniMods.CCommands.Tasks;
 
-namespace CotLTemplateMod.CustomFollowerCommands
+namespace CotLMiniMods.CustomFollowerCommands
 {
 
     internal class CrystalMineCommand : CustomFollowerCommand
