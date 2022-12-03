@@ -15,7 +15,7 @@ namespace CotLMiniMods.Structures
     internal class Structures_EndlessPit : CustomStructure, ITaskProvider
     {
         public override string InternalName => "Structures_EndlessPit";
-        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cotlpc.png"));
+        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/endlesspit.png"));
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "Endless Pit of Gluttony";
@@ -69,7 +69,7 @@ namespace CotLMiniMods.Structures
                 }
             }
 
-            if (activity != ScheduledActivity.Work || ReservedForTask || count == 0)
+            if (activity != ScheduledActivity.Work || ReservedForTask || count == 0 || !Plugin.reaperJob.Value)
                 return;
 
             FollowerTask_Reaper taskResourceStation = new FollowerTask_Reaper(Data.ID);

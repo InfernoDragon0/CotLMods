@@ -14,7 +14,7 @@ namespace CotLMiniMods.Structures
     internal class Structures_AlchemyCauldron : CustomStructure
     {
         public override string InternalName => "Structures_AlchemyCauldron";
-        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cotlpc.png"));
+        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cauldron.png"));
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "Alchemy Cauldron";

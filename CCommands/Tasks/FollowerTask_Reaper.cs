@@ -17,6 +17,9 @@ namespace CotLMiniMods.CCommands.Tasks
         private bool completeWrapping = false;
         public override int UsingStructureID => this._resourceStationID;
         public override bool BlockSocial => true;
+        public override bool BlockReactTasks => true;
+
+        public override bool BlockTaskChanges => true;
         public override FollowerLocation Location => this._resourceStation.Data.Location;
         public override float Priorty => 20f;
 
@@ -134,13 +137,12 @@ namespace CotLMiniMods.CCommands.Tasks
             
             Follower followerById = FollowerManager.FindFollowerByID(this._brain.Info.ID);
 
-            DeadWorshipper deadWorshipper = FindCorpse();
-            deadWorshipper.WrapBody();
-            deadWorshipper.HideBody();
+            
+            
             followerById.TimedAnimation("Reactions/react-laugh", 3.33f, (System.Action)(() => {
                 if (completeWrapping)
                 {
-                    /*DeadWorshipper deadWorshipper = FindCorpse();*/
+                    DeadWorshipper deadWorshipper = FindCorpse();
                     PlacementRegion.TileGridTile tileAtWorldPosition = PlacementRegion.Instance.GetClosestTileGridTileAtWorldPosition(deadWorshipper.transform.position);
                     if (tileAtWorldPosition != null)
                         deadWorshipper.Structure.Brain.RemoveFromGrid(tileAtWorldPosition.Position);
@@ -150,7 +152,10 @@ namespace CotLMiniMods.CCommands.Tasks
                 }
                 else
                 {
-                    
+                    completeWrapping = true;
+                    DeadWorshipper deadWorshipper = FindCorpse();
+                    deadWorshipper.WrapBody();
+                    //deadWorshipper.HideBody();
                     followerById.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "run-corpse");
                     followerById.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "dig");
                     if (_currentDestination.HasValue) //move to pit

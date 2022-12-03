@@ -16,6 +16,7 @@ using CotLMiniMods.Structures.Productivity;
 using CotLMiniMods.Items;
 using COTL_API.CustomInventory;
 using CotLMiniMods.CustomFollowerCommands;
+using COTL_API.CustomSettings;
 
 namespace CotLMiniMods
 {
@@ -99,11 +100,14 @@ namespace CotLMiniMods
             chefJob = Config.Bind("", "chefJob", true, "Allows followers to take on the chef role.");
             fisherJob = Config.Bind("", "fisherJob", true, "Allows you to command followers to fish (different loot table).");
             waiterJob = Config.Bind("", "waiterJob", true, "Allows followers to take on the waiter role. If you enable this, followers will not walk towards food, but wait for someone to serve.");
+            reaperJob = Config.Bind("", "reaperJob", true, "Allows followers to bury other followers in an Endless Pit.");
+            
             customFood = Config.Bind("", "customFood", false, "Adds custom food (partial implementation, not ready yet).");
             customStructures = Config.Bind("", "customStructures", true, "Adds Custom Structures.");
             customRituals = Config.Bind("", "customRituals", true, "Adds Custom Rituals.");
 
-            //ConfigListener.AddConfigEntries();
+            ConfigListener.AddConfigEntries();
+            
 
             if (waiterJob.Value)
             {
