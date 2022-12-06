@@ -1,18 +1,14 @@
-﻿using COTL_API.CustomStructures;
-using COTL_API.Helpers;
+﻿using COTL_API.Helpers;
 using CotLMiniMods.CCommands.Tasks;
-using CotLMiniMods.Interactions;
-using CotLTemplateMod;
 using Lamb.UI.BuildMenu;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEngine;
 
 namespace CotLMiniMods.Structures
 {
-    internal class Structures_EndlessPit : CustomStructure, ITaskProvider
+    internal class Structures_EndlessPit : CustomEnergyStructure, ITaskProvider
     {
         public override string InternalName => "Structures_EndlessPit";
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/endlesspit.png"));
@@ -30,13 +26,19 @@ namespace CotLMiniMods.Structures
         public override FollowerCategory.Category Category => FollowerCategory.Category.Misc;
         public override Categories StructureCategories => Categories.ECONOMY;
 
-        public int currentEnergy = 0;
-        public int maxEnergy = 1000;
+        public override int EnergyRegenRate { get => this.Data.Inventory.Count * energyPerFollower; set => this.energyPerFollower = value; }
+        
+        public override bool CanAdd => false;
+        public override bool CanRemove => true;
+        public override bool WorksAtNight => true;
+        public override bool WorksAtDay => true;
+
         public int energyPerFollower = 1;
 
         public override void OnAdded()
         {
             TimeManager.OnNewPhaseStarted += new System.Action(this.OnNewPhaseStarted);
+            this.EnergyMax = 10000;
         }
 
         public override void OnRemoved()
@@ -48,14 +50,8 @@ namespace CotLMiniMods.Structures
         public void OnNewPhaseStarted()
         {
             Plugin.Log.LogInfo("Add more energy");
-            if (this.currentEnergy + this.Data.Inventory.Count > this.maxEnergy)
-            {
-                this.currentEnergy = this.maxEnergy;
-            }
-            else
-            {
-                this.currentEnergy += this.Data.Inventory.Count;
-            }
+            this.AddEnergy(this.EnergyRegenRate);
+            
         }
 
         public void GetAvailableTasks(ScheduledActivity activity, SortedList<float, FollowerTask> sortedTasks)
@@ -85,5 +81,7 @@ namespace CotLMiniMods.Structures
         {
             return true;
         }
+
+        
     }
 }
