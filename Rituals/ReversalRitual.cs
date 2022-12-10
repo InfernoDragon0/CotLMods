@@ -23,8 +23,8 @@ namespace CotLMiniMods.Rituals
         public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_fusion.png"));
         public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.BLACK_GOLD, 300), new(Plugin.StrangeMaterialItem, 3) };
 
-        public override string GetLocalizedName => "Fusion Ritual";
-        public override string GetLocalizedDescription => "Select a follower. Infusing them with Strange Matieral to transform the first negative into its positive counterpart.";
+        public override string GetLocalizedName => "Ritual of Reversal";
+        public override string GetLocalizedDescription => "Select a follower. Infusing them with Strange Material to transform the first negative trait into its positive counterpart.";
         public override float FaithChange { get; } = 10;
         public override float Cooldown => 60f;
         public override FollowerTrait.TraitType RitualTrait { get; } = FollowerTrait.TraitType.None;
