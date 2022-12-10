@@ -58,6 +58,7 @@ namespace CotLMiniMods.Interactions
                 SimulationManager.UnPause();
                 NotificationCentreScreen.Play("Simulation is now unfrozen. Back to `reality`.");
                 this.StasisChamber.timeFrozen = false;
+                this.Activating = false;
                 return;
             }
             
