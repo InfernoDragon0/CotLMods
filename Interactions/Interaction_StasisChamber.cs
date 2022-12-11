@@ -17,7 +17,7 @@ namespace CotLMiniMods.Interactions
         public Structure Structure;
         private bool Activating = false;
         private GameObject Player;
-        private float Delay = 0.2f;
+        private float Delay = 60f;
         public float DistanceToTriggerDeposits = 5f;
 
         public StructuresData StructureInfo => this.Structure.Structure_Info;
@@ -78,24 +78,38 @@ namespace CotLMiniMods.Interactions
         }
         public override void Update()
         {
-            if ((this.Player = GameObject.FindWithTag("Player")) == null)
-                return;
             
             this.GetLabel();
 
-            if (this.Activating && (this.StasisChamber.EnergyCurrent < 50 || InputManager.Gameplay.GetInteractButtonUp()))
+            if (this.StasisChamber.timeFrozen)
             {
-                this.Activating = false;
-            }
+                if ((double)(this.Delay -= Time.deltaTime) >= 0.0)
+                    return;
 
-            if ((double)(this.Delay -= Time.deltaTime) >= 0.0 || !this.Activating)
-                return;
+                NotificationCentreScreen.Play("Simulation consumes Strange Energy. " + this.StasisChamber.EnergyCurrent + " Energy left.");
+                this.StasisChamber.RemoveEnergy(10);
+
+                if (this.StasisChamber.EnergyCurrent <= 0)
+                {
+                    NotificationCentreScreen.Play("Warning: Stasis Chamber has no energy. Unfreezing time.");
+                    SimulationManager.UnPause();
+                    this.StasisChamber.timeFrozen = false;
+
+                }
+
+                if (this.StasisChamber.EnergyCurrent < 100)
+                {
+                    NotificationCentreScreen.Play("Warning: Stasis Chamber low on energy. " + this.StasisChamber.EnergyCurrent + " Energy left.");
+                }
+
+                this.Delay = 60f;
+
+            }
 
             InventoryItem.ITEM_TYPE itemType = (InventoryItem.ITEM_TYPE)this.StructureInfo.Inventory[0].type;
             AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.gameObject);
             ResourceCustomTarget.Create(this.state.gameObject, this.transform.position, itemType, (System.Action)(() => this.GiveItem(itemType)));
             this.StructureInfo.Inventory.RemoveAt(0);
-            this.Delay = 0.2f;
         }
 
         private void GiveItem(InventoryItem.ITEM_TYPE type) => Inventory.AddItem((int)type, 1);

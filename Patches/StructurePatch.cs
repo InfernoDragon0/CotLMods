@@ -64,15 +64,21 @@ namespace CotLMiniMods.Patches
             }
             else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_StudyTable)
             {
-                Plugin.Log.LogInfo("adding interaction for alchemy cauldron");
+                Plugin.Log.LogInfo("adding interaction for study table");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_StudyTable>();
             }
             else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_EndlessPit)
             {
-                Plugin.Log.LogInfo("adding interaction for alchemy cauldron");
+                Plugin.Log.LogInfo("adding interaction for endless pit");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_EndlessPit>();
+            }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_StasisChamber)
+            {
+                Plugin.Log.LogInfo("adding interaction for stasis chamber");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_StasisChamber>();
             }
 
             Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructureList[__instance.Type].GetType());
