@@ -105,13 +105,6 @@ namespace CotLMiniMods.Interactions
                 this.Delay = 60f;
 
             }
-
-            InventoryItem.ITEM_TYPE itemType = (InventoryItem.ITEM_TYPE)this.StructureInfo.Inventory[0].type;
-            AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.gameObject);
-            ResourceCustomTarget.Create(this.state.gameObject, this.transform.position, itemType, (System.Action)(() => this.GiveItem(itemType)));
-            this.StructureInfo.Inventory.RemoveAt(0);
         }
-
-        private void GiveItem(InventoryItem.ITEM_TYPE type) => Inventory.AddItem((int)type, 1);
     }
 }

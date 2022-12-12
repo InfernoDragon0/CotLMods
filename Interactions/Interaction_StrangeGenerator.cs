@@ -33,7 +33,8 @@ namespace CotLMiniMods.Interactions
         {
             base.OnEnable();
             Plugin.Log.LogInfo("I am enabled Strange Generator");
-            
+            Structure = GetComponentInParent<Transform>().GetComponent<Structure>();
+
         }
 
         public override void OnInteract(StateMachine state)
