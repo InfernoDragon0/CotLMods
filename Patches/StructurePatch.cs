@@ -80,6 +80,12 @@ namespace CotLMiniMods.Patches
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_StasisChamber>();
             }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_StrangeGenerator)
+            {
+                Plugin.Log.LogInfo("adding interaction for stasis chamber");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_StrangeGenerator>();
+            }
 
             Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructureList[__instance.Type].GetType());
 

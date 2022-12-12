@@ -36,20 +36,17 @@ namespace CotLMiniMods.Structures
             int finalChange = 0;
             if (amount < 0) return finalChange;
 
-            if (this.CanAdd)
+            if (this.EnergyCurrent + amount >= this.EnergyMax)
             {
-                if (this.EnergyCurrent + amount >= this.EnergyMax)
-                {
-                    finalChange = this.EnergyMax - this.EnergyCurrent;
-                    this.EnergyCurrent = this.EnergyMax;
-                }
-                else
-                {
-                    this.EnergyCurrent += amount;
-                    finalChange = amount;
-                }
-
+                finalChange = this.EnergyMax - this.EnergyCurrent;
+                this.EnergyCurrent = this.EnergyMax;
             }
+            else
+            {
+                this.EnergyCurrent += amount;
+                finalChange = amount;
+            }
+
             return finalChange;
         }
 
@@ -58,18 +55,15 @@ namespace CotLMiniMods.Structures
             int finalChange = 0;
             if (amount < 0) return finalChange;
 
-            if (this.CanRemove)
+            if (this.EnergyCurrent - amount <= 0)
             {
-                if (this.EnergyCurrent - amount <= 0)
-                {
-                    finalChange = this.EnergyCurrent;
-                    this.EnergyCurrent = 0;
-                }
-                else
-                {
-                    finalChange = amount;
-                    this.EnergyCurrent -= amount;
-                }
+                finalChange = this.EnergyCurrent;
+                this.EnergyCurrent = 0;
+            }
+            else
+            {
+                finalChange = amount;
+                this.EnergyCurrent -= amount;
             }
             return finalChange;
         }

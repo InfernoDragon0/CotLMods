@@ -164,6 +164,10 @@ namespace CotLMiniMods
                 Structures_EndlessPit = new Structures_EndlessPit();
                 CustomStructureManager.Add(Structures_EndlessPit);
 
+                CustomStructureManager.Add(new Structures_StrangeGenerator());
+                CustomStructureManager.Add(new Structures_EnergyController());
+                CustomStructureManager.Add(new Structures_StasisChamber());
+
                 BoneMineCommand = new BoneMineCommand();
                 CustomFollowerCommandManager.Add(BoneMineCommand);
 
@@ -197,6 +201,7 @@ namespace CotLMiniMods
                 CustomRitualManager.Add(new RitualFrenzyRitual());
                 CustomRitualManager.Add(new FusionRitual());
                 CustomRitualManager.Add(new YouthRitual());
+                CustomRitualManager.Add(new ReversalRitual());
             }
         }
 
