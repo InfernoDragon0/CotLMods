@@ -35,8 +35,8 @@ namespace CotLMiniMods.Interactions
                 this.Activated = true;
                 Inventory.ChangeItemQuantity(Plugin.StrangeMaterialItem, -5);
                 Inventory.ChangeItemQuantity(InventoryItem.ITEM_TYPE.BLACK_GOLD, -100);
-                ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, this.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
-                ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, this.transform.position, Plugin.StrangeMaterialItem, null);
+                ResourceCustomTarget.Create(this.gameObject, PlayerFarming.Instance.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
+                ResourceCustomTarget.Create(this.gameObject, PlayerFarming.Instance.transform.position, Plugin.StrangeMaterialItem, null);
 
                 //generate a random necklace
                 int rand = Random.Range(45, 50);

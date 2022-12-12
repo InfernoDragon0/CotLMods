@@ -59,11 +59,15 @@ namespace CotLMiniMods.Structures
             Plugin.Log.LogInfo("Collecting energy..");
             foreach (StructureBrain structureBrain in StructureManager.StructuresAtLocation(FollowerLocation.Base))
             {
+                if (structureBrain is Structures_EnergyController)
+                {
+                    continue;
+                }
                 if (structureBrain is CustomEnergyStructure energyStructure && energyStructure.CanRemove)
                 {
                     Plugin.Log.LogInfo("Found energy structure: " + energyStructure.InternalName + " with " + energyStructure.EnergyCurrent + " energy");
                     int energyToAdd;
-                    if (energyStructure.EnergyCurrent + this.EnergyCurrent >= this.EnergyMax)
+                    if (energyStructure.EnergyCurrent + this.EnergyCurrent >= energyStructure.EnergyMax)
                     {
                         energyToAdd = this.EnergyMax - this.EnergyCurrent;
                     }
@@ -75,12 +79,15 @@ namespace CotLMiniMods.Structures
                     this.AddEnergy(energyToAdd);
                     energyStructure.RemoveEnergy(energyToAdd);
                     Plugin.Log.LogInfo("Now this structure has " + this.EnergyCurrent + " energy");
-                    return;
                 }
             }
             Plugin.Log.LogInfo("Distributing Energy..");
             foreach (StructureBrain structureBrain in StructureManager.StructuresAtLocation(FollowerLocation.Base))
             {
+                if (structureBrain is Structures_EnergyController)
+                {
+                    continue;
+                }
                 if (structureBrain is CustomEnergyStructure energyStructure && energyStructure.CanAdd)
                 {
                     Plugin.Log.LogInfo("Found to add structure: " + energyStructure.InternalName + " with " + energyStructure.EnergyCurrent + " energy");
@@ -91,14 +98,13 @@ namespace CotLMiniMods.Structures
                     }
                     else
                     {
-                        energyToAdd = energyStructure.EnergyCurrent;
+                        energyToAdd = this.EnergyCurrent;
                     }
                     Plugin.Log.LogInfo("Before removing, that structure has " + energyStructure.EnergyCurrent + " energy");
                     this.RemoveEnergy(energyToAdd);
                     energyStructure.AddEnergy(energyToAdd);
                     Plugin.Log.LogInfo("Now that structure has " + energyStructure.EnergyCurrent + " energy");
                     Plugin.Log.LogInfo("Now this structure has " + this.EnergyCurrent + " energy");
-                    return;
                 }
             }
         }
