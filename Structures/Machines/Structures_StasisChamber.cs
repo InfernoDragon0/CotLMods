@@ -14,7 +14,7 @@ namespace CotLMiniMods.Structures
     internal class Structures_StasisChamber : CustomEnergyStructure
     {
         public override string InternalName => "Structures_StasisChamber";
-        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cauldron.png"));
+        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "Stasis Chamber";
