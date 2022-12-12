@@ -55,9 +55,9 @@ namespace CotLMiniMods.Interactions
             this.Activating = true;
             if (this.StasisChamber.timeFrozen)
             {
+                this.StasisChamber.timeFrozen = false;
                 SimulationManager.UnPause();
                 NotificationCentreScreen.Play("Simulation is now unfrozen. Back to `reality`.");
-                this.StasisChamber.timeFrozen = false;
                 this.Activating = false;
                 return;
             }
@@ -70,7 +70,7 @@ namespace CotLMiniMods.Interactions
 
             this.StasisChamber.timeFrozen = true;
             this.StasisChamber.RemoveEnergy(50);
-            NotificationCentreScreen.Play("Simulation is now frozen. Taking 10 Energy per True Minute.");
+            NotificationCentreScreen.Play("Simulation is now frozen.");
             SimulationManager.Pause();
             this.Activating = false;
 
@@ -85,15 +85,15 @@ namespace CotLMiniMods.Interactions
             {
                 if ((double)(this.Delay -= Time.deltaTime) >= 0.0)
                     return;
-
-                NotificationCentreScreen.Play("Simulation consumes Strange Energy. " + this.StasisChamber.EnergyCurrent + " Energy left.");
+                
                 this.StasisChamber.RemoveEnergy(10);
+                NotificationCentreScreen.Play("Simulation consumes Strange Energy when not fighting. " + this.StasisChamber.EnergyCurrent + " Energy left.");
 
                 if (this.StasisChamber.EnergyCurrent <= 0)
                 {
                     NotificationCentreScreen.Play("Warning: Stasis Chamber has no energy. Unfreezing time.");
-                    SimulationManager.UnPause();
                     this.StasisChamber.timeFrozen = false;
+                    SimulationManager.UnPause();
 
                 }
 

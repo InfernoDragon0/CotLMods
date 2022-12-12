@@ -82,7 +82,7 @@ namespace CotLMiniMods.Patches
             }
             else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_StrangeGenerator)
             {
-                Plugin.Log.LogInfo("adding interaction for stasis chamber");
+                Plugin.Log.LogInfo("adding interaction for strange generator");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_StrangeGenerator>();
             }
