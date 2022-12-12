@@ -23,8 +23,8 @@ namespace CotLMiniMods.Structures
 
         public override List<StructuresData.ItemCost> Cost => new()
         {
-            new(InventoryItem.ITEM_TYPE.BLACK_GOLD, 150),
-            new(Plugin.StrangeMaterialItem, 10)
+            new(InventoryItem.ITEM_TYPE.BLACK_GOLD, 1000),
+            new(Plugin.StrangeMaterialItem, 25)
         };
 
         public override FollowerCategory.Category Category => FollowerCategory.Category.Misc;
