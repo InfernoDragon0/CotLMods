@@ -31,23 +31,18 @@ namespace CotLMiniMods.Structures.Mines
             new(Plugin.StrangeMaterialItem, 20),
         };
 
-        public List<InventoryItem> QuarryItems => new()
+        public List<InventoryItem.ITEM_TYPE> QuarryItems => new()
         {
-            new(InventoryItem.ITEM_TYPE.BLACK_GOLD),
-            new(InventoryItem.ITEM_TYPE.STONE),
-            new(InventoryItem.ITEM_TYPE.STONE_REFINED),
-            new(InventoryItem.ITEM_TYPE.LOG),
-            new(InventoryItem.ITEM_TYPE.LOG_REFINED),
-            new(InventoryItem.ITEM_TYPE.SHELL),
-            new(InventoryItem.ITEM_TYPE.POOP),
-            new(InventoryItem.ITEM_TYPE.GRASS),
-            new(InventoryItem.ITEM_TYPE.MEAT),
-            new(InventoryItem.ITEM_TYPE.SEED_BEETROOT),
-            new(InventoryItem.ITEM_TYPE.SEED_MUSHROOM),
-            new(InventoryItem.ITEM_TYPE.SEED_CAULIFLOWER),
-            new(InventoryItem.ITEM_TYPE.WHEAT),
-            new(InventoryItem.ITEM_TYPE.SEED_PUMPKIN),
-            new(InventoryItem.ITEM_TYPE.SEED_FLOWER_WHITE),
+            InventoryItem.ITEM_TYPE.BLACK_GOLD,
+            InventoryItem.ITEM_TYPE.STONE,
+            InventoryItem.ITEM_TYPE.STONE_REFINED,
+            InventoryItem.ITEM_TYPE.LOG,
+            InventoryItem.ITEM_TYPE.LOG_REFINED,
+            InventoryItem.ITEM_TYPE.SHELL,
+            InventoryItem.ITEM_TYPE.POOP,
+            InventoryItem.ITEM_TYPE.GRASS,
+            InventoryItem.ITEM_TYPE.MEAT,
+            InventoryItem.ITEM_TYPE.WHEAT,
 
         };
 

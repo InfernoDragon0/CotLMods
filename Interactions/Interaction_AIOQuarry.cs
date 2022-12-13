@@ -57,7 +57,7 @@ namespace CotLMiniMods.Interactions
         public override void OnSecondaryInteract(StateMachine state)
         {
             base.OnSecondaryInteract(state);
-            List<InventoryItem> QuarryItems = this.AIOQuarry.QuarryItems;
+            List<InventoryItem.ITEM_TYPE> QuarryItems = this.AIOQuarry.QuarryItems;
             state.CURRENT_STATE = StateMachine.State.InActive;
             state.facingAngle = Utils.GetAngle(state.transform.position, this.transform.position);
             CameraFollowTarget cameraFollowTarget = CameraFollowTarget.Instance;
@@ -67,16 +67,19 @@ namespace CotLMiniMods.Interactions
             
             UIItemSelectorOverlayController itemSelector = MonoSingleton<UIManager>.Instance.ShowItemSelector(QuarryItems, new ItemSelector.Params()
             {
-                Key = "seed_shop",
-                Context = ItemSelector.Context.Buy,
+                Key = "farm_plot",
+                Context = ItemSelector.Context.SetLabel,
                 Offset = new Vector2(0.0f, 150f),
                 ShowEmpty = true,
                 RequiresDiscovery = false,
-                HideQuantity = true
+                HideQuantity = true,
+                HideOnSelection = true,
             });
             itemSelector.OnItemChosen += chosenItem =>
             {
+                Plugin.Log.LogInfo("item selected " + chosenItem);
                 this.AIOQuarry.SelectedQuarryItem = chosenItem;
+                HUD_Manager.Instance.Show(0);
             };
             itemSelector.OnCancel += () => HUD_Manager.Instance.Show(0);
             itemSelector.OnHidden += () =>
