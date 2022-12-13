@@ -75,7 +75,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override Vector3 UpdateDestination(Follower follower)
         {
-            return this._resourceStation.Data.Position;
+            return this._resourceStation.Data.Position + new Vector3(1.0f, 0.0f);
         }
         public override void Setup(Follower follower)
         {

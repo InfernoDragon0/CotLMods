@@ -76,13 +76,12 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override Vector3 UpdateDestination(Follower follower)
         {
-            return this._resourceStation.Data.Position;
+            return this._resourceStation.Data.Position + new Vector3(1.0f, 0.0f);
         }
         public override void Setup(Follower follower)
         {
             base.Setup(follower);
             follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "dig");
-            follower.Spine.timeScale = 5;
             Plugin.Log.LogInfo("the follower " + follower.Brain._directInfoAccess.Name + " is working on a AIO mine");
         }
 
@@ -105,7 +104,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
             this._resourceStation.Data.Progress += deltaGameTime * this._brain.Info.ProductivityMultiplier;
 
-            if (this._resourceStation.Data.Progress < 125)
+            if (this._resourceStation.Data.Progress < 35)
                 return;
 
             this._resourceStation.Data.Progress = 0.0f;
