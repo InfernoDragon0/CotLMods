@@ -86,6 +86,12 @@ namespace CotLMiniMods.Patches
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_StrangeGenerator>();
             }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_AIOQuarry)
+            {
+                Plugin.Log.LogInfo("adding interaction for aio");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_AIOQuarry>();
+            }
 
             Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructureList[__instance.Type].GetType());
 
