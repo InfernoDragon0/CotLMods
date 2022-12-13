@@ -11,7 +11,7 @@ namespace CotLMiniMods.Structures
     internal class Structures_StrangeGenerator : CustomEnergyStructure
     {
         public override string InternalName => "Structures_StrangeGenerator";
-        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/endlesspit.png"));
+        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/generator.png"));
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "Strange Generator";

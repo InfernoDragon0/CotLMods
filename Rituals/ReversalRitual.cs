@@ -20,7 +20,7 @@ namespace CotLMiniMods.Rituals
     public class ReversalRitual : CustomRitual
     {
         public override string InternalName { get; } = "Reversal_Ritual";
-        public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_fusion.png"));
+        public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_reversal.png"));
         public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.BLACK_GOLD, 300), new(Plugin.StrangeMaterialItem, 3) };
 
         public override string GetLocalizedName => "Ritual of Reversal";

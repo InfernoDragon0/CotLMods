@@ -15,8 +15,8 @@ namespace CotLMiniMods.Items
         public override string LocalizedName() { return "Strange Material"; }
         public override string LocalizedDescription() { return "An unstable material that is harvested from an unknown source. Seems really interested in gold."; }
 
-        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));
-        public override Sprite InventoryIcon { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));
+        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/strange.png"));
+        public override Sprite InventoryIcon { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/strange.png"));
 
         public override bool AddItemToDungeonChests => true;
         public override bool AddItemToOfferingShrine => true;

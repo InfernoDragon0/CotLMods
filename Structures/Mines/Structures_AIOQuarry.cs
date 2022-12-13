@@ -15,7 +15,7 @@ namespace CotLMiniMods.Structures.Mines
     internal class Structures_AIOQuarry : CustomStructure, ITaskProvider
     {
         public override string InternalName => "Structures_AIOQuarry";
-        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/crystalmines.png"));
+        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/aio.png"));
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "AIO Quarry";

@@ -15,7 +15,7 @@ namespace CotLMiniMods.Structures
     internal class Structures_EnergyController : CustomEnergyStructure
     {
         public override string InternalName => "Structures_EnergyController";
-        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cauldron.png"));
+        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/wireless.png"));
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "Energy Controller";

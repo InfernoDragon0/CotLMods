@@ -16,7 +16,7 @@ namespace CotLMiniMods.Rituals
     public class YouthRitual : CustomRitual
     {
         public override string InternalName { get; } = "Youth_Ritual";
-        public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_leveling.png"));
+        public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_youth.png"));
         public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { 
             new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.BLACK_GOLD, 1000), 
             new StructuresData.ItemCost(Plugin.StrangeMaterialItem, 10) 
