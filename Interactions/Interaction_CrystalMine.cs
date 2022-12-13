@@ -16,7 +16,7 @@ namespace CotLMiniMods.Interactions
         public Structure Structure;
         private bool Activating = false;
         private GameObject Player;
-        private float Delay = 0.2f;
+        private float Delay = 0.04f;
         public float DistanceToTriggerDeposits = 5f;
 
         public StructuresData StructureInfo => this.Structure.Structure_Info;
@@ -26,7 +26,7 @@ namespace CotLMiniMods.Interactions
             //this.Interactable = count > 0;
 
             if (this.Structure != null)
-                this.label = "<sprite name=\"icon_Crystal\"> x" + this.StructureInfo.Inventory.Count;
+                this.label = "Collect Items: x" + this.StructureInfo.Inventory.Count;
             else
                 this.label = "structure was null";
         }
@@ -69,7 +69,7 @@ namespace CotLMiniMods.Interactions
             AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.gameObject);
             ResourceCustomTarget.Create(this.state.gameObject, this.transform.position, itemType, (System.Action)(() => this.GiveItem(itemType)));
             this.StructureInfo.Inventory.RemoveAt(0);
-            this.Delay = 0.2f;
+            this.Delay = 0.04f;
         }
 
         private void GiveItem(InventoryItem.ITEM_TYPE type) => Inventory.AddItem((int)type, 1);

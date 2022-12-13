@@ -133,6 +133,8 @@ namespace CotLMiniMods.CCommands.Tasks
         {
             base.OnIdleBegin(follower);
             follower.SetHat(HatType.Miner);
+            follower.State.facingAngle = Utils.GetAngle(follower.transform.position, this._resourceStation.Data.Position);
+
 
         }
 
@@ -140,6 +142,8 @@ namespace CotLMiniMods.CCommands.Tasks
         {
             base.OnDoingBegin(follower);
             follower.SetHat(HatType.Miner);
+            follower.State.facingAngle = Utils.GetAngle(follower.transform.position, this._resourceStation.Data.Position);
+
         }
         private void OnNewPhaseStarted() => this.End();
     }
