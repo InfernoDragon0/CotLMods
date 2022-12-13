@@ -122,6 +122,8 @@ namespace CotLMiniMods.Rituals
             yield return new WaitForSeconds(1.3f);
             this.selectedFollower.Spine.AnimationState.SetAnimation(1, "devotion/devotion-collect-loop-whiteyes", true);
 
+            var converted = false;
+
             foreach (FollowerTrait.TraitType trait in this.selectedFollower.Brain.Info.Traits)
             {
                 if (!FollowerTrait.IsPositiveTrait(trait))
@@ -129,13 +131,19 @@ namespace CotLMiniMods.Rituals
                     yield return new WaitForSeconds(1f);
                     ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, this.selectedFollower.transform.position, FollowerTrait.GetIcon(trait), null);
                     AudioManager.Instance.PlayOneShot("event:/building/building_bell_ring", PlayerFarming.Instance.gameObject);
+                    converted = true;
                     GameManager.GetInstance().StartCoroutine(this.DoConversionRoutine(trait));
-                    yield return null;
                     break;
                 }
-                
             }
             
+            if (!converted) //if there were no available traits to convert
+            {
+                ChurchFollowerManager.Instance.EndRitualOverlay();
+                Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
+                this.EndRitual();
+                this.CompleteRitual();
+            }
             yield return null;
         }
         
@@ -143,10 +151,7 @@ namespace CotLMiniMods.Rituals
         {
             GameManager.GetInstance().OnConversationNext(this.selectedFollower.gameObject, 4f);
             
-            ChurchFollowerManager.Instance.PlayOverlay(ChurchFollowerManager.OverlayType.Sacrifice, "1");
-
-            Ritual.FollowerToAttendSermon.Remove(this.selectedFollower.Brain);
-
+            //Ritual.FollowerToAttendSermon.Remove(this.selectedFollower.Brain);
 
             int followerID = this.selectedFollower.Brain.Info.ID;
             yield return (object)new WaitForSeconds(0.5f);
@@ -170,12 +175,14 @@ namespace CotLMiniMods.Rituals
             if (positiveTrait != FollowerTrait.TraitType.None)
             {
                 this.selectedFollower.AddTrait(positiveTrait);
+                ResourceCustomTarget.Create(this.selectedFollower.gameObject, PlayerFarming.Instance.transform.position, FollowerTrait.GetIcon(positiveTrait), null);
+
                 Plugin.Log.LogInfo("Added a trait " + positiveTrait);
             }
 
-            BiomeConstants.Instance.ChromaticAbberationTween(1f, BiomeConstants.Instance.ChromaticAberrationDefaultValue, 7f);
+            //BiomeConstants.Instance.ChromaticAbberationTween(1f, BiomeConstants.Instance.ChromaticAberrationDefaultValue, 7f);
             
-            foreach (FollowerBrain allBrain in FollowerBrain.AllBrains) //need to stop cheering while selecting 2nd follower
+            foreach (FollowerBrain allBrain in FollowerBrain.AllBrains)
             {
                 if (allBrain.CurrentTaskType == FollowerTaskType.AttendTeaching)
                     (allBrain.CurrentTask as FollowerTask_AttendRitual).Cheer();
@@ -195,10 +202,10 @@ namespace CotLMiniMods.Rituals
             yield return new WaitForSeconds(1f);
             GameManager.GetInstance().OnConversationNext(Interaction_TempleAltar.Instance.RitualCameraPosition, 6f);
             
-            JudgementMeter.ShowModify(DataManager.Instance.CultTraits.Contains(FollowerTrait.TraitType.SacrificeEnthusiast) ? 1 : -1);
             ChurchFollowerManager.Instance.EndRitualOverlay();
             Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
             yield return new WaitForSeconds(0.5f);
+            this.EndRitual();
             this.CompleteRitual();
         }
 

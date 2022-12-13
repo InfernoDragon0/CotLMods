@@ -43,13 +43,15 @@ namespace CotLMiniMods.Rituals
                 Interaction_TempleAltar.Instance.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
                 PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
                 PlayerFarming.Instance.state.transform.DOMove(ChurchFollowerManager.Instance.RitualCenterPosition.position, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
+
+                PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
+                PlayerFarming.Instance.Spine.skeleton.UpdateWorldTransform();
+                PlayerFarming.Instance.Spine.skeleton.Update(Time.deltaTime);
+                PlayerFarming.Instance.simpleSpineAnimator.Animate("rituals/ritual-start", 0, false);
+                PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("rituals/ritual-loop", 0, true, 0.0f);
             })));
 
-            PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
-            PlayerFarming.Instance.Spine.skeleton.UpdateWorldTransform();
-            PlayerFarming.Instance.Spine.skeleton.Update(Time.deltaTime);
-            PlayerFarming.Instance.simpleSpineAnimator.Animate("rituals/ritual-start", 0, false);
-            PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("rituals/ritual-loop", 0, true, 0.0f);
+            
 
             Interaction_TempleAltar.Instance.RitualLighting.gameObject.SetActive(true);
             ChurchFollowerManager.Instance.StartRitualOverlay();
