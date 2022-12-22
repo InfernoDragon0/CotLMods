@@ -92,6 +92,18 @@ namespace CotLMiniMods.Patches
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_AIOQuarry>();
             }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_AIOFarmer)
+            {
+                Plugin.Log.LogInfo("adding interaction for aio");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_AIOFarmer>();
+            }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_GiftTree)
+            {
+                Plugin.Log.LogInfo("adding interaction for aio");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_CrystalMine>();
+            }
 
             Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructureList[__instance.Type].GetType());
 

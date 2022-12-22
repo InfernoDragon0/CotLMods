@@ -27,7 +27,7 @@ namespace CotLMiniMods
     {
         public const string PluginGuid = "InfernoDragon0.cotl.CotLChef";
         public const string PluginName = "CotLChef";
-        public const string PluginVer = "1.1.3";
+        public const string PluginVer = "1.1.4";
 
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
@@ -168,6 +168,7 @@ namespace CotLMiniMods
                 CustomStructureManager.Add(new Structures_EnergyController());
                 CustomStructureManager.Add(new Structures_StasisChamber());
                 CustomStructureManager.Add(new Structures_AIOQuarry());
+                CustomStructureManager.Add(new Structures_AIOFarmer());
 
                 BoneMineCommand = new BoneMineCommand();
                 CustomFollowerCommandManager.Add(BoneMineCommand);
