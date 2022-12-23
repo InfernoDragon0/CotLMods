@@ -14,6 +14,7 @@ using Lamb.UI.FollowerSelect;
 using Lamb.UI;
 using Spine;
 using src.Extensions;
+using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace CotLMiniMods.Rituals
 {
@@ -125,7 +126,7 @@ namespace CotLMiniMods.Rituals
                 {
                     var brain = followerInfoBox.followBrain;
                     IDAndRelationship relationship = brain.Info.GetOrCreateRelationship(this.leaderFollower.Brain.Info.ID);
-                    followerInfoBox.FollowerRole.text = $"Relation: {relationship}";
+                    followerInfoBox.FollowerRole.text = $"Relation: {relationship.CurrentRelationshipState}";
                 }
             };
             
@@ -177,17 +178,22 @@ namespace CotLMiniMods.Rituals
             {
                 this.leaderFollower.TimedAnimation("cheer", 2f, () =>
                 {
+                    this.leaderFollower.AddThought(Thought.NewLover);
                 });
             });
 
             this.secondaryFollower.TimedAnimation("kiss", 4f, () =>
             {
-                this.leaderFollower.TimedAnimation("cheer", 2f, () =>
+                this.secondaryFollower.TimedAnimation("cheer", 2f, () =>
                 {
+                    this.secondaryFollower.AddThought(Thought.NewLover);
                 });
             });
 
             yield return new WaitForSeconds(6f);
+            
+            IDAndRelationship relationship = this.secondaryFollower.Brain.Info.GetOrCreateRelationship(this.leaderFollower.Brain.Info.ID);
+            relationship.CurrentRelationshipState = IDAndRelationship.RelationshipState.Lovers;
 
             PlayerFarming.Instance.simpleSpineAnimator.Animate("rituals/ritual-stop", 0, false);
             PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
