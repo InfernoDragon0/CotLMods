@@ -33,16 +33,16 @@ namespace CotLMiniMods.Structures.Mines
 
         public List<InventoryItem.ITEM_TYPE> QuarryItems => new()
         {
-            InventoryItem.ITEM_TYPE.BLACK_GOLD,
-            InventoryItem.ITEM_TYPE.STONE,
-            InventoryItem.ITEM_TYPE.STONE_REFINED,
-            InventoryItem.ITEM_TYPE.LOG,
-            InventoryItem.ITEM_TYPE.LOG_REFINED,
-            InventoryItem.ITEM_TYPE.SHELL,
-            InventoryItem.ITEM_TYPE.POOP,
+            InventoryItem.ITEM_TYPE.PUMPKIN,
+            InventoryItem.ITEM_TYPE.BEETROOT,
+            InventoryItem.ITEM_TYPE.CAULIFLOWER,
+            InventoryItem.ITEM_TYPE.MUSHROOM_SMALL,
+            InventoryItem.ITEM_TYPE.BERRY,
+            InventoryItem.ITEM_TYPE.MUSHROOM_BIG,
+            InventoryItem.ITEM_TYPE.FLOWER_RED,
+            InventoryItem.ITEM_TYPE.FLOWER_WHITE,
+            InventoryItem.ITEM_TYPE.FLOWER_PURPLE,
             InventoryItem.ITEM_TYPE.GRASS,
-            InventoryItem.ITEM_TYPE.MEAT,
-            InventoryItem.ITEM_TYPE.WHEAT,
 
         };
 

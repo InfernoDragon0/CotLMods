@@ -40,7 +40,7 @@ namespace CotLMiniMods.Structures.Mines
             InventoryItem.ITEM_TYPE.LOG_REFINED,
             InventoryItem.ITEM_TYPE.SHELL,
             InventoryItem.ITEM_TYPE.POOP,
-            InventoryItem.ITEM_TYPE.GRASS,
+            InventoryItem.ITEM_TYPE.GOLD_NUGGET,
             InventoryItem.ITEM_TYPE.MEAT,
             InventoryItem.ITEM_TYPE.WHEAT,
 
