@@ -127,7 +127,7 @@ namespace CotLMiniMods.CCommands.Tasks
             this._resourceStation.Data.Inventory.Add(item);
 
             Follower followerById = FollowerManager.FindFollowerByID(this._brain.Info.ID);
-            followerById.TimedAnimation("gift", 0.75f, (System.Action)(() => {
+            followerById.TimedAnimation("Gifts/gift3", 0.75f, (System.Action)(() => {
                 
             }));
         }

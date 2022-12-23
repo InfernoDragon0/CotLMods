@@ -45,7 +45,7 @@ namespace CotLMiniMods.Structures.Mines
 
         };
 
-        public InventoryItem.ITEM_TYPE SelectedQuarryItem = InventoryItem.ITEM_TYPE.STONE;
+        public InventoryItem.ITEM_TYPE SelectedQuarryItem = InventoryItem.ITEM_TYPE.GRASS;
 
         public void GetAvailableTasks(ScheduledActivity activity, SortedList<float, FollowerTask> sortedTasks)
         {

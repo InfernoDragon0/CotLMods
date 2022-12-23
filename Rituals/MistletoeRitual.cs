@@ -95,10 +95,11 @@ namespace CotLMiniMods.Rituals
                         }
                     }
                     this.leaderFollower.Spine.AnimationState.SetAnimation(1, "walk", true);
-                    this.leaderFollower.gameObject.transform.DOMove(Interaction_TempleAltar.Instance.PortalEffect.transform.position + Vector3.left * 0.5f, 2.5f).OnComplete(() =>
+                    nextTask.GoToAndStop(this.leaderFollower, Interaction_TempleAltar.Instance.PortalEffect.transform.position + Vector3.left * 0.75f, () =>
                     {
                         this.leaderFollower.Spine.AnimationState.SetAnimation(1, "idle", true);
                     });
+                    
                     Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
                     GameManager.GetInstance().StartCoroutine(this.GetAbsorptionFollower());
                 })));
@@ -124,6 +125,12 @@ namespace CotLMiniMods.Rituals
             {
                 foreach (FollowerInformationBox followerInfoBox in followerSelectInstance.FollowerInfoBoxes)
                 {
+                    if (followerInfoBox.FollowerInfo.ID == this.leaderFollower.Brain.Info.ID)
+                    {
+                        followerInfoBox.gameObject.SetActive(false);
+                        continue;
+                    }
+
                     var brain = followerInfoBox.followBrain;
                     IDAndRelationship relationship = brain.Info.GetOrCreateRelationship(this.leaderFollower.Brain.Info.ID);
                     followerInfoBox.FollowerRole.text = $"Relation: {relationship.CurrentRelationshipState}";
@@ -152,7 +159,7 @@ namespace CotLMiniMods.Rituals
                 }
             }
             this.secondaryFollower.Spine.AnimationState.SetAnimation(1, "walk", true);
-            this.secondaryFollower.gameObject.transform.DOMove(Interaction_TempleAltar.Instance.PortalEffect.transform.position + Vector3.right * 1f, 2.5f).OnComplete(() =>
+            nextTask.GoToAndStop(this.secondaryFollower, Interaction_TempleAltar.Instance.PortalEffect.transform.position + Vector3.right * 0.75f, () =>
             {
                 Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
                 GameManager.GetInstance().StartCoroutine(this.DoMistletoeRoutine());
@@ -165,15 +172,20 @@ namespace CotLMiniMods.Rituals
         private IEnumerator DoMistletoeRoutine()
         {
             Plugin.Log.LogInfo("Start mistletoe");
-
+            this.leaderFollower.State.facingAngle = Utils.GetAngle(this.leaderFollower.transform.position, this.secondaryFollower.transform.position);
+            this.secondaryFollower.State.facingAngle = Utils.GetAngle(this.secondaryFollower.transform.position, this.leaderFollower.transform.position);
             this.leaderFollower.TimedAnimation("Conversations/greet-nice", 1.9f, () =>
             {
             });
 
+            yield return new WaitForSeconds(0.2f);
+
             this.secondaryFollower.TimedAnimation("Conversations/greet-nice", 1.9f, () =>
             {
             });
-            yield return new WaitForSeconds(1.9f);
+            yield return new WaitForSeconds(2.1f);
+            
+
             this.leaderFollower.TimedAnimation("kiss", 4f, () =>
             {
                 this.leaderFollower.TimedAnimation("cheer", 2f, () =>
@@ -181,7 +193,8 @@ namespace CotLMiniMods.Rituals
                     this.leaderFollower.AddThought(Thought.NewLover);
                 });
             });
-
+            yield return new WaitForSeconds(0.2f);
+            
             this.secondaryFollower.TimedAnimation("kiss", 4f, () =>
             {
                 this.secondaryFollower.TimedAnimation("cheer", 2f, () =>
@@ -190,22 +203,19 @@ namespace CotLMiniMods.Rituals
                 });
             });
 
-            yield return new WaitForSeconds(6f);
+            foreach (FollowerBrain followerBrain in Ritual.FollowerToAttendSermon)
+            {
+                if (followerBrain.CurrentTask is FollowerTask_AttendRitual)
+                    (followerBrain.CurrentTask as FollowerTask_AttendRitual).Cheer();
+            }
+
+            yield return new WaitForSeconds(6.2f);
             
             IDAndRelationship relationship = this.secondaryFollower.Brain.Info.GetOrCreateRelationship(this.leaderFollower.Brain.Info.ID);
             relationship.CurrentRelationshipState = IDAndRelationship.RelationshipState.Lovers;
 
             PlayerFarming.Instance.simpleSpineAnimator.Animate("rituals/ritual-stop", 0, false);
             PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
-            float num3 = 0.5f;
-            yield return new WaitForSeconds(0.5f);
-            
-            foreach (FollowerBrain brain in Ritual.FollowerToAttendSermon)
-            {
-                float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
-                num3 += Delay;
-                this.StartCoroutine(this.DelayFollowerReaction(brain, Delay));
-            }
             yield return new WaitForSeconds(0.5f);
             this.CompleteRitual();
 

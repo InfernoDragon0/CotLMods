@@ -63,7 +63,8 @@ namespace CotLMiniMods.Rituals
                 foreach (FollowerInformationBox followerInfoBox in followerSelectInstance.FollowerInfoBoxes)
                 {
                     var brain = followerInfoBox.followBrain;
-                    followerInfoBox.FollowerRole.text = $"Movement: {this.selectedFollower._speed}/{brain.CurrentState.MaxSpeed}";
+                    var follower = FollowerManager.FindFollowerByID(brain.Info.ID);
+                    followerInfoBox.FollowerRole.text = $"Movement: {follower._speed}/{brain.CurrentState.MaxSpeed}";
                 }
             };
             followerSelectInstance.OnCancel = followerSelectInstance.OnCancel + (System.Action)(() =>
