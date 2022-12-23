@@ -22,7 +22,7 @@ namespace CotLMiniMods.Rituals
     {
         public override string InternalName { get; } = "Mistletoe_Ritual";
         public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_fusion.png"));
-        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.BLACK_GOLD, 1000) };
+        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new(Plugin.StrangeMaterialItem, 6) };
 
         public override string GetLocalizedName => "Mistletoe Ritual";
         public override string GetLocalizedDescription => "Select two followers. Using the power of Strange Materials, the relationship status of both selected followers will be maxed (Lovers).";
