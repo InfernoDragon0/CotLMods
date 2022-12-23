@@ -15,7 +15,7 @@ namespace CotLMiniMods.Structures.Mines
     internal class Structures_GiftTree : CustomStructure, ITaskProvider
     {
         public override string InternalName => "Structures_GiftTree";
-        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/crystalmines.png"));
+        public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/GiftTree.png"));
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "Tree of Giving";
