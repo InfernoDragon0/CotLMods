@@ -67,7 +67,7 @@ namespace CotLMiniMods.Interactions
             
             UIItemSelectorOverlayController itemSelector = MonoSingleton<UIManager>.Instance.ShowItemSelector(QuarryItems, new ItemSelector.Params()
             {
-                Key = "farm_plot",
+                Key = "AIOFarmer",
                 Context = ItemSelector.Context.SetLabel,
                 Offset = new Vector2(0.0f, 150f),
                 ShowEmpty = true,

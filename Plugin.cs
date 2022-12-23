@@ -169,6 +169,7 @@ namespace CotLMiniMods
                 CustomStructureManager.Add(new Structures_StasisChamber());
                 CustomStructureManager.Add(new Structures_AIOQuarry());
                 CustomStructureManager.Add(new Structures_AIOFarmer());
+                CustomStructureManager.Add(new Structures_GiftTree());
 
                 BoneMineCommand = new BoneMineCommand();
                 CustomFollowerCommandManager.Add(BoneMineCommand);

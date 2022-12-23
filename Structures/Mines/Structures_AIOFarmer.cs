@@ -38,7 +38,6 @@ namespace CotLMiniMods.Structures.Mines
             InventoryItem.ITEM_TYPE.CAULIFLOWER,
             InventoryItem.ITEM_TYPE.MUSHROOM_SMALL,
             InventoryItem.ITEM_TYPE.BERRY,
-            InventoryItem.ITEM_TYPE.MUSHROOM_BIG,
             InventoryItem.ITEM_TYPE.FLOWER_RED,
             InventoryItem.ITEM_TYPE.FLOWER_WHITE,
             InventoryItem.ITEM_TYPE.FLOWER_PURPLE,
