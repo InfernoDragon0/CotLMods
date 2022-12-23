@@ -204,6 +204,8 @@ namespace CotLMiniMods
                 CustomRitualManager.Add(new FusionRitual());
                 CustomRitualManager.Add(new YouthRitual());
                 CustomRitualManager.Add(new ReversalRitual());
+                CustomRitualManager.Add(new SuperchargeRitual());
+                CustomRitualManager.Add(new MistletoeRitual());
             }
         }
 

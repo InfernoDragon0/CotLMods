@@ -21,7 +21,7 @@ namespace CotLMiniMods.Rituals
     {
         public override string InternalName { get; } = "Supercharge_Ritual";
         public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_reversal.png"));
-        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new(Plugin.StrangeMaterialItem, 10) };
+        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new(Plugin.StrangeMaterialItem, 2) };
 
         public override string GetLocalizedName => "Ritual of Supercharge";
         public override string GetLocalizedDescription => "Select a follower. Infusing them with Strange Material to increase their speed by 0.1.";
