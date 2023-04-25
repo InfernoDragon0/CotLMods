@@ -59,7 +59,7 @@ namespace CotLMiniMods.CustomFollowerCommands
                 }
                 
             }));
-            interaction.Close();
+            interaction.Close(true, reshowMenu: false);
         }
     }
 }

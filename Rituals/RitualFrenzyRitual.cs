@@ -10,6 +10,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using FMOD.Studio;
+using Lamb.UI.Assets;
 
 namespace CotLMiniMods.Rituals
 {
@@ -64,7 +65,8 @@ namespace CotLMiniMods.Rituals
             foreach (UpgradeSystem.UpgradeCoolDown ucd in DataManager.Instance.UpgradeCoolDowns)
             {
                 yield return (object)new WaitForSeconds(1f);
-                ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, Interaction_TempleAltar.Instance.transform.position, DoctrineUpgradeSystem.GetIconForRitual(ucd.Type), null);
+                //as of 1.20 this does not exist (yet?)
+                /*ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, Interaction_TempleAltar.Instance.transform.position, RitualIconMapping.GetImage(ucd.Type), null);*/
                 AudioManager.Instance.PlayOneShot("event:/building/building_bell_ring", PlayerFarming.Instance.gameObject);
 
             }

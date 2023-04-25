@@ -2,6 +2,7 @@
 using CotLTemplateMod;
 using HarmonyLib;
 using I2.Loc;
+using Lamb.UI.Assets;
 using Lamb.UI.Rituals;
 using Socket.Newtonsoft.Json.Utilities.LinqBridge;
 using src.Extensions;
@@ -36,7 +37,7 @@ namespace CotLMiniMods.Patches.Rituals
             return true;
         }
 
-        [HarmonyPatch(typeof(DoctrineUpgradeSystem), nameof(DoctrineUpgradeSystem.GetIconForRitual))]
+        [HarmonyPatch(typeof(RitualIconMapping), nameof(RitualIconMapping.GetImage), new[] { typeof(UpgradeSystem.Type) })]
         [HarmonyPrefix]
         public static bool DoctrineUpgradeSystem_GetIconForRitual(ref Sprite __result, UpgradeSystem.Type type)
         {

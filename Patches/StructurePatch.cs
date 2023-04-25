@@ -3,6 +3,7 @@ using CotLMiniMods.Interactions;
 using CotLMiniMods.Structures;
 using CotLMiniMods.Structures.Mines;
 using CotLMiniMods.Structures.Productivity;
+using CotLMiniMods.Structures.Proxies;
 using CotLTemplateMod;
 using HarmonyLib;
 using src.UI.Menus;
@@ -103,6 +104,12 @@ namespace CotLMiniMods.Patches
                 Plugin.Log.LogInfo("adding interaction for aio");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_CrystalMine>();
+            }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is ChefDeskStructure)
+            {
+                Plugin.Log.LogInfo("adding interaction for aio");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_SousDesk>();
             }
 
             Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructureList[__instance.Type].GetType());

@@ -23,10 +23,13 @@ namespace CotLMiniMods.Interactions
         {
             base.OnEnable();
             Plugin.Log.LogInfo("I am enabled Wish");
+            //load as of 1.1.4
+            MonoSingleton<UIManager>.Instance.LoadDungeonAssets();
         }
 
         public override void OnInteract(StateMachine state)
         {
+            
 
             if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.BLACK_GOLD) < 20)
             {

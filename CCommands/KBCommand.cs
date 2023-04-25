@@ -38,12 +38,17 @@ namespace CotLMiniMods.CustomFollowerCommands
             interaction.StartCoroutine(interaction.FrameDelayCallback(delegate
             {
                 interaction.follower.Brain.HardSwapToTask((FollowerTask)new FollowerTask_ManualControl());
+                //preload assets as of 1.1.4 as they are not loaded
+                MonoSingleton<UIManager>.Instance.LoadKnucklebonesAssets().YieldUntilCompleted();
+                
                 interaction.follower.TimedAnimation("action", 1f, () =>
                 {
                     //GameManager.GetInstance().OnConversationNew();
                     //interactionKnucklebones.goopTransition.FadeIn(1f);
                     PlayerFarming.Instance.state.CURRENT_STATE = StateMachine.State.InActive;
                     //yield return (object)new WaitForSeconds(1f);
+                    
+                    
                     _knuckleBonesInstance = MonoSingleton<UIManager>.Instance.KnucklebonesTemplate.Instantiate<UIKnuckleBonesController>();
                     SimulationManager.Pause();
 
@@ -55,13 +60,13 @@ namespace CotLMiniMods.CustomFollowerCommands
                     UIKnuckleBonesController knuckleBonesInstance2 = _knuckleBonesInstance;
                     // ISSUE: reference to a compiler-generated method
                     knuckleBonesInstance2.OnHidden = knuckleBonesInstance2.OnHidden + new System.Action(this.ContinueToKnucklebones);
-                    _knuckleBonesInstance.OnGameCompleted += new System.Action<bool>(this.CompleteGame);
+                    _knuckleBonesInstance.OnGameCompleted += new Action<UIKnuckleBonesController.KnucklebonesResult>(this.CompleteGame);
                     _knuckleBonesInstance.OnGameQuit += new System.Action(this.GameQuit);
                     interaction.follower.Brain.CompleteCurrentTask();
                 });
                 
             }));
-            interaction.Close();
+            interaction.Close(true, reshowMenu: false);
         }
 
         private void ContinueToKnucklebones()
@@ -69,9 +74,9 @@ namespace CotLMiniMods.CustomFollowerCommands
             Plugin.Log.LogInfo("cont kb ");
         }
 
-        private void CompleteGame(bool obj)
+        private void CompleteGame(UIKnuckleBonesController.KnucklebonesResult result)
         {
-            Plugin.Log.LogInfo("copmleted kb " + obj);
+            Plugin.Log.LogInfo("copmleted kb " + result.ToString());
             SimulationManager.UnPause();
             PlayerFarming.Instance.state.CURRENT_STATE = StateMachine.State.Idle;
         }

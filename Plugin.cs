@@ -17,6 +17,7 @@ using CotLMiniMods.Items;
 using COTL_API.CustomInventory;
 using CotLMiniMods.CustomFollowerCommands;
 using COTL_API.CustomSettings;
+using Lamb.UI;
 
 namespace CotLMiniMods
 {
@@ -27,7 +28,7 @@ namespace CotLMiniMods
     {
         public const string PluginGuid = "InfernoDragon0.cotl.CotLChef";
         public const string PluginName = "CotLChef";
-        public const string PluginVer = "1.1.4";
+        public const string PluginVer = "1.1.5";
 
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
@@ -188,6 +189,7 @@ namespace CotLMiniMods
             }   
 
             
+
 
             DivorceCommand = new DivorceCommand();
             CustomFollowerCommandManager.Add(DivorceCommand);

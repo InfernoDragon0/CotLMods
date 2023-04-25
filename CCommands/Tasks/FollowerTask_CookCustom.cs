@@ -11,18 +11,16 @@ namespace CotLMiniMods.CCommands.Tasks
     internal class FollowerTask_CookCustom : CustomTask
     {
         public override string InternalName => "FollowerTask_CookCustom";
-        public override int UsingStructureID => this.kitchenStationID;
+        public override int UsingStructureID => this.chefDeskID;
         public override bool BlockSocial => true;
         public override bool BlockTaskChanges => true;
-        public override FollowerLocation Location => this.kitchenStructure.Data.Location;
+        public override FollowerLocation Location => this.chefDeskStructure.Data.Location;
         public override float Priorty => 20f;
 
-        private Structures_Kitchen kitchenStructure;
-        private int kitchenStationID;
-
         private ChefDeskStructure chefDeskStructure;
+        private Structures_Kitchen kitchenStructure;
         private int chefDeskID;
-        public override Vector3 UpdateDestination(Follower follower) => this.kitchenStructure.Data.Position + new Vector3(0.0f, 2.521f);
+        public override Vector3 UpdateDestination(Follower follower) => this.chefDeskStructure.Data.Position + new Vector3(0.0f, 0.521f);
 
         public override FollowerTaskType Type => FollowerTaskType.Cook;
 
@@ -49,36 +47,30 @@ namespace CotLMiniMods.CCommands.Tasks
             }
         }
 
-        public FollowerTask_CookCustom(int kitchenStationID, int desk)
+        public FollowerTask_CookCustom(int desk)
         {
-            this.kitchenStationID = kitchenStationID;
-            this.kitchenStructure = StructureManager.GetStructureByID<Structures_Kitchen>(kitchenStationID);
-
             this.chefDeskID = desk;
             this.chefDeskStructure = StructureManager.GetStructureByID<ChefDeskStructure>(desk);
+            FindKitchen();
         }
 
-        public FollowerTask_CookCustom(int kitchenStationID)
+        public FollowerTask_CookCustom()
         {
-            this.kitchenStationID = kitchenStationID;
-            this.kitchenStructure = StructureManager.GetStructureByID<Structures_Kitchen>(kitchenStationID);
-
             foreach (StructureBrain structureBrain in StructureManager.StructuresAtLocation(FollowerLocation.Base))
             {
                 if (structureBrain is ChefDeskStructure && !structureBrain.ReservedForTask)
                 {
                     this.chefDeskID = structureBrain.Data.ID;
                     this.chefDeskStructure = StructureManager.GetStructureByID<ChefDeskStructure>(chefDeskID);
+                    FindKitchen();
                     return;
                 }
 
             }
-
             this.End();
-            
         }
 
-        public override int GetSubTaskCode() => this.kitchenStationID;
+        public override int GetSubTaskCode() => this.chefDeskID;
 
         public override void ClaimReservations()
         {
@@ -98,22 +90,80 @@ namespace CotLMiniMods.CCommands.Tasks
         
         public override void TaskTick(float deltaGameTime)
         {
-            if (this.State != FollowerTaskState.Doing || (this.kitchenStructure.Data.QueuedMeals.Count <= 0 && this.kitchenStructure.Data.CurrentCookingMeal == null))
+            bool flag = false;
+            //there are two types of tasks,
+            //task 1 is that the signature dish, when assigned, can be cooked on demand when followers request
+            //the cost is 1 strange material per dish cooked, and the dish is cooked in 10 seconds. if the follower kitchen is full, the dish is not cooked
+            //
+            //task 2 is that when a follower is cooking in the kitchen, they provide moral support and cook in the counter as well
+
+            //interactions: left click to deposit strange material, right click to select dish, another click to show upgrade screen
+            if (this.State != FollowerTaskState.Doing)
             {
                 return;
             }
-            
-            if (this.kitchenStructure.Data.CurrentCookingMeal == null)
+
+            //check if the current task is to aid the cook in follower kitchen or to cook the signature dish
+            if (this.kitchenStructure != null)
             {
-                this.kitchenStructure.Data.CurrentCookingMeal = this.kitchenStructure.Data.QueuedMeals[0];
-                if (Interaction_Kitchen.Kitchens.Count > 0) //turn on the fire
+                //aid
+                if (this.kitchenStructure.Data.CurrentCookingMeal == null)
                 {
-                    Plugin.Log.LogInfo("turning on fire");
-                    Interaction_Kitchen.Kitchens[0].ShowCooking(true);
+                    Interaction_Kitchen.QueuedMeal bestPossibleMeal = this.kitchenStructure.GetBestPossibleMeal();
+                    if (bestPossibleMeal == null)
+                        flag = true;
+                    else
+                        this.kitchenStructure.Data.CurrentCookingMeal = bestPossibleMeal;
+                }
+
+                if (!flag) {
+                    if (kitchenStructure.Data.CurrentCookingMeal.CookedTime >= kitchenStructure.Data.CurrentCookingMeal.CookingDuration)
+                    {
+                        this.MealFinishedCooking();
+                    }
+                    else
+                    {
+                        //include efficiency, etc
+                        this.kitchenStructure.Data.CurrentCookingMeal.CookedTime += deltaGameTime * this._brain.Info.ProductivityMultiplier;
+
+                    }
                 }
             }
+            else
+            {
+                flag = true;
+            }
+            
+            if (flag)
+            {
+                Plugin.Log.LogInfo("No kitchen found, we cook ourselves");
+                //cook self
+                this.chefDeskStructure.Data.Progress += deltaGameTime * this._brain.Info.ProductivityMultiplier;
 
-            else if (this.kitchenStructure.Data.CurrentCookingMeal.CookedTime >= this.kitchenStructure.Data.CurrentCookingMeal.CookingDuration)
+                if (this.chefDeskStructure.Data.Progress < 75)
+                    return;
+
+                this.chefDeskStructure.Data.Progress = 0.0f;
+
+                //TODO: also check if there is follower kitchen space
+                StructureBrain.TYPES mealStructureType = StructuresData.GetMealStructureType(this.chefDeskStructure.SelectedCookItem);
+                Vector3 position = this.chefDeskStructure.Data.Position + (Vector3)Random.insideUnitCircle * 2f;
+                StructureManager.BuildStructure(this.chefDeskStructure.Data.Location, StructuresData.GetInfoByType(mealStructureType, 0), position, Vector2Int.one);
+                
+                if (followerChef != null)
+                {
+                    followerChef.TimedAnimation("Reactions/react-happy1", 2.1f, (System.Action)(() => {
+                        followerChef.FacePosition(this.chefDeskStructure.Data.Position);
+                        followerChef.State.CURRENT_STATE = StateMachine.State.CustomAnimation;
+                        followerChef.SetBodyAnimation("cook", true);
+                        this.Complete();
+                    }));
+                }
+            }
+            
+           
+
+            /*else if (this.kitchenStructure.Data.CurrentCookingMeal.CookedTime >= this.kitchenStructure.Data.CurrentCookingMeal.CookingDuration)
             {
                 if (followerChef != null)
                 {
@@ -125,9 +175,9 @@ namespace CotLMiniMods.CCommands.Tasks
                     }));
                     this.MealFinishedCooking();
                 }
-            }
+            }*/
 
-            else
+           /* else
             {
                 if (_dissentBubbleCoroutine == null && followerChef != null)
                 {
@@ -135,33 +185,35 @@ namespace CotLMiniMods.CCommands.Tasks
                 }
                 
                 this.kitchenStructure.Data.CurrentCookingMeal.CookedTime += deltaGameTime * this._brain.Info.ProductivityMultiplier;
-            }
+            }*/
         }
 
-        private void MealFinishedCooking()
+        private void MealFinishedCooking() //TODO: change this into not dropping food but meal objectives only
         {
             ++DataManager.Instance.MealsCooked;
             ObjectiveManager.CheckObjectives(Objectives.TYPES.COOK_MEALS);
 
-            Structures_FoodStorage availableFoodStorage = Structures_FoodStorage.GetAvailableFoodStorage(this.kitchenStructure.Data.Position, this.Location);
+            //as of 1.20, no need food storage anymore, will become sous chef
+
+            /*Structures_FoodStorage availableFoodStorage = GetAvailableFoodStorage(this.kitchenStructure.Data.Position, this.Location);
             if (availableFoodStorage != null)
             {
                 availableFoodStorage.DepositItemUnstacked(this.kitchenStructure.Data.CurrentCookingMeal.MealType);
             }
             else
-            {
+            {*/
                 Plugin.Log.LogInfo("No Food Storage?");
                 StructureBrain.TYPES mealStructureType = StructuresData.GetMealStructureType(this.kitchenStructure.Data.CurrentCookingMeal.MealType);
                 Vector3 position = this.kitchenStructure.Data.Position + (Vector3)Random.insideUnitCircle * 2f;
                 StructureManager.BuildStructure(this.kitchenStructure.Data.Location, StructuresData.GetInfoByType(mealStructureType, 0), position, Vector2Int.one);
-            }
+            /*}*/
             
             CookingData.CookedMeal(this.kitchenStructure.Data.CurrentCookingMeal.MealType);
             ObjectiveManager.CheckObjectives(Objectives.TYPES.COOK_MEALS);
             this.kitchenStructure.Data.QueuedMeals.Remove(this.kitchenStructure.Data.CurrentCookingMeal);
             this.kitchenStructure.Data.CurrentCookingMeal = null;
             
-            if (this.kitchenStructure.Data.QueuedMeals.Count <= 0)
+            if (this.kitchenStructure.Data.QueuedMeals.Count <= 0) //TODO: change this
             {
                 //Plugin.Log.LogInfo("Closing bubble");
                 if (_dissentBubbleCoroutine != null)
@@ -172,10 +224,6 @@ namespace CotLMiniMods.CCommands.Tasks
                     Plugin.Log.LogInfo("closed bubble");
                 }
 
-                if (Interaction_Kitchen.Kitchens.Count > 0) //turn off the fire
-                {
-                    Interaction_Kitchen.Kitchens[0].ShowCooking(false);
-                }
                 this.Complete();
                 
             }
@@ -185,9 +233,8 @@ namespace CotLMiniMods.CCommands.Tasks
         public override void Setup(Follower follower)
         {
             base.Setup(follower);
-            if (this.kitchenStationID == 0)
-                return;
             follower.SetHat(HatType.Chef);
+            follower.SetOutfit(FollowerOutfitType.Undertaker, false);
 
             followerChef = follower;
             _dissentBubbleCoroutine = follower.StartCoroutine(DissentBubbleRoutine(follower));
@@ -195,9 +242,10 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override void OnDoingBegin(Follower follower)
         {
-            if (this.kitchenStationID == 0)
-                follower.SetHat(HatType.Chef);
-            follower.FacePosition(this.kitchenStructure.Data.Position);
+            follower.SetHat(HatType.Chef);
+            follower.SetOutfit(FollowerOutfitType.Undertaker, false);
+
+            follower.FacePosition(this.chefDeskStructure.Data.Position);
             follower.State.CURRENT_STATE = StateMachine.State.CustomAnimation;
             follower.SetBodyAnimation("cook", true);
 
@@ -220,14 +268,14 @@ namespace CotLMiniMods.CCommands.Tasks
             followerChef = null;
         }
 
-        private Interaction_Kitchen FindKitchen()
+        private Interaction_FollowerKitchen FindKitchen()
         {
-            foreach (Interaction_Kitchen kitchen in Interaction_Kitchen.Kitchens)
+            foreach (Interaction_FollowerKitchen kitchen in Interaction_FollowerKitchen.Kitchens)
             {
-                if (kitchen.structure.Structure_Info.ID == this.kitchenStationID)
-                    return kitchen;
+                this.kitchenStructure = StructureManager.GetStructureByID<Structures_Kitchen>(kitchen.StructureInfo.ID);
+                return kitchen;
             }
-            return (Interaction_Kitchen)null;
+            return null;
         }
 
         private static IEnumerator DissentBubbleRoutine(Follower follower) //for the bubble

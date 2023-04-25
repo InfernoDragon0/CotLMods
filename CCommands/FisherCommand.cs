@@ -44,7 +44,7 @@ namespace CotLMiniMods.CustomFollowerCommands
                 }
                 //interaction.follower.Brain.HardSwapToTask(new FollowerTask_Fisherman());
             }));
-            interaction.Close();
+            interaction.Close(true, reshowMenu: false);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace CotLMiniMods.Patches
             Interaction_FoodStorage foodInstance;
             if ((foodInstance = __instance as Interaction_FoodStorage) != null)
             {
-                __result = ScriptLocalization.Interactions.ReceiveDevotion + " Take out Food: " + foodInstance.CurrentCapacity + "/" + foodInstance.StructureBrain.Capacity;
+                __result = "Take out Food: " + foodInstance.CurrentCapacity + "/" + foodInstance.StructureBrain.Capacity;
             }
         }
 
@@ -36,7 +36,38 @@ namespace CotLMiniMods.Patches
             if (__instance is Interaction_FoodStorage)
             {
                 if (!Activating)
+                {
                     Activating = true;
+                    //get inventory
+                    var instanced = __instance as Interaction_FoodStorage;
+                    if (instanced.StructureInfo.Inventory.Count <= 0)
+                    {
+                        Plugin.Log.LogInfo("No food in storage");
+                    }
+                    else
+                    {
+                        foreach (InventoryItem inventoryItem in instanced.StructureInfo.Inventory)
+                        {
+                            if (inventoryItem.UnreservedQuantity > 0)
+                            {
+                                Plugin.Log.LogInfo("Found stored food of type " + (InventoryItem.ITEM_TYPE)inventoryItem.type);
+                                instanced.StructureBrain.TryClaimFoodReservation((InventoryItem.ITEM_TYPE)inventoryItem.type);
+                                if (instanced.StructureBrain.TryEatReservedFood((InventoryItem.ITEM_TYPE)inventoryItem.type))
+                                {
+                                    Plugin.Log.LogInfo("removed stored food");
+                                    StructureBrain.TYPES mealStructureType = StructuresData.GetMealStructureType((InventoryItem.ITEM_TYPE)inventoryItem.type);
+                                    Vector3 position = PlayerFarming.Instance.transform.position + (Vector3)Random.insideUnitCircle * 2f;
+                                    StructureManager.BuildStructure(FollowerLocation.Base, StructuresData.GetInfoByType(mealStructureType, 0), position, Vector2Int.one);
+                                    Activating = false;
+                                    break;
+                                }
+                            }
+                        }
+                        Activating = false;
+                    }
+                }
+
+
             }
         }
 
@@ -55,7 +86,7 @@ namespace CotLMiniMods.Patches
         }
 
         // This patch allows to take out food form food storage
-        [HarmonyPatch(typeof(Interaction_FoodStorage), nameof(Interaction_FoodStorage.Update))]
+        /*[HarmonyPatch(typeof(Interaction_FoodStorage), nameof(Interaction_FoodStorage.Update))]
         [HarmonyPostfix]
         public static void Interaction_FoodStorage_Update(Interaction_FoodStorage __instance)
         {
@@ -85,7 +116,7 @@ namespace CotLMiniMods.Patches
                 }
             }
             Delay = 0.2f;
-        }
+        }*/
 
 
 

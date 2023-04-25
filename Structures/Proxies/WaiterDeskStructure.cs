@@ -29,6 +29,7 @@ namespace CotLMiniMods.Structures.Proxies
         };
 
 
+
         public void GetAvailableTasks(ScheduledActivity activity, SortedList<float, FollowerTask> sortedTasks)
         {
             var count = 0;

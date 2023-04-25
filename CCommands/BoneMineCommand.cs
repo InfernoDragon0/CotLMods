@@ -36,7 +36,7 @@ namespace CotLMiniMods.CustomFollowerCommands
                 interaction.eventListener.PlayFollowerVO(interaction.generalAcknowledgeVO);
                 interaction.follower.Brain.HardSwapToTask(new FollowerTask_BoneMiner());
             }));
-            interaction.Close();
+            interaction.Close(true, reshowMenu: false);
         }
     }
 }

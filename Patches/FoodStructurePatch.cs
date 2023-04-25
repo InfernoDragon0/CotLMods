@@ -457,6 +457,28 @@ namespace CotLMiniMods.Patches
             return true;
         }
 
+        public static Structures_FoodStorage GetAvailableFoodStorage(
+            Vector3 fromPosition,
+            FollowerLocation location)
+        {
+            List<Structures_FoodStorage> structuresOfType = StructureManager.GetAllStructuresOfType<Structures_FoodStorage>(location);
+            List<Structures_FoodStorage> structuresFoodStorageList = new List<Structures_FoodStorage>();
+            foreach (Structures_FoodStorage structuresFoodStorage in structuresOfType)
+            {
+                BoxCollider2D boxCollider2D = GameManager.GetInstance().GetComponent<BoxCollider2D>();
+                if ((UnityEngine.Object)boxCollider2D == (UnityEngine.Object)null)
+                {
+                    boxCollider2D = GameManager.GetInstance().gameObject.AddComponent<BoxCollider2D>();
+                    boxCollider2D.isTrigger = true;
+                }
+                boxCollider2D.size = Vector2.one * 12f;
+                boxCollider2D.transform.position = structuresFoodStorage.Data.Position;
+                boxCollider2D.transform.rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, -45f));
+                if ((double)structuresFoodStorage.Data.Inventory.Count < (double)structuresFoodStorage.Capacity && boxCollider2D.OverlapPoint((Vector2)fromPosition))
+                    structuresFoodStorageList.Add(structuresFoodStorage);
+            }
+            return structuresFoodStorageList.Count <= 0 ? (Structures_FoodStorage)null : structuresFoodStorageList[UnityEngine.Random.Range(0, structuresFoodStorageList.Count)];
+        }
 
         //this patch to skip some animations for kitchen 2 on finish
         [HarmonyPatch(typeof(Interaction_Kitchen), "MealFinishedCooking")]
@@ -466,7 +488,7 @@ namespace CotLMiniMods.Patches
 
             if (__instance.StructureInfo.Type == StructureBrain.TYPES.KITCHEN_II)
             {
-                Structures_FoodStorage foodStorage = Structures_FoodStorage.GetAvailableFoodStorage(__instance.StructureInfo.Position, __instance.StructureInfo.Location);
+                Structures_FoodStorage foodStorage = GetAvailableFoodStorage(__instance.StructureInfo.Position, __instance.StructureInfo.Location);
                 InventoryItem.ITEM_TYPE mealType = __instance.structure.Structure_Info.QueuedMeals[0].MealType;
                 ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.CookFirstMeal);
                 DataManager.Instance.CookedFirstFood = true;

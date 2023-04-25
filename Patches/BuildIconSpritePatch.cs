@@ -32,12 +32,14 @@ namespace CotLMiniMods.Patches
                 case StructureBrain.TYPES.FOOD_STORAGE_2:
                     sprite = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/Icon_FoodStorage2.png"));
                     break;
-                case StructureBrain.TYPES.KITCHEN:
+                    //as of 1.20, no more kitchen 2, and kitchen has changed. this may break some saves?
+                    //kitchen 1 and 2 will generate the structure_kitchen as brain, so the cooking fire may disappear, but the cooking fire should be buildable again
+                /*case StructureBrain.TYPES.KITCHEN:
                     sprite = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/Icon_Kitchen.png"));
                     break;
                 case StructureBrain.TYPES.KITCHEN_II:
                     sprite = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/Icon_Kitchen.png"));
-                    break;
+                    break;*/
 
             }
             if (sprite != null)
