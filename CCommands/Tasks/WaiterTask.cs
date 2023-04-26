@@ -37,7 +37,7 @@ namespace CotLMiniMods.CCommands.Tasks
         {
             if (nextMeal != null && victim != null) return victim.Brain.LastPosition;
             if (nextMeal != null) return follower.Brain.LastPosition;//return this.nextMeal.Data.Position;
-            else if (nextMeal == null && Interaction_Kitchen.Kitchens.Count > 0) return Interaction_Kitchen.Kitchens[0].Position - (Vector3)Random.insideUnitCircle * 2f;
+            else if (nextMeal == null && Interaction_FollowerKitchen.Kitchens.Count > 0) return Interaction_FollowerKitchen.Kitchens[0].Position - (Vector3)Random.insideUnitCircle * 2f;
             else return base.UpdateDestination(follower);
         }
 

@@ -28,11 +28,11 @@ namespace CotLMiniMods.Interactions
         {
             int count = this.StructureInfo.Inventory.Count;
             //this.Interactable = count > 0;
-            this.SecondaryLabel = "Select Signature Dish (Currently " + this.ChefDesk.SelectedCookItem + ")";
-            this.thirdLabel = "Upgrade Sous Chef Desk";
+            this.SecondaryLabel = "Select Signature Dish (" + this.ChefDesk.SelectedCookItem + ")";
+            this.thirdLabel = "Upgrades";
 
             if (this.Structure != null)
-                this.label = "Add Strange Material: Currently x" + this.StructureInfo.Inventory.Count;
+                this.label = "Add Strange Material: x" + this.StructureInfo.Inventory.Count;
             else
                 this.label = "structure was null";
         }
@@ -100,6 +100,7 @@ namespace CotLMiniMods.Interactions
         public override void OnThirdInteract(StateMachine state)
         {
             base.OnThirdInteract(state);
+            Plugin.Log.LogInfo("interacted 3");
 
         }
         public override void Update()
