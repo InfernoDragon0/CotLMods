@@ -136,7 +136,7 @@ namespace CotLMiniMods.CCommands.Tasks
             
             if (flag)
             {
-                Plugin.Log.LogInfo("No kitchen found, we cook ourselves");
+               /* Plugin.Log.LogInfo("No kitchen found, we cook ourselves");*/
                 //cook self
                 this.chefDeskStructure.Data.Progress += deltaGameTime * this._brain.Info.ProductivityMultiplier;
 
@@ -146,9 +146,25 @@ namespace CotLMiniMods.CCommands.Tasks
                 this.chefDeskStructure.Data.Progress = 0.0f;
 
                 //TODO: also check if there is follower kitchen space
-                StructureBrain.TYPES mealStructureType = StructuresData.GetMealStructureType(this.chefDeskStructure.SelectedCookItem);
-                Vector3 position = this.chefDeskStructure.Data.Position + (Vector3)Random.insideUnitCircle * 2f;
-                StructureManager.BuildStructure(this.chefDeskStructure.Data.Location, StructuresData.GetInfoByType(mealStructureType, 0), position, Vector2Int.one);
+                bool flag1 = false;
+                foreach (Interaction_FollowerKitchen k in Interaction_FollowerKitchen.FollowerKitchens)
+                {
+                    if ((k.foodStorage.StructureBrain.Data.Inventory.Count < k.foodStorage.StructureBrain.Capacity) && k.StructureInfo.CurrentCookingMeal == null)
+                    {
+                        //store food
+                        Plugin.Log.LogInfo("Adding food to kitchen via Sous Chef Desk");
+                        k.foodStorage.StructureBrain.DepositItemUnstacked(this.chefDeskStructure.SelectedCookItem);
+                        k.foodStorage.UpdateFoodDisplayed();
+                        flag1 = true;
+                        break;
+                    }
+                }
+                if (!flag1) //if not put into storage, then spawn it on the ground
+                {
+                    StructureBrain.TYPES mealStructureType = StructuresData.GetMealStructureType(this.chefDeskStructure.SelectedCookItem);
+                    Vector3 position = this.chefDeskStructure.Data.Position + (Vector3)Random.insideUnitCircle * 2f;
+                    StructureManager.BuildStructure(this.chefDeskStructure.Data.Location, StructuresData.GetInfoByType(mealStructureType, 0), position, Vector2Int.one);
+                }
                 
                 if (followerChef != null)
                 {

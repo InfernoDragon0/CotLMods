@@ -21,6 +21,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public Structures_Meal nextMeal;
         public Follower victim;
+        public SimFollower simvictim;
         public Follower waiter;
 
         public bool sendingFood = false;
@@ -36,6 +37,7 @@ namespace CotLMiniMods.CCommands.Tasks
         public override Vector3 UpdateDestination(Follower follower)
         {
             if (nextMeal != null && victim != null) return victim.Brain.LastPosition;
+            /*if (nextMeal != null && simvictim != null) return simvictim.Brain.LastPosition;*/
             if (nextMeal != null) return follower.Brain.LastPosition;//return this.nextMeal.Data.Position;
             else if (nextMeal == null && Interaction_FollowerKitchen.Kitchens.Count > 0) return Interaction_FollowerKitchen.Kitchens[0].Position - (Vector3)Random.insideUnitCircle * 2f;
             else return base.UpdateDestination(follower);
@@ -99,7 +101,9 @@ namespace CotLMiniMods.CCommands.Tasks
             if (sendingFood) //arived at the follower
             {
                 //if still too far, such as the other follower moved away
-                float num = Vector3.Distance(victim.transform.position, follower.transform.position);
+                var pos = victim ? victim.transform.position : follower.transform.position;
+                var directid = victim ? victim.Brain._directInfoAccess.ID : simvictim.Brain._directInfoAccess.ID;
+                float num = Vector3.Distance(pos, follower.transform.position);
                 if ((double)num > 7.0) //sometimes chasing breaks the waiter so a bigger acceptable radius is easier on the task
                 {
                     Plugin.Log.LogInfo("victim moved, chasing..");
@@ -116,7 +120,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
                         Plugin.Log.LogInfo("forcing victim to eat..");
 
-                        if (victim.Brain._directInfoAccess.ID == follower.Brain._directInfoAccess.ID)
+                        if (directid == follower.Brain._directInfoAccess.ID)
                         {
                             Plugin.Log.LogInfo("Self eating");
                             _brain.Stats.Satiation += CookingData.GetSatationAmount(CookingData.GetMealFromStructureType(nextMeal.Data.Type)) * 2;
@@ -130,8 +134,8 @@ namespace CotLMiniMods.CCommands.Tasks
                                 _brain.Stats.Satiation += CookingData.GetSatationAmount(CookingData.GetMealFromStructureType(nextMeal.Data.Type));
 
                                 //free gold
-                                ResourceCustomTarget.Create(follower.gameObject, victim.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
-                                InventoryItem.Spawn(InventoryItem.ITEM_TYPE.BLACK_GOLD, 2, victim.transform.position);
+                                ResourceCustomTarget.Create(follower.gameObject, pos, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
+                                InventoryItem.Spawn(InventoryItem.ITEM_TYPE.BLACK_GOLD, 2, pos);
 
                                 //eat meal
                                 victim.Brain.HardSwapToTask(new EatWaiterTask(nextMeal.Data.ID));
@@ -146,6 +150,7 @@ namespace CotLMiniMods.CCommands.Tasks
                         //now go back and find food again
                         nextMeal = null;
                         victim = null;
+                        simvictim = null;
                         sendingFood = false;
                         FindNextMeal();
 
@@ -173,6 +178,7 @@ namespace CotLMiniMods.CCommands.Tasks
                         Plugin.Log.LogInfo("another waiter got to it");
                         nextMeal = null;
                         victim = null;
+                        simvictim = null;
                         sendingFood = false;
                         SetState(FollowerTaskState.GoingTo);
                         return;
@@ -269,20 +275,42 @@ namespace CotLMiniMods.CCommands.Tasks
         //set the next victim of the meal, can be self, but if it is self the waiter task might go away
         private void FindNextMealVictim()
         {
+            Plugin.Log.LogInfo("finding next victim start");
             foreach (ObjectivesData objective in DataManager.Instance.Objectives)
             {
                 if (objective is Objectives_EatMeal && ((Objectives_EatMeal)objective).MealType == nextMeal.Data.Type)
                 {
+                    Plugin.Log.LogInfo("follower by id " + objective.Follower);
+
                     victim = FollowerManager.FindFollowerByID(objective.Follower);
 
                 }
             }
+
             if (victim == null)
             {//TODO: make it so that they dont dunk on the same person
                 FollowerBrain fb = FollowerManager.GetHungriestFollowerBrain();
+                
+                //TODO: may become sim follower when fighting, so all follower tasks need to change to simfollower
                 victim = FollowerManager.FindFollowerByID(fb._directInfoAccess.ID);
+                if (victim == null)
+                {
+                    Plugin.Log.LogInfo("Could not find victim, using sim victim");
+                    simvictim = FollowerManager.FindSimFollowerByID(fb._directInfoAccess.ID);
+                    Plugin.Log.LogInfo("sim victim found = " + simvictim.Brain._directInfoAccess.Name);
+
+                }
+                else
+                {
+                    Plugin.Log.LogInfo("victim found = " + victim.Brain._directInfoAccess.Name);
+                }
+
             }
-            Plugin.Log.LogInfo("victim found = " + victim.Brain._directInfoAccess.Name);
+            else
+            {
+                Plugin.Log.LogInfo("victim found = " + victim.Brain._directInfoAccess.Name);
+            }
+
             if (_currentDestination.HasValue) //clear if have destination
             {
                 ClearDestination();
@@ -326,20 +354,21 @@ namespace CotLMiniMods.CCommands.Tasks
             {
                 //from the food storage
                 //TODO
-                foreach (Structures_FoodStorage structuresFoodStorage in StructureManager.GetAllStructuresOfType<Structures_FoodStorage>(Location))
+                foreach (Interaction_FollowerKitchen followerKitchen in Interaction_FollowerKitchen.FollowerKitchens)
                 {
-                    foreach (InventoryItem inventoryItem in structuresFoodStorage.Data.Inventory)
+                    
+                    foreach (InventoryItem inventoryItem in followerKitchen.foodStorage.StructureInfo.Inventory)
                     {
                         if (inventoryItem.UnreservedQuantity > 0)
                         {
                             Plugin.Log.LogInfo("Found stored food of type " + (InventoryItem.ITEM_TYPE)inventoryItem.type);
-                            structuresFoodStorage.TryClaimFoodReservation((InventoryItem.ITEM_TYPE)inventoryItem.type);
-                            if (structuresFoodStorage.TryEatReservedFood((InventoryItem.ITEM_TYPE)inventoryItem.type))
+                            followerKitchen.foodStorage.StructureBrain.TryClaimFoodReservation((InventoryItem.ITEM_TYPE)inventoryItem.type);
+                            if (followerKitchen.foodStorage.StructureBrain.TryEatReservedFood((InventoryItem.ITEM_TYPE)inventoryItem.type))
                             {
                                 Plugin.Log.LogInfo("removed stored food");
                                 StructureBrain.TYPES mealStructureType = StructuresData.GetMealStructureType((InventoryItem.ITEM_TYPE)inventoryItem.type);
-                                Vector3 position = structuresFoodStorage.Data.Position + (Vector3)Random.insideUnitCircle * 2f;
-                                StructureManager.BuildStructure(structuresFoodStorage.Data.Location, StructuresData.GetInfoByType(mealStructureType, 0), position, Vector2Int.one);
+                                Vector3 position = this._resourceStation.Data.Position + (Vector3)Random.insideUnitCircle * 2f;
+                                StructureManager.BuildStructure(this._resourceStation.Data.Location, StructuresData.GetInfoByType(mealStructureType, 0), position, Vector2Int.one);
                                 break;
                             }
 

@@ -41,15 +41,17 @@ namespace CotLMiniMods.Structures.Proxies
                 }
             }
 
-            foreach (Structures_FoodStorage structuresFoodStorage in StructureManager.GetAllStructuresOfType<Structures_FoodStorage>(FollowerLocation.Base))
+            foreach (Interaction_FollowerKitchen followerKitchen in Interaction_FollowerKitchen.FollowerKitchens)
             {
-                foreach (InventoryItem inventoryItem in structuresFoodStorage.Data.Inventory)
+
+                foreach (InventoryItem inventoryItem in followerKitchen.foodStorage.StructureInfo.Inventory)
                 {
                     if (inventoryItem.UnreservedQuantity > 0)
                     {
                         count++;
                     }
                 }
+
             }
 
             if (activity != ScheduledActivity.Work || ReservedForTask || count == 0)

@@ -8,6 +8,8 @@ using UnityEngine;
 using src.Extensions;
 using Lamb.UI.FollowerInteractionWheel;
 using System.Collections;
+using COTL_API.CustomTarotCard;
+using System.Linq;
 
 namespace CotLMiniMods.Interactions
 {
@@ -65,7 +67,7 @@ namespace CotLMiniMods.Interactions
 
             
             TarotCards.TarotCard card1 = this.GetCard();
-            TarotCards.TarotCard card2 = this.GetCard();
+            TarotCards.TarotCard card2 = this.GetCard(false);
             if (card1 != null && card2 != null)
             {
                 UITarotChoiceOverlayController tarotChoiceOverlayInstance = MonoSingleton<UIManager>.Instance.ShowTarotChoice(card1, card2);
@@ -135,18 +137,44 @@ namespace CotLMiniMods.Interactions
                 TrinketManager.AddTrinket(card);
         }
 
-        private TarotCards.TarotCard GetCard()
+        private TarotCards.TarotCard GetCard(bool customFirst = true)
         {
-            TarotCards.TarotCard card;
-            if (!DataManager.Instance.FirstTarot && TarotCards.DrawRandomCard() != null)
-            {
-                DataManager.Instance.FirstTarot = true;
-                card = new TarotCards.TarotCard(TarotCards.Card.Lovers1, 0);
+            
+            TarotCards.TarotCard card = null;
+            bool alreadyTaken = false;
+            if (customFirst) {
+                TarotCards.Card cardData = CustomTarotCardManager.CustomTarotCardList.Keys.ElementAt(UnityEngine.Random.Range(0, CustomTarotCardManager.CustomTarotCardList.Count));
+
+                card = new TarotCards.TarotCard(cardData, 0);
+                Plugin.Log.LogInfo("Before contain card " + DataManager.Instance.PlayerRunTrinkets.Contains(card));
             }
-            else
-                card = TarotCards.DrawRandomCard();
+
+            
+            foreach(var cardz in DataManager.Instance.PlayerRunTrinkets)
+            {
+                if (card == null) break;
+                
+                if (cardz.CardType == card.CardType)
+                {
+                    Plugin.Log.LogInfo("custom already taken");
+                    alreadyTaken = true;
+                }
+            }
+
+            if (alreadyTaken || card == null) //if already have the custom card, then draw a vanilla card
+            {
+                if (!DataManager.Instance.FirstTarot && TarotCards.DrawRandomCard() != null)
+                {
+                    DataManager.Instance.FirstTarot = true;
+                    card = new TarotCards.TarotCard(TarotCards.Card.Lovers1, 0);
+                }
+                else
+                    card = TarotCards.DrawRandomCard();
+            }
+            
             if (card != null)
                 DataManager.Instance.PlayerRunTrinkets.Add(card);
+            
             return card;
         }
 

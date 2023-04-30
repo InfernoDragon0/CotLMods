@@ -106,7 +106,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
             this._resourceStation.Data.Progress += deltaGameTime * this._brain.Info.ProductivityMultiplier;
 
-            if (this._resourceStation.Data.Progress < 180)
+            if (this._resourceStation.Data.Progress < 120)
                 return;
 
             this._resourceStation.Data.Progress = 0.0f;
@@ -129,8 +129,19 @@ namespace CotLMiniMods.CCommands.Tasks
                 }
                 else
                 {
-                    Plugin.Log.LogInfo("give quest");
-                    this.Brain.HardSwapToTask(new FollowerTask_GetAttention(Follower.ComplaintType.GiveQuest));
+                    if (Plugin.telescopeGivesQuest.Value)
+                    {
+                        Plugin.Log.LogInfo("give quest");
+                        this.Brain.HardSwapToTask(new FollowerTask_GetAttention(Follower.ComplaintType.GiveQuest));
+                    }
+                    else
+                    {
+                        Plugin.Log.LogInfo("no give quest");
+                        followerById.TimedAnimation("Hungry/get-hungry", 0.5f, (System.Action)(() =>
+                        {
+                            InventoryItem.Spawn(Plugin.StrangeMaterialItem, 1, followerById.transform.position);
+                        }));
+                    }
                 }
                 //this.End();
             }));

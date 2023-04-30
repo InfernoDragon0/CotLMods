@@ -18,7 +18,7 @@ namespace CotLMiniMods.Structures.Productivity
         public override string GetLocalizedName() => "Study Table";
         
         //SEASON 1: v1.1.0 only. v1.1.1 will change to provide strange material along with a quest.
-        public override string GetLocalizedDescription() => "Allows your followers to research. The follower will gain loyalty.";
+        public override string GetLocalizedDescription() => "Allows your followers to research in Strange Materials. Invest Gold to increase generation. The follower will gain loyalty as well.";
 
         public bool CheckOverrideComplete() => true;
 

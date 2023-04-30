@@ -11,6 +11,8 @@ using DG.Tweening;
 using CotLMiniMods.Structures.Mines;
 using CotLMiniMods.Structures.Proxies;
 using CotLMiniMods.Items;
+using COTL_API.Helpers;
+using System.IO;
 
 namespace CotLMiniMods.Interactions
 {
@@ -29,12 +31,7 @@ namespace CotLMiniMods.Interactions
             int count = this.StructureInfo.Inventory.Count;
             //this.Interactable = count > 0;
             this.SecondaryLabel = "Select Signature Dish (" + this.ChefDesk.SelectedCookItem + ")";
-            this.thirdLabel = "Upgrades";
-
-            if (this.Structure != null)
-                this.label = "Add Strange Material: x" + this.StructureInfo.Inventory.Count;
-            else
-                this.label = "structure was null";
+            this.label = "Upgrades";
         }
 
         private void Start()
@@ -52,9 +49,35 @@ namespace CotLMiniMods.Interactions
 
         public override void OnInteract(StateMachine state)
         {
-            if (this.Activating) return;
+            UIUpgradeTreeMenuController upgradeTreeInstance = UIManager.Instance.UpgradeTreeMenuTemplate.Instantiate<UIUpgradeTreeMenuController>();
+            upgradeTreeInstance._divineInspirationBackground.sprite = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/chefdesk.png"));
+            Plugin.Log.LogInfo("root node was");
+            Plugin.Log.LogInfo(upgradeTreeInstance._rootNode._title.text);
+
+            
+
+            upgradeTreeInstance.OnShow += new Action(() =>
+            {
+                //test creating a node
+                UpgradeTreeNode customNode = upgradeTreeInstance._rootNode;
+                customNode._title.text = "hello there";
+                customNode._state = UpgradeTreeNode.NodeState.Locked;
+                
+                foreach (UpgradeTreeNode upgradeTreeNode in upgradeTreeInstance._treeNodes)
+                {
+                    Plugin.Log.LogInfo("tree nodes");
+                    Plugin.Log.LogInfo(upgradeTreeNode._title.text);
+                    upgradeTreeNode._title.text = "bye bye";
+                }
+                upgradeTreeInstance._rootNode.Configure(upgradeTreeInstance.TreeTier(), true);
+            });
+
+            
+            
+            upgradeTreeInstance.Show();
+            /*if (this.Activating) return;
             base.OnInteract(state);
-            this.Activating = true;
+            this.Activating = true;*/
         }
 
         public override void OnSecondaryInteract(StateMachine state)
@@ -97,12 +120,6 @@ namespace CotLMiniMods.Interactions
 
         }
 
-        public override void OnThirdInteract(StateMachine state)
-        {
-            base.OnThirdInteract(state);
-            Plugin.Log.LogInfo("interacted 3");
-
-        }
         public override void Update()
         {
             if ((this.Player = GameObject.FindWithTag("Player")) == null)

@@ -18,6 +18,8 @@ using COTL_API.CustomInventory;
 using CotLMiniMods.CustomFollowerCommands;
 using COTL_API.CustomSettings;
 using Lamb.UI;
+using COTL_API.CustomTarotCard;
+using CotLMiniMods.Tarots;
 
 namespace CotLMiniMods
 {
@@ -28,7 +30,7 @@ namespace CotLMiniMods
     {
         public const string PluginGuid = "InfernoDragon0.cotl.CotLChef";
         public const string PluginName = "CotLChef";
-        public const string PluginVer = "1.1.5";
+        public const string PluginVer = "1.2.0";
 
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
@@ -80,6 +82,9 @@ namespace CotLMiniMods
         internal static ConfigEntry<bool> customFood;
         internal static ConfigEntry<bool> customStructures;
         internal static ConfigEntry<bool> customRituals;
+        internal static ConfigEntry<bool> customTarots;
+        
+        internal static ConfigEntry<bool> telescopeGivesQuest;
 
         private void Awake()
         {
@@ -106,6 +111,8 @@ namespace CotLMiniMods
             customFood = Config.Bind("", "customFood", false, "Adds custom food (partial implementation, not ready yet).");
             customStructures = Config.Bind("", "customStructures", true, "Adds Custom Structures.");
             customRituals = Config.Bind("", "customRituals", true, "Adds Custom Rituals.");
+            customTarots = Config.Bind("", "customTarots", true, "Adds Custom Tarots.");
+            telescopeGivesQuest = Config.Bind("", "telescopeGivesQuest", true, "Set to true if the telescope should give quests in the morning. False will provide Strange Material at a lower rate in the day.");
 
             ConfigListener.AddConfigEntries();
             
@@ -209,6 +216,14 @@ namespace CotLMiniMods
                 CustomRitualManager.Add(new ReversalRitual());
                 //CustomRitualManager.Add(new SuperchargeRitual());
                 CustomRitualManager.Add(new MistletoeRitual());
+                CustomRitualManager.Add(new MassResurrectionRitual());
+                CustomRitualManager.Add(new ExiledRitual());
+            }
+
+            if (customTarots.Value)
+            {
+                Plugin.Log.LogInfo("Added tarots");
+                CustomTarotCardManager.Add(new Tarot_StrangeExtraction());
             }
         }
 

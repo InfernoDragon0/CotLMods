@@ -35,8 +35,8 @@ namespace CotLMiniMods.Patches
                 Plugin.Log.LogInfo("Add food storage and fishing");
                 __result.Add(StructureBrain.TYPES.FOOD_STORAGE);
                 __result.Add(StructureBrain.TYPES.FOOD_STORAGE_2);
-                __result.Add(StructureBrain.TYPES.KITCHEN);
-                __result.Add(StructureBrain.TYPES.KITCHEN_II);
+               /* __result.Add(StructureBrain.TYPES.KITCHEN);
+                __result.Add(StructureBrain.TYPES.KITCHEN_II);*/
                 //__result.Add(StructureBrain.TYPES.FISHING_SPOT);
                 __result.Add(StructureBrain.TYPES.FISHING_HUT);
                 //__result.Add(StructureBrain.TYPES.FISHING_HUT_2);
@@ -47,7 +47,7 @@ namespace CotLMiniMods.Patches
         [HarmonyPrefix]
         private static void StructuresData_GetUnlocked(StructureBrain.TYPES Types)
         {
-            if (!DataManager.Instance.UnlockedStructures.Contains(Types) && (Types == StructureBrain.TYPES.KITCHEN || Types == StructureBrain.TYPES.KITCHEN_II || Types ==  StructureBrain.TYPES.FOOD_STORAGE || Types == StructureBrain.TYPES.FOOD_STORAGE_2 || Types == StructureBrain.TYPES.FISHING_HUT /*|| Types == StructureBrain.TYPES.FISHING_HUT_2*/))
+            if (!DataManager.Instance.UnlockedStructures.Contains(Types) && (Types == StructureBrain.TYPES.KITCHEN /*|| Types == StructureBrain.TYPES.KITCHEN_II*/ || Types ==  StructureBrain.TYPES.FOOD_STORAGE || Types == StructureBrain.TYPES.FOOD_STORAGE_2 || Types == StructureBrain.TYPES.FISHING_HUT /*|| Types == StructureBrain.TYPES.FISHING_HUT_2*/))
             {
                 DataManager.Instance.UnlockedStructures.Add(Types);
             }
@@ -433,7 +433,7 @@ namespace CotLMiniMods.Patches
         }
 
         //this patch to skip some animations for kitchen 2
-        [HarmonyPatch(typeof(Interaction_Kitchen), "CookAll")]
+        /*[HarmonyPatch(typeof(Interaction_Kitchen), "CookAll")]
         [HarmonyPrefix]
         private static bool Interaction_Kitchen_CookAll(Interaction_Kitchen __instance)
         {
@@ -455,7 +455,7 @@ namespace CotLMiniMods.Patches
                 return false;
             }
             return true;
-        }
+        }*/
 
         public static Structures_FoodStorage GetAvailableFoodStorage(
             Vector3 fromPosition,

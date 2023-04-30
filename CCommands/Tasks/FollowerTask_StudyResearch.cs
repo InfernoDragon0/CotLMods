@@ -123,8 +123,7 @@ namespace CotLMiniMods.CCommands.Tasks
                 
                 if (this._resourceStation.Data.Inventory.Count > 0) //1.1.2
                 {
-                    InventoryItem.Spawn((InventoryItem.ITEM_TYPE)this._resourceStation.Data.Inventory[0].type, 1, followerById.transform.position);
-                    this._resourceStation.Data.Inventory.RemoveAt(0);
+                    InventoryItem.Spawn((InventoryItem.ITEM_TYPE)this._resourceStation.Data.Inventory[0].type, this._resourceStation.Data.Inventory.Count, followerById.transform.position);
                 }
             }));
 
