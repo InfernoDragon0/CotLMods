@@ -106,13 +106,12 @@ namespace CotLMiniMods.CCommands.Tasks
 
             if (this._resourceStation.UsedForTheDay)
             {
-                this.End();
                 return;
             }
 
             this._resourceStation.Data.Progress += deltaGameTime * this._brain.Info.ProductivityMultiplier;
 
-            if (this._resourceStation.Data.Progress < 120)
+            if (this._resourceStation.Data.Progress < 60)
                 return;
 
             this._resourceStation.Data.Progress = 0.0f;
