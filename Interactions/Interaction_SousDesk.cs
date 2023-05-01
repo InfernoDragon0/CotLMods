@@ -31,7 +31,7 @@ namespace CotLMiniMods.Interactions
             int count = this.StructureInfo.Inventory.Count;
             //this.Interactable = count > 0;
             this.SecondaryLabel = "Select Signature Dish (" + this.ChefDesk.SelectedCookItem + ")";
-            this.label = "Upgrades";
+            this.label = "";
         }
 
         private void Start()
@@ -49,7 +49,7 @@ namespace CotLMiniMods.Interactions
 
         public override void OnInteract(StateMachine state)
         {
-            UIUpgradeTreeMenuController upgradeTreeInstance = UIManager.Instance.UpgradeTreeMenuTemplate.Instantiate<UIUpgradeTreeMenuController>();
+           /* UIUpgradeTreeMenuController upgradeTreeInstance = UIManager.Instance.UpgradeTreeMenuTemplate.Instantiate<UIUpgradeTreeMenuController>();
             upgradeTreeInstance._divineInspirationBackground.sprite = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/chefdesk.png"));
             Plugin.Log.LogInfo("root node was");
             Plugin.Log.LogInfo(upgradeTreeInstance._rootNode._title.text);
@@ -74,7 +74,7 @@ namespace CotLMiniMods.Interactions
 
             
             
-            upgradeTreeInstance.Show();
+            upgradeTreeInstance.Show();*/
             /*if (this.Activating) return;
             base.OnInteract(state);
             this.Activating = true;*/

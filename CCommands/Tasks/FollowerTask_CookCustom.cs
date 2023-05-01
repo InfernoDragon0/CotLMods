@@ -286,7 +286,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
         private Interaction_FollowerKitchen FindKitchen()
         {
-            foreach (Interaction_FollowerKitchen kitchen in Interaction_FollowerKitchen.Kitchens)
+            foreach (Interaction_FollowerKitchen kitchen in Interaction_FollowerKitchen.FollowerKitchens)
             {
                 this.kitchenStructure = StructureManager.GetStructureByID<Structures_Kitchen>(kitchen.StructureInfo.ID);
                 return kitchen;

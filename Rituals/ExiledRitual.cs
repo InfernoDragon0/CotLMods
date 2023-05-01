@@ -20,8 +20,8 @@ namespace CotLMiniMods.Rituals
     public class ExiledRitual : CustomRitual
     {
         public override string InternalName { get; } = "Exiled_Ritual";
-        public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_leveling.png"));
-        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.BLACK_GOLD, 700) };
+        public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_exile.png"));
+        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new(Plugin.StrangeMaterialItem, 3) };
 
         public override string GetLocalizedName => "Ritual of Exile";
         public override string GetLocalizedDescription => "Removes a follower from existence, permanently leaving the cult. Warning: this action is irreversible!";

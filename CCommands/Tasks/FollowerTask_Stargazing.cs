@@ -104,19 +104,24 @@ namespace CotLMiniMods.CCommands.Tasks
             if (this.State != FollowerTaskState.Idle && this.State != FollowerTaskState.Doing)
                 return;
 
+            if (this._resourceStation.UsedForTheDay)
+            {
+                this.End();
+                return;
+            }
+
             this._resourceStation.Data.Progress += deltaGameTime * this._brain.Info.ProductivityMultiplier;
 
             if (this._resourceStation.Data.Progress < 120)
                 return;
 
             this._resourceStation.Data.Progress = 0.0f;
-
+            this._resourceStation.UsedForTheDay = true;
 
             Follower followerById = FollowerManager.FindFollowerByID(this._brain.Info.ID);
 
-            
             followerById.TimedAnimation("Reactions/react-laugh", 3.33f, (System.Action)(() => {
-                this._resourceStation.UsedForTheDay = true;
+                
                 Plugin.Log.LogInfo("Completed stargazing");
                 
                 if (TimeManager.IsNight)
@@ -125,6 +130,7 @@ namespace CotLMiniMods.CCommands.Tasks
                     followerById.TimedAnimation("Hungry/get-hungry", 0.5f, (System.Action)(() =>
                     {
                         InventoryItem.Spawn(Plugin.StrangeMaterialItem, 5, followerById.transform.position);
+                        this.End();
                     }));
                 }
                 else
@@ -133,6 +139,7 @@ namespace CotLMiniMods.CCommands.Tasks
                     {
                         Plugin.Log.LogInfo("give quest");
                         this.Brain.HardSwapToTask(new FollowerTask_GetAttention(Follower.ComplaintType.GiveQuest));
+                        this.End();
                     }
                     else
                     {
@@ -140,7 +147,9 @@ namespace CotLMiniMods.CCommands.Tasks
                         followerById.TimedAnimation("Hungry/get-hungry", 0.5f, (System.Action)(() =>
                         {
                             InventoryItem.Spawn(Plugin.StrangeMaterialItem, 1, followerById.transform.position);
+                            this.End();
                         }));
+                        
                     }
                 }
                 //this.End();

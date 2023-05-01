@@ -33,8 +33,8 @@ namespace CotLMiniMods.Patches
             if (category == FollowerCategory.Category.Food)
             {
                 Plugin.Log.LogInfo("Add food storage and fishing");
-                __result.Add(StructureBrain.TYPES.FOOD_STORAGE);
-                __result.Add(StructureBrain.TYPES.FOOD_STORAGE_2);
+                /*__result.Add(StructureBrain.TYPES.FOOD_STORAGE);
+                __result.Add(StructureBrain.TYPES.FOOD_STORAGE_2);*/
                /* __result.Add(StructureBrain.TYPES.KITCHEN);
                 __result.Add(StructureBrain.TYPES.KITCHEN_II);*/
                 //__result.Add(StructureBrain.TYPES.FISHING_SPOT);

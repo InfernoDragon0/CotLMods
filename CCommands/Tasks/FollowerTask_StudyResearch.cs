@@ -16,7 +16,7 @@ namespace CotLMiniMods.CCommands.Tasks
         public override bool BlockSocial => true;
         public override FollowerLocation Location => this._resourceStation.Data.Location;
         public override float Priorty => 20f;
-
+        public bool finishing = false;
         public FollowerTask_StudyResearch(int resourceStationID)
         {
             this._resourceStationID = resourceStationID;
@@ -104,6 +104,8 @@ namespace CotLMiniMods.CCommands.Tasks
             if (this.State != FollowerTaskState.Idle && this.State != FollowerTaskState.Doing)
                 return;
 
+            if (finishing) return;
+
             this._resourceStation.Data.Progress += deltaGameTime * this._brain.Info.ProductivityMultiplier;
 
             if (this._resourceStation.Data.Progress < 180)
@@ -113,10 +115,13 @@ namespace CotLMiniMods.CCommands.Tasks
 
 
             Follower followerById = FollowerManager.FindFollowerByID(this._brain.Info.ID);
-
             
+            this.finishing = true;
             followerById.TimedAnimation("Reactions/react-laugh", 3.33f, (System.Action)(() => {
-                followerById.Brain.Stats.Adoration += 10;
+                if (followerById.Brain.Stats.Adoration < followerById.Brain.Stats.MAX_ADORATION)
+                {
+                    followerById.Brain.Stats.Adoration += 10;
+                }
 
                 followerById.AdorationUI.BarController.SetBarSize(followerById.Brain.Stats.Adoration / followerById.Brain.Stats.MAX_ADORATION, false, true);
                 followerById.StartCoroutine(followerById.Brain.AddAdorationIE(followerById, FollowerBrain.AdorationActions.InspireLvl1, null)); //SEASON 1 v1.1.0
@@ -125,6 +130,7 @@ namespace CotLMiniMods.CCommands.Tasks
                 {
                     InventoryItem.Spawn((InventoryItem.ITEM_TYPE)this._resourceStation.Data.Inventory[0].type, this._resourceStation.Data.Inventory.Count, followerById.transform.position);
                 }
+                this.finishing = false;
             }));
 
             

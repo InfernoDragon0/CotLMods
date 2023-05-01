@@ -20,8 +20,8 @@ namespace CotLMiniMods.Rituals
     public class MassResurrectionRitual : CustomRitual
     {
         public override string InternalName { get; } = "MassResurrection_Ritual";
-        public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_leveling.png"));
-        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.BLACK_GOLD, 700) };
+        public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_massres.png"));
+        public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new(Plugin.StrangeMaterialItem, 12) };
 
         public override string GetLocalizedName => "Mass Resurrection Ritual";
         public override string GetLocalizedDescription => "Resurrects all dead followers. Beware, your cult may be flooded with followers!";
