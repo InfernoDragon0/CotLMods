@@ -25,13 +25,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CultOfTheLamb.GameLibs" Version="1.2.1.275-r.0" />
+        <PackageReference Include="CultOfTheLamb.GameLibs" Version="1.2.3.297-r.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="COTL_API" Private="false">
-        <HintPath>lib\COTL_API.dll</HintPath>
-      </Reference>
+		<PackageReference Include="COTL_API" Version="0.1.21" />
     </ItemGroup>
 
     <ItemGroup>

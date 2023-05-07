@@ -1,4 +1,4 @@
-﻿using COTL_API.Tasks;
+﻿using COTL_API.CustomTasks;
 using CotLMiniMods.Structures.Productivity;
 using CotLTemplateMod;
 using UnityEngine;
