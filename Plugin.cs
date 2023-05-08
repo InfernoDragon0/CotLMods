@@ -58,6 +58,7 @@ namespace CotLMiniMods
         internal static Structures_Telescope Structures_Telescope;
         internal static Structures_AlchemyCauldron Structures_AlchemyCauldron;
         internal static Structures_EndlessPit Structures_EndlessPit;
+        internal static Structures_RelicGenerator Structures_RelicGenerator;
 
         internal static InventoryItem.ITEM_TYPE StrangeMaterialItem;
         internal static InventoryItem.ITEM_TYPE StrangeEnergyItem;
@@ -85,6 +86,7 @@ namespace CotLMiniMods
         internal static ConfigEntry<bool> customTarots;
         
         internal static ConfigEntry<bool> telescopeGivesQuest;
+        internal static ConfigEntry<bool> relicNoReset;
 
         private void Awake()
         {
@@ -113,6 +115,7 @@ namespace CotLMiniMods
             customRituals = Config.Bind("", "customRituals", true, "Adds Custom Rituals.");
             customTarots = Config.Bind("", "customTarots", true, "Adds Custom Tarots.");
             telescopeGivesQuest = Config.Bind("", "telescopeGivesQuest", true, "Set to true if the telescope should give quests in the morning. False will provide Strange Material at a lower rate in the day.");
+            relicNoReset = Config.Bind("", "relicNoReset", true, "Set to true for the Relic Infuser to work, and getting to keep relics after runs.");
 
             ConfigListener.AddConfigEntries();
             
@@ -171,6 +174,9 @@ namespace CotLMiniMods
 
                 Structures_EndlessPit = new Structures_EndlessPit();
                 CustomStructureManager.Add(Structures_EndlessPit);
+
+                Structures_RelicGenerator = new Structures_RelicGenerator();
+                CustomStructureManager.Add(Structures_RelicGenerator);
 
                 CustomStructureManager.Add(new Structures_StrangeGenerator());
                 CustomStructureManager.Add(new Structures_EnergyController());

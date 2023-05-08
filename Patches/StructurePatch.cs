@@ -107,9 +107,15 @@ namespace CotLMiniMods.Patches
             }
             else if (CustomStructureManager.CustomStructureList[__instance.Type] is ChefDeskStructure)
             {
-                Plugin.Log.LogInfo("adding interaction for aio");
+                Plugin.Log.LogInfo("adding interaction for sous desk");
                 var parent = __instance.GetComponentInParent<Transform>();
                 parent.gameObject.AddComponent<Interaction_SousDesk>();
+            }
+            else if (CustomStructureManager.CustomStructureList[__instance.Type] is Structures_RelicGenerator)
+            {
+                Plugin.Log.LogInfo("adding interaction for relic generator");
+                var parent = __instance.GetComponentInParent<Transform>();
+                parent.gameObject.AddComponent<Interaction_RelicGenerator>();
             }
 
             Plugin.Log.LogInfo("type is " + CustomStructureManager.CustomStructureList[__instance.Type].GetType());
