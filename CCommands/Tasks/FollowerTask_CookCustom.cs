@@ -249,7 +249,7 @@ namespace CotLMiniMods.CCommands.Tasks
         public override void Setup(Follower follower)
         {
             base.Setup(follower);
-            follower.SetHat(HatType.Chef);
+            follower.SetHat(FollowerHatType.Chef);
             follower.SetOutfit(FollowerOutfitType.Undertaker, false);
 
             followerChef = follower;
@@ -258,7 +258,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override void OnDoingBegin(Follower follower)
         {
-            follower.SetHat(HatType.Chef);
+            follower.SetHat(FollowerHatType.Chef);
             follower.SetOutfit(FollowerOutfitType.Undertaker, false);
 
             follower.FacePosition(this.chefDeskStructure.Data.Position);
@@ -272,7 +272,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override void Cleanup(Follower follower)
         {
-            follower.SetHat(HatType.None);
+            follower.SetHat(FollowerHatType.None);
             base.Cleanup(follower);
 
             if (_dissentBubbleCoroutine != null)

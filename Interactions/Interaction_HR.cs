@@ -35,17 +35,14 @@ namespace CotLMiniMods.Interactions
 
             HUD_Manager.Instance.Hide(false, 0);
             UIFollowerSelectMenuController followerSelectMenu = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
-            List<FollowerInfo> blackList = new List<FollowerInfo>();
 
-            foreach (FollowerInfo follower in DataManager.Instance.Followers)
+            List<FollowerSelectEntry> followerSelectEntries = new();
+            foreach (Follower follower in Follower.Followers)
             {
-                if (follower.CursedState == Thought.OldAge)
-                    blackList.Add(follower);
+                followerSelectEntries.Add(new FollowerSelectEntry(follower.Brain._directInfoAccess, FollowerManager.GetFollowerAvailabilityStatus(follower.Brain, true)));
             }
 
-            
-
-            followerSelectMenu.Show(DataManager.Instance.Followers, blackList, false, UpgradeSystem.Type.Count, true, true, true);
+            followerSelectMenu.Show(followerSelectEntries, false, UpgradeSystem.Type.Count, true, true, true);
 
             
 

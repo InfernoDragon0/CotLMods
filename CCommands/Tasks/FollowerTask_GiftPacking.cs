@@ -136,7 +136,7 @@ namespace CotLMiniMods.CCommands.Tasks
         {
             base.Cleanup(follower);
             follower.SimpleAnimator.ResetAnimationsToDefaults();
-            follower.SetHat(HatType.None);
+            follower.SetHat(FollowerHatType.None);
         }
 
 

@@ -20,6 +20,7 @@ using COTL_API.CustomSettings;
 using Lamb.UI;
 using COTL_API.CustomTarotCard;
 using CotLMiniMods.Tarots;
+using System;
 
 namespace CotLMiniMods
 {
@@ -88,6 +89,8 @@ namespace CotLMiniMods
         internal static ConfigEntry<bool> telescopeGivesQuest;
         internal static ConfigEntry<bool> relicNoReset;
 
+        internal static bool SinnedToday = false;
+
         private void Awake()
         {
             Logger.LogInfo($"Loaded {PluginName}!");
@@ -118,6 +121,7 @@ namespace CotLMiniMods
             relicNoReset = Config.Bind("", "relicNoReset", true, "Set to true for the Relic Infuser to work, and getting to keep relics after runs.");
 
             ConfigListener.AddConfigEntries();
+            TimeManager.OnNewDayStarted += new System.Action(this.OnNewDayStarted);
             
 
             if (waiterJob.Value)
@@ -184,6 +188,7 @@ namespace CotLMiniMods
                 CustomStructureManager.Add(new Structures_AIOQuarry());
                 CustomStructureManager.Add(new Structures_AIOFarmer());
                 CustomStructureManager.Add(new Structures_GiftTree());
+                CustomStructureManager.Add(new Structures_Boutique());
 
                 BoneMineCommand = new BoneMineCommand();
                 CustomFollowerCommandManager.Add(BoneMineCommand);
@@ -201,8 +206,6 @@ namespace CotLMiniMods
 
             }   
 
-            
-
 
             DivorceCommand = new DivorceCommand();
             CustomFollowerCommandManager.Add(DivorceCommand);
@@ -213,6 +216,7 @@ namespace CotLMiniMods
             KnucklebonesCommand = new KnucklebonesCommand();
             CustomFollowerCommandManager.Add(KnucklebonesCommand);
 
+            CustomFollowerCommandManager.Add(new Command_ForIHaveSinned());
             if (customRituals.Value)
             {
                 CustomRitualManager.Add(new DistributionRitual());
@@ -233,6 +237,12 @@ namespace CotLMiniMods
             }
         }
 
+        private void OnNewDayStarted()
+        {
+            SinnedToday = false;
+            Plugin.Log.LogInfo("You can now sin again.");
+        }
+
         private void OnEnable()
         {
             Harmony.PatchAll();
@@ -244,5 +254,7 @@ namespace CotLMiniMods
             Harmony.UnpatchSelf();
             Logger.LogInfo($"Unloaded {PluginName}!");
         }
+
+
     }
 }

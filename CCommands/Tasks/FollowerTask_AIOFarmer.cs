@@ -125,14 +125,14 @@ namespace CotLMiniMods.CCommands.Tasks
         {
             base.Cleanup(follower);
             follower.SimpleAnimator.ResetAnimationsToDefaults();
-            follower.SetHat(HatType.None);
+            follower.SetHat(FollowerHatType.None);
         }
 
 
         public override void OnIdleBegin(Follower follower)
         {
             base.OnIdleBegin(follower);
-            follower.SetHat(HatType.Farm);
+            follower.SetHat(FollowerHatType.Farm);
             follower.State.facingAngle = Utils.GetAngle(follower.transform.position, this._resourceStation.Data.Position);
 
 
@@ -141,7 +141,7 @@ namespace CotLMiniMods.CCommands.Tasks
         public override void OnDoingBegin(Follower follower)
         {
             base.OnDoingBegin(follower);
-            follower.SetHat(HatType.Farm);
+            follower.SetHat(FollowerHatType.Farm);
             follower.State.facingAngle = Utils.GetAngle(follower.transform.position, this._resourceStation.Data.Position);
 
         }

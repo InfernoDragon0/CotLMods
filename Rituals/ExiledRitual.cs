@@ -14,6 +14,7 @@ using Lamb.UI.FollowerSelect;
 using Lamb.UI;
 using src.Extensions;
 using Unity.Mathematics;
+using CotLMiniMods.Helpers;
 
 namespace CotLMiniMods.Rituals
 {
@@ -58,7 +59,8 @@ namespace CotLMiniMods.Rituals
             UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
             List<FollowerInfo> tempList = new();
             
-            followerSelectInstance.Show(DataManager.Instance.Followers, followerSelectionType: UpgradeSystem.Type.Ritual_Sacrifice);
+            List<FollowerSelectEntry> FSE = Helper.MakeSimpleFSEFromList(DataManager.Instance.Followers);
+            followerSelectInstance.Show(Ritual.GetFollowerSelectEntriesForSermon(), followerSelectionType: UpgradeSystem.Type.Ritual_Sacrifice);
             
             followerSelectInstance.OnFollowerSelected += followerInfo =>
             {

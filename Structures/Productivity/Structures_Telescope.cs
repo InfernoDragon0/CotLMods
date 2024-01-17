@@ -56,7 +56,7 @@ namespace CotLMiniMods.Structures.Productivity
             
         }
 
-        public void OnNewPhaseStarted()
+        public override void OnNewPhaseStarted()
         {
             Plugin.Log.LogInfo("Reset use for the day for telescope");
             UsedForTheDay = false;

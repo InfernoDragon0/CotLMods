@@ -14,6 +14,7 @@ using Lamb.UI.FollowerSelect;
 using Lamb.UI;
 using src.Extensions;
 using Unity.Mathematics;
+using CotLMiniMods.Helpers;
 
 namespace CotLMiniMods.Rituals
 {
@@ -60,7 +61,8 @@ namespace CotLMiniMods.Rituals
             {
                 tempList.Add(DataManager.Instance.Followers_Dead[0]);
             }
-            followerSelectInstance.Show(tempList, followerSelectionType: UpgradeSystem.Type.Ritual_Ressurect);
+            List<FollowerSelectEntry> FSE = Helper.MakeSimpleFSEFromList(tempList);
+            followerSelectInstance.Show(FSE, followerSelectionType: UpgradeSystem.Type.Ritual_Ressurect);
             
             followerSelectInstance.OnFollowerSelected += followerInfo =>
             {

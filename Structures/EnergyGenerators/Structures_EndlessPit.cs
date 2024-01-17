@@ -47,7 +47,7 @@ namespace CotLMiniMods.Structures
 
         }
 
-        public void OnNewPhaseStarted()
+        public override void OnNewPhaseStarted()
         {
             Plugin.Log.LogInfo("Add more energy");
             this.AddEnergy(this.EnergyRegenRate);

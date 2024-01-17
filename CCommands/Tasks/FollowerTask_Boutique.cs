@@ -1,35 +1,38 @@
-﻿using COTL_API.CustomTasks;
+﻿using System;
+using COTL_API.CustomTasks;
 using CotLMiniMods.Structures.Mines;
-using CotLTemplateMod;
-using Spine;
 using UnityEngine;
 
-namespace CotLMiniMods.CCommands.Tasks
-{
-    internal class FollowerTask_CrystalMiner : CustomTask
+namespace CotLMiniMods.CCommands.Tasks {
+
+    internal class FollowerTask_Boutique : CustomTask
     {
-        public override string InternalName => "FollowerTask_CrystalMiner";
+        public override string InternalName => "FollowerTask_GiftPacking";
         private int _resourceStationID;
-        private CrystalMineStructure _resourceStation;
+        private Structures_Boutique _resourceStation;
         public override int UsingStructureID => this._resourceStationID;
         public override bool BlockSocial => true;
         public override FollowerLocation Location => this._resourceStation.Data.Location;
         public override float Priorty => 20f;
 
-        public FollowerTask_CrystalMiner(int resourceStationID)
+        public Follower victim;
+
+        public bool isGiving = false;
+
+        public FollowerTask_Boutique(int resourceStationID)
         {
             this._resourceStationID = resourceStationID;
-            this._resourceStation = StructureManager.GetStructureByID<CrystalMineStructure>(this._resourceStationID);
+            this._resourceStation = StructureManager.GetStructureByID<Structures_Boutique>(this._resourceStationID);
         }
 
-        public FollowerTask_CrystalMiner()
+        public FollowerTask_Boutique()
         {
             foreach (StructureBrain structureBrain in StructureManager.StructuresAtLocation(FollowerLocation.Base))
             {
-                if (structureBrain is CrystalMineStructure && !structureBrain.ReservedForTask)
+                if (structureBrain is Structures_GiftTree && !structureBrain.ReservedForTask)
                 {
                     this._resourceStationID = structureBrain.Data.ID;
-                    this._resourceStation = StructureManager.GetStructureByID<CrystalMineStructure>(this._resourceStationID);
+                    this._resourceStation = StructureManager.GetStructureByID<Structures_Boutique>(this._resourceStationID);
                     return;
                 }
                     
@@ -39,9 +42,9 @@ namespace CotLMiniMods.CCommands.Tasks
         }
 
         public override PriorityCategory GetPriorityCategory(
-          FollowerRole FollowerRole,
-          WorkerPriority WorkerPriority,
-          FollowerBrain brain)
+            FollowerRole FollowerRole,
+            WorkerPriority WorkerPriority,
+            FollowerBrain brain)
         {
             switch (FollowerRole)
             {
@@ -61,7 +64,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override void ClaimReservations()
         {
-            Plugin.Log.LogInfo("the follower is claimed on a crystal mine");
+            Plugin.Log.LogInfo("the follower is claimed on a boutique");
 
             if (this._resourceStation == null)
                 return;
@@ -70,7 +73,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override void ReleaseReservations()
         {
-            Plugin.Log.LogInfo("the follower is released on a crystal mine");
+            Plugin.Log.LogInfo("the follower is released on a boutique");
 
             if (this._resourceStation == null)
                 return;
@@ -79,13 +82,46 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override Vector3 UpdateDestination(Follower follower)
         {
-            return this._resourceStation.Data.Position + new Vector3(1.0f, 0.0f);
+            if (isGiving && victim != null)
+            {
+                return victim.Brain.LastPosition;
+            }
+            else
+            {
+                return this._resourceStation.Data.Position + new Vector3(1.0f, 0.0f);
+            }
         }
+
         public override void Setup(Follower follower)
         {
             base.Setup(follower);
-            follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "mining");
-            Plugin.Log.LogInfo("the follower " + follower.Brain._directInfoAccess.Name + " is working on a crystal mine");
+            follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "action");
+            Plugin.Log.LogInfo("the follower " + follower.Brain._directInfoAccess.Name + " is working on a gift tree");
+
+            //get relationship status, as long as it is not ENEMIES, then we can give gifts
+            var followers = FollowerManager.FollowersAtLocation(FollowerLocation.Base);
+            foreach (Follower f in followers)
+            {
+                if (f.Brain.Info.ID != follower.Brain.Info.ID)
+                {
+                    IDAndRelationship relationship = f.Brain.Info.GetOrCreateRelationship(follower.Brain.Info.ID);
+                    if (relationship.CurrentRelationshipState != IDAndRelationship.RelationshipState.Enemies)
+                    {
+                        victim = f;
+                        break;
+                    }
+                }
+            }
+
+            if (victim == null)
+            {
+                Plugin.Log.LogInfo("the follower " + follower.Brain._directInfoAccess.Name + " has no friends. cannot use boutique");
+                this.End();
+            }
+            else
+            {
+                Plugin.Log.LogInfo("the follower " + follower.Brain._directInfoAccess.Name + " will give a gift to " + victim.Brain._directInfoAccess.Name);
+            }
         }
 
         public override void OnStart()
@@ -112,15 +148,28 @@ namespace CotLMiniMods.CCommands.Tasks
 
             this._resourceStation.Data.Progress = 0.0f;
 
-            if (this._resourceStation.Data.Inventory.Count >= this._resourceStation.ResourceMax)
-                return;
 
-            this._resourceStation.Data.Inventory.Add(new InventoryItem(InventoryItem.ITEM_TYPE.CRYSTAL));
+            var ran = UnityEngine.Random.Range(0, 2);
+
+            var item = ran switch
+            {
+                0 => new InventoryItem(InventoryItem.ITEM_TYPE.GIFT_SMALL),
+                1 => new InventoryItem(InventoryItem.ITEM_TYPE.GIFT_MEDIUM),
+                _ => new InventoryItem(InventoryItem.ITEM_TYPE.GIFT_SMALL),
+            };
 
             Follower followerById = FollowerManager.FindFollowerByID(this._brain.Info.ID);
-            followerById.TimedAnimation("Reactions/react-laugh", 3.33f, (System.Action)(() => {
+            followerById.TimedAnimation("Gifts/gift3", 0.75f, () =>
+            {
+                isGiving = true;
+                followerById.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "run-corpse"); //TODO: of course this is not the right animation, we arent giving a corpse
                 
-            }));
+                if (_currentDestination.HasValue) //clear if have destination
+                    {
+                        ClearDestination();
+                    }
+                SetState(FollowerTaskState.GoingTo);
+            });
         }
 
         public override void Cleanup(Follower follower)
@@ -134,7 +183,6 @@ namespace CotLMiniMods.CCommands.Tasks
         public override void OnIdleBegin(Follower follower)
         {
             base.OnIdleBegin(follower);
-            follower.SetHat(FollowerHatType.Miner);
             follower.State.facingAngle = Utils.GetAngle(follower.transform.position, this._resourceStation.Data.Position);
 
 
@@ -143,10 +191,10 @@ namespace CotLMiniMods.CCommands.Tasks
         public override void OnDoingBegin(Follower follower)
         {
             base.OnDoingBegin(follower);
-            follower.SetHat(FollowerHatType.Miner);
             follower.State.facingAngle = Utils.GetAngle(follower.transform.position, this._resourceStation.Data.Position);
 
         }
         private void OnNewPhaseStarted() => this.End();
     }
+
 }

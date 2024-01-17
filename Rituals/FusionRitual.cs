@@ -52,7 +52,7 @@ namespace CotLMiniMods.Rituals
 
             bool Cancelled = false;
             UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
-            followerSelectInstance.Show(Ritual.GetFollowersAvailableToAttendSermon(), followerSelectionType: UpgradeSystem.Type.Ritual_Sacrifice);
+            followerSelectInstance.Show(Ritual.GetFollowerSelectEntriesForSermon(), followerSelectionType: UpgradeSystem.Type.Ritual_Sacrifice);
 
             followerSelectInstance.OnFollowerSelected += followerInfo =>
             {
@@ -214,7 +214,7 @@ namespace CotLMiniMods.Rituals
         private IEnumerator GetAbsorptionFollower()
         {
             UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
-            followerSelectInstance.Show(Ritual.GetFollowersAvailableToAttendSermon(), cancellable: false);
+            followerSelectInstance.Show(Ritual.GetFollowerSelectEntriesForSermon(), cancellable: false);
             
             followerSelectInstance.OnFollowerSelected += followerInfo =>
             {

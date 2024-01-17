@@ -67,7 +67,7 @@ namespace CotLMiniMods.CCommands.Tasks
         public override void Setup(Follower follower)
         {
             base.Setup(follower);
-            follower.SetHat(HatType.Chef);
+            follower.SetHat(FollowerHatType.Chef);
             follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, "Food/food-run");
             waiter = follower;
         }
@@ -89,7 +89,7 @@ namespace CotLMiniMods.CCommands.Tasks
             if (nextMeal == null) //if still null, then end
             {
                 Plugin.Log.LogInfo("no more next meal");
-                waiter.SetHat(HatType.None);
+                waiter.SetHat(FollowerHatType.None);
                 waiter.SimpleAnimator.ResetAnimationsToDefaults();
                 waiter.OverridingOutfit = false;
                 this.End();
@@ -266,7 +266,7 @@ namespace CotLMiniMods.CCommands.Tasks
 
         public override void Cleanup(Follower follower)
         {
-            follower.SetHat(HatType.None);
+            follower.SetHat(FollowerHatType.None);
             follower.SimpleAnimator.ResetAnimationsToDefaults();
             follower.OverridingOutfit = false;
             base.Cleanup(follower);

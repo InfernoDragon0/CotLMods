@@ -24,7 +24,7 @@ namespace CotLMiniMods.Rituals
         public override Sprite Sprite { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/ritual_fusion.png"));
         public override List<StructuresData.ItemCost> ItemCosts { get; } = new() { new(Plugin.StrangeMaterialItem, 6) };
 
-        public override string GetLocalizedName => "Mistletoe Ritual";
+        public override string GetLocalizedName => "Ritual of Love";
         public override string GetLocalizedDescription => "Select two followers. Using the power of Strange Materials, the relationship status of both selected followers will be maxed (Lovers).";
         public override float FaithChange { get; } = 20;
         public override float Cooldown => 60f;
@@ -53,7 +53,7 @@ namespace CotLMiniMods.Rituals
 
             bool Cancelled = false;
             UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
-            followerSelectInstance.Show(Ritual.GetFollowersAvailableToAttendSermon(), followerSelectionType: UpgradeSystem.Type.Ritual_Sacrifice);
+            followerSelectInstance.Show(Ritual.GetFollowerSelectEntriesForSermon(), followerSelectionType: UpgradeSystem.Type.Ritual_Sacrifice);
 
             followerSelectInstance.OnFollowerSelected += followerInfo =>
             {
@@ -119,7 +119,7 @@ namespace CotLMiniMods.Rituals
         private IEnumerator GetAbsorptionFollower()
         {
             UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
-            followerSelectInstance.Show(Ritual.GetFollowersAvailableToAttendSermon(), cancellable: false);
+            followerSelectInstance.Show(Ritual.GetFollowerSelectEntriesForSermon(), cancellable: false);
 
             followerSelectInstance.OnShow += () =>
             {

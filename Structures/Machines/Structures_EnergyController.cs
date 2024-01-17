@@ -53,7 +53,7 @@ namespace CotLMiniMods.Structures
 
         }
 
-        public void OnNewPhaseStarted()
+        public override void OnNewPhaseStarted()
         {
             //two separate loops, one for collection and one for distribution
             Plugin.Log.LogInfo("Collecting energy..");

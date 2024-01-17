@@ -51,7 +51,7 @@ namespace CotLMiniMods.Rituals
 
             bool Cancelled = false;
             UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
-            followerSelectInstance.Show(Ritual.GetFollowersAvailableToAttendSermon());
+            followerSelectInstance.Show(Ritual.GetFollowerSelectEntriesForSermon());
 
             followerSelectInstance.OnFollowerSelected += followerInfo =>
             {
