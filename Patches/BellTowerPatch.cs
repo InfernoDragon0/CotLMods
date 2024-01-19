@@ -1,18 +1,54 @@
-﻿using HarmonyLib;
-using I2.Loc;
-using MMTools;
-using Socket.Newtonsoft.Json.Utilities.LinqBridge;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
+﻿using System.Collections;
+using HarmonyLib;
 
-namespace CotLTemplateMod.Patches
+namespace CotLMiniMods.Patches
 {
     [HarmonyPatch]
 
-    internal class BellTowerPatch
+    internal class BellTowerPatch //INTERACTION_MATING patch
     {
+        [HarmonyPatch(typeof(Interaction_MatingTent), nameof(Interaction_MatingTent.SuccessfulMatingIE))]
+        [HarmonyPostfix]
+        public static IEnumerator Interaction_MatingTent_SuccessfulMatingIE(IEnumerator result, Interaction_MatingTent __instance, Follower follower1, Follower follower2)
+        {
+            while (result.MoveNext()) {
+                yield return result.Current;
+            }
+            
+            if (Plugin.NoExhaustMating.Value) {
+                Plugin.Log.LogInfo("Resetting exhaustion");
+                follower1.Brain.Stats.Exhaustion = 0f;
+                follower2.Brain.Stats.Exhaustion = 0f;
+                FollowerBrainStats.StatStateChangedEvent exhaustionStateChanged = FollowerBrainStats.OnExhaustionStateChanged;
+                if (exhaustionStateChanged != null) {
+                    exhaustionStateChanged(follower1.Brain.Info.ID, FollowerStatState.Off, FollowerStatState.On);
+                    exhaustionStateChanged(follower2.Brain.Info.ID, FollowerStatState.Off, FollowerStatState.On);
+                    follower1.Brain.CheckChangeState();
+                    follower2.Brain.CheckChangeState();
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Interaction_MatingTent), nameof(Interaction_MatingTent.FailedMatingIE))]
+        [HarmonyPostfix]
+        public static IEnumerator Interaction_MatingTent_FailedMatingIE(IEnumerator result, Interaction_MatingTent __instance, Follower follower1, Follower follower2)
+        {
+            while (result.MoveNext()) {
+                yield return result.Current;
+            }
+            if (Plugin.NoExhaustMating.Value) {
+                Plugin.Log.LogInfo("Resetting exhaustion");
+                follower1.Brain.Stats.Exhaustion = 0f;
+                follower2.Brain.Stats.Exhaustion = 0f;
+                FollowerBrainStats.StatStateChangedEvent exhaustionStateChanged = FollowerBrainStats.OnExhaustionStateChanged;
+                if (exhaustionStateChanged != null) {
+                    exhaustionStateChanged(follower1.Brain.Info.ID, FollowerStatState.Off, FollowerStatState.On);
+                    exhaustionStateChanged(follower2.Brain.Info.ID, FollowerStatState.Off, FollowerStatState.On);
+                    follower1.Brain.CheckChangeState();
+                    follower2.Brain.CheckChangeState();
+                }
+            }
+        }
         //TODO: do something about the bell tower, maybe pay 5 gold to "bless" the food by increasing satiation x2 "BellTower.cs"
 
         //TODO: bell tower will start a animation on the character, after a few seconds, while loop the total amount of food and collect with wait x seconds

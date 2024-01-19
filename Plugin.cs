@@ -89,6 +89,8 @@ namespace CotLMiniMods
         internal static ConfigEntry<bool> telescopeGivesQuest;
         internal static ConfigEntry<bool> relicNoReset;
 
+        internal static ConfigEntry<bool> NoExhaustMating;
+
         internal static bool SinnedToday = false;
 
         private void Awake()
@@ -119,6 +121,7 @@ namespace CotLMiniMods
             customTarots = Config.Bind("", "customTarots", true, "Adds Custom Tarots.");
             telescopeGivesQuest = Config.Bind("", "telescopeGivesQuest", true, "Set to true if the telescope should give quests in the morning. False will provide Strange Material at a lower rate in the day.");
             relicNoReset = Config.Bind("", "relicNoReset", true, "Set to true for the Relic Infuser to work, and getting to keep relics after runs.");
+            NoExhaustMating = Config.Bind("", "NoExhaustMating", true, "Set to true to allow mating without exhausting the follower.");
 
             ConfigListener.AddConfigEntries();
             TimeManager.OnNewDayStarted += new System.Action(this.OnNewDayStarted);
