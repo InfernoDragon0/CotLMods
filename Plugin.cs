@@ -31,7 +31,7 @@ namespace CotLMiniMods
     {
         public const string PluginGuid = "InfernoDragon0.cotl.CotLChef";
         public const string PluginName = "CotLMiniMods";
-        public const string PluginVer = "1.2.1";
+        public const string PluginVer = "1.2.2";
 
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
