@@ -1,9 +1,9 @@
 {
     "name": "CotLMiniMods",
-    "version_number": "1.2.2",
+    "version_number": "1.2.3",
     "website_url": "https://github.com/InfernoDragon0/CotLMods",
-    "description": "A Collection of Custom Things! Ritual of Love, Mass Ressurection, AIO Miners, Wishing Wells, and more. Lots of custom stuff!",
+    "description": "A Collection of Custom Things! Ritual of Love, Mass Resurrection, AIO Miners, Wishing Wells, and more. Lots of custom stuff!",
     "dependencies": [
-        "xhayper-COTL_API-0.2.1"
+        "xhayper-COTL_API-0.2.3"
     ]
 }

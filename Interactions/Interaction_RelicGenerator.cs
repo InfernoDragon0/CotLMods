@@ -53,7 +53,7 @@ namespace CotLMiniMods.Interactions
             if (Inventory.GetItemQuantity(Plugin.StrangeMaterialItem) >= 10)
             {
                 this.Activated = true;
-                var randomRelic = EquipmentManager.GetRandomRelicData(true, RelicSubType.Any);
+                var randomRelic = EquipmentManager.GetRandomRelicData(true, this.playerFarming, RelicSubType.Any);
                 PlayerFarming.Instance.playerRelic.EquipRelic(randomRelic, true, false);
                 Inventory.ChangeItemQuantity(Plugin.StrangeMaterialItem, -10);
 
@@ -70,7 +70,7 @@ namespace CotLMiniMods.Interactions
             {
                 this.Activated = true;
                 var randomInt = UnityEngine.Random.Range(0, 2);
-                var randomRelic = EquipmentManager.GetRandomRelicData(true, (RelicSubType)Math.Min(2, 1+randomInt));
+                var randomRelic = EquipmentManager.GetRandomRelicData(true, this.playerFarming, (RelicSubType)Math.Min(2, 1+randomInt));
                 PlayerFarming.Instance.playerRelic.EquipRelic(randomRelic, true, false);
                 Inventory.ChangeItemQuantity(Plugin.StrangeMaterialItem, -10);
 

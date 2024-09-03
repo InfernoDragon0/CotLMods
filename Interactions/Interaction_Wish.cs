@@ -73,8 +73,14 @@ namespace CotLMiniMods.Interactions
                 UITarotChoiceOverlayController tarotChoiceOverlayInstance = MonoSingleton<UIManager>.Instance.ShowTarotChoice(card1, card2);
                 tarotChoiceOverlayInstance.OnTarotCardSelected += (System.Action<TarotCards.TarotCard>)(card =>
                 {
+                    TarotCards.TarotCard card3 = card1;
+                    if (card == card1)
+                        card3 = card2;
+                    if (CoopManager.CoopActive)
+                        GameManager.GetInstance().StartCoroutine(this.DelayEffectsRoutine(card3, 0.0f, this.playerFarming.isLamb ? PlayerFarming.players[1] : PlayerFarming.players[0]));
+                    
                     this.StartCoroutine(this.BackToIdleRoutine(card, 0.0f));
-                    DataManager.Instance.PlayerRunTrinkets.Remove(GetOther(card));
+                    /*DataManager.Instance.PlayerRunTrinkets.Remove(GetOther(card));*/
                     this.Activated = false;
                 });
                 
@@ -111,6 +117,13 @@ namespace CotLMiniMods.Interactions
             TarotCards.TarotCard GetOther(TarotCards.TarotCard card) => card == card1 ? card2 : card1;
         }
 
+        private IEnumerator DelayEffectsRoutine(TarotCards.TarotCard card, float delay, PlayerFarming playerFarming)
+        {
+            yield return (object)new WaitForSeconds(0.2f + delay);
+            if (card != null)
+                TrinketManager.AddTrinket(card, playerFarming);
+        }
+
         private IEnumerator BackToIdleRoutine(TarotCards.TarotCard card, float delay)
         {
             PlayerFarming.Instance.Spine.UseDeltaTime = false;
@@ -134,7 +147,7 @@ namespace CotLMiniMods.Interactions
         {
             yield return (object)new WaitForSeconds(0.2f + delay);
             if (card != null)
-                TrinketManager.AddTrinket(card);
+                TrinketManager.AddTrinket(card, this.playerFarming);
         }
 
         private TarotCards.TarotCard GetCard(bool customFirst = true)
@@ -146,11 +159,11 @@ namespace CotLMiniMods.Interactions
                 TarotCards.Card cardData = CustomTarotCardManager.CustomTarotCardList.Keys.ElementAt(UnityEngine.Random.Range(0, CustomTarotCardManager.CustomTarotCardList.Count));
 
                 card = new TarotCards.TarotCard(cardData, 0);
-                Plugin.Log.LogInfo("Before contain card " + DataManager.Instance.PlayerRunTrinkets.Contains(card));
+                /*Plugin.Log.LogInfo("Before contain card " + DataManager.Instance.PlayerRunTrinkets.Contains(card));*/
             }
 
             
-            foreach(var cardz in DataManager.Instance.PlayerRunTrinkets)
+            foreach(var cardz in PlayerFarming.Instance.RunTrinkets)
             {
                 if (card == null) break;
                 
@@ -163,18 +176,18 @@ namespace CotLMiniMods.Interactions
 
             if (alreadyTaken || card == null) //if already have the custom card, then draw a vanilla card
             {
-                if (!DataManager.Instance.FirstTarot && TarotCards.DrawRandomCard() != null)
+                if (!DataManager.Instance.FirstTarot && TarotCards.DrawRandomCard(this.playerFarming, true) != null)
                 {
                     DataManager.Instance.FirstTarot = true;
                     card = new TarotCards.TarotCard(TarotCards.Card.Lovers1, 0);
                 }
                 else
-                    card = TarotCards.DrawRandomCard();
+                    card = TarotCards.DrawRandomCard(this.playerFarming, true);
             }
             
             if (card != null)
-                DataManager.Instance.PlayerRunTrinkets.Add(card);
-            
+                TrinketManager.AddEncounteredTrinket(card, this.playerFarming);
+
             return card;
         }
 

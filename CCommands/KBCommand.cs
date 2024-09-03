@@ -56,7 +56,7 @@ namespace CotLMiniMods.CustomFollowerCommands
 
                     knuckleBonesInstance1.OnHidden += new System.Action(SimulationManager.UnPause);
 
-                    _knuckleBonesInstance.Show(createOpponent(interaction.follower), 5);
+                    _knuckleBonesInstance.Show(interaction.playerFarming, createOpponent(interaction.follower), 5);
                     UIKnuckleBonesController knuckleBonesInstance2 = _knuckleBonesInstance;
                     // ISSUE: reference to a compiler-generated method
                     knuckleBonesInstance2.OnHidden = knuckleBonesInstance2.OnHidden + new System.Action(this.ContinueToKnucklebones);

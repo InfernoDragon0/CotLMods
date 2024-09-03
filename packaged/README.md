@@ -6,20 +6,9 @@
 - [Save Converter](https://cotlminimod.infernodragon.net/saveconverter) (if you are updating from 0.1.6 COTL API to 0.1.7 COTL API and above) 
 - If you like the mod, consider donating [here](https://ko-fi.com/infernodragon0)! Thank you for checking out the mod!
 
-# v1.2.2 Compatiblity Fix & Minor Additional Content
-![image](https://i.imgur.com/5tl5o4r.png)
-- You can now drink from the drinkhouse. Drink with your followers!
-- Updated for Sins of the Flesh
-- Renamed Mistletoe Ritual to Ritual of Love. The Ritual of Love improves two follower's relationship to the maximum.
-
-### 1 New Command!
-- For I have sinned: Infuse 20 Strange Material into followers to gain a full sin bar.
-
-### 1 New Structure!
-- The Boutique: Followers can pack gifts to randomly gift to other non-enemy followers. Their relationship will increase by 1.
-
-### 1 New Config
-- NoExhaustMating: Will not exhaust followers after mating.
+# v1.2.3 Compatiblity Fix & Minor Additional Content
+- Updated for Unholy Alliance
+- Ritual of Massacre: Need a reset button? Kills every follower except the selected follower.
 
 #### End of what's new
 
@@ -86,6 +75,7 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 - Knucklebones: Play knucklebones with your followers!
 - Flip Coin: Flip the coin with your followers and see if you win! (5 coins each)
 - Divorce: Too many spouses? Heres a solution!
+- For I have sinned: Infuse 20 Strange Material into followers to gain a full sin bar.
 
 ### Work Commands
 - Custom Miners
@@ -113,9 +103,6 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 ![text](https://i.imgur.com/1RHe5Rv.gif)
 - **Ritual of Love**: Select two followers, and infuse them with the power of the Strange Material to bond them together.
 
-
-
-
 ---
 ![text](https://i.imgur.com/3jmokTt.png)
 ### Narinder Devotion Role
@@ -125,6 +112,7 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 - Astrologer: See the stars, Gain inspiration. Creates a new quest for the follower if used in the morning. Can use once every day. Provides Strange Material at night
 - Study: The follower can study and increase loyalty. Invest in the study table to generate Strange Material.
 - Reaper: Followers can now wrap and bury dead followers. You need an endless pit for followers to get this role. Normal Graves will not work.
+- The Boutique: Followers can pack gifts to randomly gift to other non-enemy followers. Their relationship will increase by 1.
 
 ### Miner Roles
 ![text](https://i.imgur.com/ySwXcUF.png)
@@ -152,12 +140,16 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 - Food will first be stored in the available Follower Kitchens, then on the floor.
 
 # Extras
+![image](https://i.imgur.com/5tl5o4r.png)
+- You can now drink from the drinkhouse. Drink with your followers!
 - All you can eat Buffet: Players can now eat as many food items as they want. (Deaths due to excessive eating not covered by insurance.) [Enabled by default]
 - Large Shrine: Shrine stores 2000 Souls max instead [Enabled by default]
 - Instant Collection: Clicking the Shrine once will grab all the souls instead of just 1 [Enabled by default]
 - Skips Intro Cutscene [Enabled by default]
 - You can now challenge "The One Who Waits" repeatedly and add more of them to your collection. [Disabled by default]
+- NoExhaustMating: Will not exhaust followers after mating.
 - Config files available for enabling and disabling any part of the mod.
+
 
 ### Known Issues
 - Follower Manager Device: If you assign a task to a follower that cannot be done, they might turn invisible, just re-assign another task.

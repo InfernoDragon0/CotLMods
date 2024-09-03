@@ -399,7 +399,7 @@ namespace CotLMiniMods.Patches
             }
         }
 
-        //this patch to upgrade to kitchen 2
+        /*//this patch to upgrade to kitchen 2
         [HarmonyPatch(typeof(Interaction_Kitchen), "Start")]
         [HarmonyPostfix]
         private static void Interaction_Kitchen_Start(Interaction_Kitchen __instance)
@@ -411,15 +411,15 @@ namespace CotLMiniMods.Patches
                 __instance.structure.Type = StructureBrain.TYPES.KITCHEN;
             }
 
-            /*if (__instance.StructureInfo.Type == StructureBrain.TYPES.KITCHEN_II)
+            *//*if (__instance.StructureInfo.Type == StructureBrain.TYPES.KITCHEN_II)
             {
                 Plugin.Log.LogInfo("Reassigned as cooking fire");
                 __instance.structure.Type = StructureBrain.TYPES.COOKING_FIRE;
-            }*/
-        }
+            }*//*
+        }*/
 
         //this patch to skip cooking fire kitchen 2
-        [HarmonyPatch(typeof(Interaction_Kitchen), "ShowCooking")]
+        /*[HarmonyPatch(typeof(Interaction_Kitchen), "ShowCooking")]
         [HarmonyPrefix]
         private static bool Interaction_Kitchen_ShowCooking(Interaction_Kitchen __instance)
         {
@@ -430,7 +430,7 @@ namespace CotLMiniMods.Patches
                 return false;
             }
             return true;
-        }
+        }*/
 
         //this patch to skip some animations for kitchen 2
         /*[HarmonyPatch(typeof(Interaction_Kitchen), "CookAll")]

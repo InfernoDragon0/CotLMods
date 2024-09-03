@@ -25,10 +25,10 @@ namespace CotLTemplateMod.Patches
             //collect the loot
             if (Plugin.relicNoReset.Value)
             {
-                Plugin.Log.LogInfo("GOT cyrrent relic");
-                Plugin.Log.LogInfo(DataManager.Instance.CurrentRelic);
-                __state = DataManager.Instance.CurrentRelic;
-                temp = DataManager.Instance.CurrentRelic;
+                Plugin.Log.LogInfo("GOT current relic (SINGLEPLAYER ONLY)");
+                Plugin.Log.LogInfo(PlayerFarming.Instance.currentRelicType);
+                __state = PlayerFarming.Instance.currentRelicType;
+                temp = PlayerFarming.Instance.currentRelicType;
             }
             else
             {
@@ -45,8 +45,8 @@ namespace CotLTemplateMod.Patches
             {
                 Plugin.Log.LogInfo("GOT old relic");
                 Plugin.Log.LogInfo(__state);
-                DataManager.Instance.CurrentRelic = __state;
-                PlayerFarming.Instance.playerRelic.EquipRelic(EquipmentManager.GetRelicData(DataManager.Instance.CurrentRelic), false);
+                PlayerFarming.Instance.currentRelicType = __state;
+                PlayerFarming.Instance.playerRelic.EquipRelic(EquipmentManager.GetRelicData(PlayerFarming.Instance.currentRelicType), false);
             }
         }
 

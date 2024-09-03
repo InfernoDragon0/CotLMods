@@ -16,7 +16,6 @@ namespace CotLMiniMods.Interactions
     {
         public Structure Structure;
         private bool Activating = false;
-        private GameObject Player;
         private float Delay = 0.04f;
         public float DistanceToTriggerDeposits = 5f;
 
@@ -65,7 +64,7 @@ namespace CotLMiniMods.Interactions
             cameraFollowTarget.AddTarget(this.gameObject, 1f);
             HUD_Manager.Instance.Hide(false, 0);
             
-            UIItemSelectorOverlayController itemSelector = MonoSingleton<UIManager>.Instance.ShowItemSelector(QuarryItems, new ItemSelector.Params()
+            UIItemSelectorOverlayController itemSelector = MonoSingleton<UIManager>.Instance.ShowItemSelector(this.playerFarming, QuarryItems, new ItemSelector.Params()
             {
                 Key = "AIOFarmer",
                 Context = ItemSelector.Context.SetLabel,
@@ -95,12 +94,11 @@ namespace CotLMiniMods.Interactions
         }
         public override void Update()
         {
-            if ((this.Player = GameObject.FindWithTag("Player")) == null)
-                return;
-            
+            base.Update();
+
             this.GetLabel();
 
-            if (this.Activating && (this.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp()))
+            if (this.Activating && (this.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp(this.playerFarming)))
             {
                 this.Activating = false;
             }

@@ -1,4 +1,8 @@
 # Changelog
+### v1.2.3 - Compatibility Update & Minor content update
+- Updated for Unholy Alliance
+- Add Ritual of Massacre
+
 ### v1.2.2 - Compatibility Update & Minor content update
 - Updated for Sins of the Flesh
 - Add NoExhaustMating Config

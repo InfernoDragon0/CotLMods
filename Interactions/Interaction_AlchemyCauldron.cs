@@ -56,7 +56,7 @@ namespace CotLMiniMods.Interactions
                 cameraFollowTarget.AddTarget(this.gameObject, 1f);
                 HUD_Manager.Instance.Hide(false, 0);
 
-                UIItemSelectorOverlayController itemSelector = MonoSingleton<UIManager>.Instance.ShowItemSelector(QuarryItems, new ItemSelector.Params()
+                UIItemSelectorOverlayController itemSelector = MonoSingleton<UIManager>.Instance.ShowItemSelector(this.playerFarming, QuarryItems, new ItemSelector.Params()
                 {
                     Key = "cCauldron",
                     Context = ItemSelector.Context.SetLabel,

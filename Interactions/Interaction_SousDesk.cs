@@ -28,7 +28,7 @@ namespace CotLMiniMods.Interactions
         public ChefDeskStructure ChefDesk => this.Structure.Brain as ChefDeskStructure;
         public override void GetLabel()
         {
-            int count = this.StructureInfo.Inventory.Count;
+            /*int count = this.StructureInfo.Inventory.Count;*/
             //this.Interactable = count > 0;
             this.SecondaryLabel = "Select Signature Dish (" + this.ChefDesk.SelectedCookItem + ")";
             this.label = "";
@@ -43,7 +43,7 @@ namespace CotLMiniMods.Interactions
         public override void OnEnable()
         {
             base.OnEnable();
-            Plugin.Log.LogInfo("I am enabled AIO Quarry Interaction");
+            Plugin.Log.LogInfo("I am enabled Sous Desk");
             Structure = GetComponentInParent<Transform>().GetComponent<Structure>();
         }
 
@@ -91,7 +91,7 @@ namespace CotLMiniMods.Interactions
             cameraFollowTarget.AddTarget(this.gameObject, 1f);
             HUD_Manager.Instance.Hide(false, 0);
             
-            UIItemSelectorOverlayController itemSelector = MonoSingleton<UIManager>.Instance.ShowItemSelector(QuarryItems, new ItemSelector.Params()
+            UIItemSelectorOverlayController itemSelector = MonoSingleton<UIManager>.Instance.ShowItemSelector(this.playerFarming, QuarryItems, new ItemSelector.Params()
             {
                 Key = "ChefDesk",
                 Context = ItemSelector.Context.SetLabel,
@@ -122,12 +122,20 @@ namespace CotLMiniMods.Interactions
 
         public override void Update()
         {
-            if ((this.Player = GameObject.FindWithTag("Player")) == null)
-                return;
+            /*if ((this.Player = GameObject.FindWithTag("Player")) == null)
+                return;*/
+
+            base.Update();
             
+            if (this.ChefDesk == null)
+            {
+                Plugin.Log.LogInfo("Waiting for chef desk");
+                return;
+            }
+
             this.GetLabel();
 
-            if (this.Activating && (this.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp()))
+            if (this.Activating && (this.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp(this.playerFarming)))
             {
                 this.Activating = false;
             }

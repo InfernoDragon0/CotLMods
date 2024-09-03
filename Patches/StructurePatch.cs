@@ -19,9 +19,9 @@ namespace CotLMiniMods.Patches
     {
 
         // This patch to add interactions to custom structures
-        [HarmonyPatch(typeof(Structure), nameof(Structure.Start))]
+        [HarmonyPatch(typeof(Structure), nameof(Structure.BrainAssigned))]
         [HarmonyPostfix]
-        public static void Structure_Start(Structure __instance)
+        public static void Structure_BrainAssigned(Structure __instance)
         {
 
             if (!CustomStructureManager.CustomStructureList.ContainsKey(__instance.Type)) return;

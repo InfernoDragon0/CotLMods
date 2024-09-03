@@ -58,6 +58,7 @@ namespace CotLMiniMods.Interactions
 
         public override void Update()
         {
+            base.Update();
             this.GetLabel();
         }
 

@@ -15,7 +15,6 @@ namespace CotLMiniMods.Interactions
     {
         public Structure Structure;
         private bool Activating = false;
-        private GameObject Player;
         private float Delay = 0.04f;
         public float DistanceToTriggerDeposits = 5f;
 
@@ -52,12 +51,11 @@ namespace CotLMiniMods.Interactions
         }
         public override void Update()
         {
-            if ((this.Player = GameObject.FindWithTag("Player")) == null)
-                return;
+            base.Update();
             
             this.GetLabel();
 
-            if (this.Activating && (this.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp()))
+            if (this.Activating && (this.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp(this.playerFarming)))
             {
                 this.Activating = false;
             }
