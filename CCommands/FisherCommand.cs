@@ -1,5 +1,6 @@
 ﻿using COTL_API.CustomFollowerCommand;
 using COTL_API.Helpers;
+using CotLMiniMods.Structures.Mines;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace CotLMiniMods.CustomFollowerCommands
                 interaction.eventListener.PlayFollowerVO(interaction.generalAcknowledgeVO);
                 foreach (StructureBrain structureBrain in StructureManager.StructuresAtLocation(FollowerLocation.Base))
                 {
-                    if (structureBrain is ITaskProvider && (structureBrain is Structures_FishingHut))
+                    if (structureBrain is ITaskProvider && (structureBrain is FishingStructure))
                     {
                         if (!structureBrain.ReservedForTask)
                             interaction.follower.Brain.HardSwapToTask(new FisherTask(structureBrain.Data.ID));

@@ -1,4 +1,5 @@
 ﻿using COTL_API.CustomTasks;
+using CotLMiniMods.Structures.Mines;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace CotLMiniMods.CustomFollowerCommands
     {
         public const int FISH_DURATION_GAME_MINUTES = 40;
         private int _fishingHutID;
-        private Structures_FishingHut _fishingHut;
+        private FishingStructure _fishingHut;
         private float _progress;
 
         private int rngFish;
@@ -49,14 +50,14 @@ namespace CotLMiniMods.CustomFollowerCommands
         public FisherTask(int fishingHutID)
         {
             this._fishingHutID = fishingHutID;
-            this._fishingHut = StructureManager.GetStructureByID<Structures_FishingHut>(this._fishingHutID);
+            this._fishingHut = StructureManager.GetStructureByID<FishingStructure>(this._fishingHutID);
         }
 
         public override int GetSubTaskCode() => this._fishingHutID;
 
-        public override void ClaimReservations() => StructureManager.GetStructureByID<Structures_FishingHut>(this._fishingHutID).ReservedForTask = true;
+        public override void ClaimReservations() => StructureManager.GetStructureByID<FishingStructure>(this._fishingHutID).ReservedForTask = true;
 
-        public override void ReleaseReservations() => StructureManager.GetStructureByID<Structures_FishingHut>(this._fishingHutID).ReservedForTask = false;
+        public override void ReleaseReservations() => StructureManager.GetStructureByID<FishingStructure>(this._fishingHutID).ReservedForTask = false;
 
         public override void OnStart()
         {
@@ -77,7 +78,7 @@ namespace CotLMiniMods.CustomFollowerCommands
 
             this._progress = 0.0f;
 
-            Structures_FishingHut structureById = StructureManager.GetStructureByID<Structures_FishingHut>(this._fishingHutID);
+            FishingStructure structureById = StructureManager.GetStructureByID<FishingStructure>(this._fishingHutID);
 
             if (structureById.Data.Inventory.Count < 75)
             {

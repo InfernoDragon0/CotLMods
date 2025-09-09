@@ -21,6 +21,8 @@ using Lamb.UI;
 using COTL_API.CustomTarotCard;
 using CotLMiniMods.Tarots;
 using System;
+using COTL_API.CustomLocalization;
+using System.Collections.Generic;
 
 namespace CotLMiniMods
 {
@@ -49,6 +51,7 @@ namespace CotLMiniMods
         
         internal static HRManagementStructure HRManagementStructure;
         internal static CrystalMineStructure CrystalMineStructure;
+        internal static FishingStructure FishingStructure;
         internal static BoneMineStructure BoneMineStructure;
         internal static SilkMineStructure SilkMineStructure;
         internal static WishingWellStructure WishingWellStructure;
@@ -90,8 +93,16 @@ namespace CotLMiniMods
         internal static ConfigEntry<bool> relicNoReset;
 
         internal static ConfigEntry<bool> NoExhaustMating;
+        internal static ConfigEntry<string> localizationConfig;
 
         internal static bool SinnedToday = false;
+        
+        public static List<TarotCards.TarotCard> wishedCards = [];
+        public static RelicType relicData = RelicType.None;
+
+        public static List<TarotCards.Card> proxyTrialsEnabled = [];
+        public static List<TarotCards.Card> proxyAugmentsEnabled = [];
+
 
         private void Awake()
         {
@@ -114,7 +125,7 @@ namespace CotLMiniMods
             fisherJob = Config.Bind("", "fisherJob", true, "Allows you to command followers to fish (different loot table).");
             waiterJob = Config.Bind("", "waiterJob", true, "Allows followers to take on the waiter role. If you enable this, followers will not walk towards food, but wait for someone to serve.");
             reaperJob = Config.Bind("", "reaperJob", true, "Allows followers to bury other followers in an Endless Pit.");
-            
+
             customFood = Config.Bind("", "customFood", false, "Adds custom food (partial implementation, not ready yet).");
             customStructures = Config.Bind("", "customStructures", true, "Adds Custom Structures.");
             customRituals = Config.Bind("", "customRituals", true, "Adds Custom Rituals.");
@@ -122,10 +133,13 @@ namespace CotLMiniMods
             telescopeGivesQuest = Config.Bind("", "telescopeGivesQuest", true, "Set to true if the telescope should give quests in the morning. False will provide Strange Material at a lower rate in the day.");
             relicNoReset = Config.Bind("", "relicNoReset", true, "Set to true for the Relic Infuser to work, and getting to keep relics after runs.");
             NoExhaustMating = Config.Bind("", "NoExhaustMating", true, "Set to true to allow mating without exhausting the follower.");
+            localizationConfig = Config.Bind("", "Localization", "English", "Set to your preferred language (you must have localization files for this mod)");
+
 
             ConfigListener.AddConfigEntries();
             TimeManager.OnNewDayStarted += new System.Action(this.OnNewDayStarted);
-            
+            CustomLocalizationManager.LoadLocalization("English", Path.Combine(Plugin.PluginPath, "Assets/Localization/" + localizationConfig.Value + ".language"));
+
 
             if (waiterJob.Value)
             {
@@ -155,6 +169,9 @@ namespace CotLMiniMods
                 WishingWellStructure = new WishingWellStructure();
                 CustomStructureManager.Add(WishingWellStructure);
 
+                FishingStructure = new FishingStructure();
+                CustomStructureManager.Add(FishingStructure);
+
                 BoneMineStructure = new BoneMineStructure();
                 CustomStructureManager.Add(BoneMineStructure);
 
@@ -175,7 +192,7 @@ namespace CotLMiniMods
 
                 Structures_Telescope = new Structures_Telescope();
                 CustomStructureManager.Add(Structures_Telescope);
-                
+
                 Structures_AlchemyCauldron = new Structures_AlchemyCauldron();
                 CustomStructureManager.Add(Structures_AlchemyCauldron);
 
@@ -202,12 +219,12 @@ namespace CotLMiniMods
                 CrystalMineCommand = new CrystalMineCommand();
                 CustomFollowerCommandManager.Add(CrystalMineCommand);
 
-                
+
 
                 StrangeMaterialItem = CustomItemManager.Add(new StrangeMaterialItem());
                 StrangeEnergyItem = CustomItemManager.Add(new StrangeEnergyItem());
 
-            }   
+            }
 
 
             DivorceCommand = new DivorceCommand();
