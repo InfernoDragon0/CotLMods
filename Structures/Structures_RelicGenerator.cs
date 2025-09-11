@@ -18,7 +18,7 @@ namespace CotLMiniMods.Structures
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "Infernal Infuser";
-        public override string GetLocalizedDescription() => "Trials of the Unholy Lamb: Activate trials and augments to make your runs more challenging! Can you rise up to be the ultimate lamb?";
+        public override string GetLocalizedDescription() => "Trials of the Gods: Activate trials and augments to make your runs more challenging! Can you rise up to be the ultimate lamb?";
 
         public override List<StructuresData.ItemCost> Cost => new()
         {

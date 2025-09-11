@@ -216,7 +216,9 @@ namespace CotLMiniMods.Interactions
 
             var unusedFoundTrinkets = TarotCards.GetUnusedFoundTrinkets(playerFarming, true);
             unusedFoundTrinkets.AddRange([.. CustomTarotCardManager.CustomTarotCardList.Keys]);
-
+            unusedFoundTrinkets.RemoveAll(x => Plugin.proxyAugments.Any(y => y.Key == x));
+            unusedFoundTrinkets.RemoveAll(x => Plugin.proxyTrials.Any(y => y.Key == x));
+            
             foreach (var card in unusedFoundTrinkets)
             {
                 var slot = characterMenu._tarotCardItemRunTemplate.Instantiate(tarotCardsContent);
