@@ -106,6 +106,23 @@ namespace CotLMiniMods
         public static List<TarotCards.Card> proxyTrialsEnabled = [];
         public static List<TarotCards.Card> proxyAugmentsEnabled = [];
 
+        public static TarotCards.Card LeshyCard;
+        public static TarotCards.Card KallamarCard;
+        public static TarotCards.Card HeketCard;
+        public static TarotCards.Card ShamuraCard;
+        public static TarotCards.Card NarinderCard;
+
+        public static TarotCards.Card CasualsCard;
+        public static TarotCards.Card CultistsCard;
+        public static TarotCards.Card DeathCard;
+        public static TarotCards.Card DissonanceCard;
+        public static TarotCards.Card BloodpactCard;
+        public static TarotCards.Card HealingCard;
+        public static TarotCards.Card PersistenceCard;
+        public static TarotCards.Card SwarmCard;
+        public static TarotCards.Card ResistanceCard;
+        public static TarotCards.Card ExplosionCard;
+
 
         private void Awake()
         {
@@ -267,51 +284,51 @@ namespace CotLMiniMods
                 var shamura = new ProxyTarot_Trial_Shamura();
                 var narinder = new ProxyTarot_Trial_Narinder();
 
-                var leshycard = CustomTarotCardManager.Add(leshy);
-                var kallamarcard = CustomTarotCardManager.Add(kallamar);
-                var heketcard = CustomTarotCardManager.Add(heket);
-                var shamuracard = CustomTarotCardManager.Add(shamura);
-                var narindercard = CustomTarotCardManager.Add(narinder);
+                LeshyCard = CustomTarotCardManager.Add(leshy);
+                KallamarCard = CustomTarotCardManager.Add(kallamar);
+                HeketCard = CustomTarotCardManager.Add(heket);
+                ShamuraCard = CustomTarotCardManager.Add(shamura);
+                NarinderCard = CustomTarotCardManager.Add(narinder);
 
-                proxyTrials.Add(leshycard, leshy);
-                proxyTrials.Add(kallamarcard, kallamar);
-                proxyTrials.Add(heketcard, heket);
-                proxyTrials.Add(shamuracard, shamura);
-                proxyTrials.Add(narindercard, narinder);
+                proxyTrials.Add(LeshyCard, leshy);
+                proxyTrials.Add(KallamarCard, kallamar);
+                proxyTrials.Add(HeketCard, heket);
+                proxyTrials.Add(ShamuraCard, shamura);
+                proxyTrials.Add(NarinderCard, narinder);
 
                 //augments
-                var casuals = new ProxyTarot_Augment_Casuals();
-                var cultists = new ProxyTarot_Augment_Cultists();
+                var casuals = new ProxyTarot_Augment_Grace();
+                var cultists = new ProxyTarot_Augment_Bombardment();
                 var death = new ProxyTarot_Augment_Death();
                 var dissonance = new ProxyTarot_Augment_Dissonance();
                 var Bloodpact = new ProxyTarot_Augment_Bloodpact();
-                var healing = new ProxyTarot_Augment_Healing();
+                var healing = new ProxyTarot_Augment_Curse();
                 var persistence = new ProxyTarot_Augment_Persistence();
                 var swarm = new ProxyTarot_Augment_Swarm();
                 var resistance = new ProxyTarot_Augment_Resistance();
                 var explosion = new ProxyTarot_Augment_Explosion();
 
-                var casualsCard = CustomTarotCardManager.Add(casuals);
-                var cultistsCard = CustomTarotCardManager.Add(cultists);
-                var deathCard = CustomTarotCardManager.Add(death);
-                var dissonanceCard = CustomTarotCardManager.Add(dissonance);
-                var BloodpactCard = CustomTarotCardManager.Add(Bloodpact);
-                var healingCard = CustomTarotCardManager.Add(healing);
-                var persistenceCard = CustomTarotCardManager.Add(persistence);
-                var swarmCard = CustomTarotCardManager.Add(swarm);
-                var resistanceCard = CustomTarotCardManager.Add(resistance);
-                var explosionCard = CustomTarotCardManager.Add(explosion);
+                CasualsCard = CustomTarotCardManager.Add(casuals);
+                CultistsCard = CustomTarotCardManager.Add(cultists);
+                DeathCard = CustomTarotCardManager.Add(death);
+                DissonanceCard = CustomTarotCardManager.Add(dissonance);
+                BloodpactCard = CustomTarotCardManager.Add(Bloodpact);
+                HealingCard = CustomTarotCardManager.Add(healing);
+                PersistenceCard = CustomTarotCardManager.Add(persistence);
+                SwarmCard = CustomTarotCardManager.Add(swarm);
+                ResistanceCard = CustomTarotCardManager.Add(resistance);
+                ExplosionCard = CustomTarotCardManager.Add(explosion);
 
-                proxyAugments.Add(casualsCard, casuals);
-                proxyAugments.Add(cultistsCard, cultists);
-                proxyAugments.Add(deathCard, death);
-                proxyAugments.Add(dissonanceCard, dissonance);
+                proxyAugments.Add(CasualsCard, casuals);
+                proxyAugments.Add(CultistsCard, cultists);
+                proxyAugments.Add(DeathCard, death);
+                proxyAugments.Add(DissonanceCard, dissonance);
                 proxyAugments.Add(BloodpactCard, Bloodpact);
-                proxyAugments.Add(healingCard, healing);
-                proxyAugments.Add(persistenceCard, persistence);
-                proxyAugments.Add(swarmCard, swarm);
-                proxyAugments.Add(resistanceCard, resistance);
-                proxyAugments.Add(explosionCard, explosion);
+                proxyAugments.Add(HealingCard, healing);
+                proxyAugments.Add(PersistenceCard, persistence);
+                proxyAugments.Add(SwarmCard, swarm);
+                proxyAugments.Add(ResistanceCard, resistance);
+                proxyAugments.Add(ExplosionCard, explosion);
 
             }
         }

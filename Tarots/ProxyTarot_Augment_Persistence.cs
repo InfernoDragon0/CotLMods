@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "Enemies <color=\"yellow\">heal 10% of their health every 3 second</color>. Bosses <color=\"yellow\">heal 2% of their health per second</color>.";
+            return "Enemies <color=\"yellow\">heal 5% of their health every 3 second</color>. Bosses <color=\"yellow\">heal 1% of their health per second</color>.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";

@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CultOfTheLamb.GameLibs" Version="1.4.3.588-r.0" />
+        <PackageReference Include="CultOfTheLamb.GameLibs" Version="1.4.6.596-r.0" />
     </ItemGroup>
 
     <ItemGroup>

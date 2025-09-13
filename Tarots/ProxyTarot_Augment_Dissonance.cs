@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "Enemy spawns are <color=\"yellow\">randomized</color>.";
+            return "Dodging requires 20% Curse Charge. <color=\"yellow\">You cannot dodge if you have less than 20% Curse Charge</color>.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";

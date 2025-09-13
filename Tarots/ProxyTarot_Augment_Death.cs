@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "When an enemy attacks, they have a <color=\"yellow\">25% chance of spawning a black puddle under them</color>.";
+            return "When an enemy hits you, they have a <color=\"yellow\">25% chance of spawning a black puddle under them</color>.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";

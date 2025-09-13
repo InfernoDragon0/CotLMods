@@ -2,23 +2,23 @@
 
 namespace CotLMiniMods.Tarots
 {
-    public class ProxyTarot_Augment_Cultists : CustomTarotCard
+    public class ProxyTarot_Augment_Bombardment : CustomTarotCard
     {
-        public override string InternalName => "ProxyTarot_Augment_Cultists";
+        public override string InternalName => "ProxyTarot_Augment_Bombardment";
 
         public override string LocalisedName(int upgradeIndex)
         {
-            return "<color=\"purple\">Augment: Cultists</color>";
+            return "<color=\"purple\">Augment: Bombardment</color>";
         }
 
         public override string LocalisedLore()
         {
-            return "Augment of Cultists";
+            return "Augment of Bombardment";
         }
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "<color=\"yellow\">5 random Cultists</color> spawn per combat room.";
+            return "Each time you attack, <color=\"yellow\">2 enemy bombs spawn around you</color>.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";

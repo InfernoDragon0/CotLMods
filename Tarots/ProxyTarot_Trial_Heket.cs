@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "Each <color=\"purple\">Active Augment</color>, whenever you take damage, <color=\"yellow\">you lose 1 max HP</color>.\r\nEach <color=\"red\">Active Trial</color>, boss room will have an extra Mortar Hopper, and whenever you take damage, you have a <color=\"yellow\">5% chance of losing a tarot card</color>.";
+            return "Each <color=\"purple\">Active Augment</color>, whenever you take damage, <color=\"yellow\">you lose 10% Curse Charge</color>.\r\nEach <color=\"red\">Active Trial</color>, whenever you take damage, you have a <color=\"yellow\">10% chance of losing a tarot card</color>.";
         }
 
         public override string Skin => "Trinkets/CoopGoodTiming";

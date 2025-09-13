@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "All non-boss enemy spawns are <color=\"yellow\">doubled</color>.";
+            return "Enemies movement speed is <color=\"yellow\">doubled</color>.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";
