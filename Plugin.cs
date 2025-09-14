@@ -112,12 +112,12 @@ namespace CotLMiniMods
         public static TarotCards.Card ShamuraCard;
         public static TarotCards.Card NarinderCard;
 
-        public static TarotCards.Card CasualsCard;
-        public static TarotCards.Card CultistsCard;
+        public static TarotCards.Card GraceCard;
+        public static TarotCards.Card BombardmentCard;
         public static TarotCards.Card DeathCard;
         public static TarotCards.Card DissonanceCard;
         public static TarotCards.Card BloodpactCard;
-        public static TarotCards.Card HealingCard;
+        public static TarotCards.Card CurseCard;
         public static TarotCards.Card PersistenceCard;
         public static TarotCards.Card SwarmCard;
         public static TarotCards.Card ResistanceCard;
@@ -308,23 +308,23 @@ namespace CotLMiniMods
                 var resistance = new ProxyTarot_Augment_Resistance();
                 var explosion = new ProxyTarot_Augment_Explosion();
 
-                CasualsCard = CustomTarotCardManager.Add(casuals);
-                CultistsCard = CustomTarotCardManager.Add(cultists);
+                GraceCard = CustomTarotCardManager.Add(casuals);
+                BombardmentCard = CustomTarotCardManager.Add(cultists);
                 DeathCard = CustomTarotCardManager.Add(death);
                 DissonanceCard = CustomTarotCardManager.Add(dissonance);
                 BloodpactCard = CustomTarotCardManager.Add(Bloodpact);
-                HealingCard = CustomTarotCardManager.Add(healing);
+                CurseCard = CustomTarotCardManager.Add(healing);
                 PersistenceCard = CustomTarotCardManager.Add(persistence);
                 SwarmCard = CustomTarotCardManager.Add(swarm);
                 ResistanceCard = CustomTarotCardManager.Add(resistance);
                 ExplosionCard = CustomTarotCardManager.Add(explosion);
 
-                proxyAugments.Add(CasualsCard, casuals);
-                proxyAugments.Add(CultistsCard, cultists);
+                proxyAugments.Add(GraceCard, casuals);
+                proxyAugments.Add(BombardmentCard, cultists);
                 proxyAugments.Add(DeathCard, death);
                 proxyAugments.Add(DissonanceCard, dissonance);
                 proxyAugments.Add(BloodpactCard, Bloodpact);
-                proxyAugments.Add(HealingCard, healing);
+                proxyAugments.Add(CurseCard, healing);
                 proxyAugments.Add(PersistenceCard, persistence);
                 proxyAugments.Add(SwarmCard, swarm);
                 proxyAugments.Add(ResistanceCard, resistance);

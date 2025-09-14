@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "Each <color=\"purple\">Active Augment</color>, whenever enemies take damage, their <color=\"yellow\">damage increases by 5%</color>.\r\nEach <color=\"red\">Active Trial</color>, whenever you take damage, <color=\"yellow\">all enemies will heal for 10% of their max health</color>.";
+            return "Each <color=\"purple\">Active Augment</color>, whenever enemies take damage, their <color=\"yellow\">damage reduction increases by 0.5%, up to 90%</color>.\r\nEach <color=\"red\">Active Trial</color>, whenever you take damage, <color=\"yellow\">all enemies will heal for 10% of their max health</color>.";
         }
 
         public override string Skin => "Trinkets/CoopGoodTiming";

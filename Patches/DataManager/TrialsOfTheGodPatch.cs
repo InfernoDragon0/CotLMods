@@ -1,5 +1,6 @@
 
 
+using System.Collections;
 using COTL_API.CustomTarotCard;
 using CotLMiniMods;
 using HarmonyLib;
@@ -11,37 +12,20 @@ using UnityEngine.SceneManagement;
 
 // 1Augment of Death (DONE): When an enemy attacks, they have a 25% chance of spawning a poison puddle under them.
 // 2Augment of Swarm (DONE): Enemies move 100% faster
-// 3Augment of Explosion: Enemies explode on death
-// 4Augment of Bloodpact: When an enemy dies, other enemies gain 50% damage.
-// 5Augment of Persistence: Enemies heal 5% of their health per 3 second. Bosses heal 1% of their health per second.
-// 6Augment of Resistance: Enemies have a 25% chance of not taking damage from hits
-// 7Augment of Dissonance: Dodging costs 20% curse charge, you cannot dodge if you have less than 20% curse charge.
-// 8Augment of Curse: Each time you attack, you lose 5% curse charge
-// 9Augment of Grace: When an enemy dies, all other enemies double their current and max hp.
-// 10Augment of Bombardment: Each time you attack, 2 enemy bombs appear around you.
+// 3Augment of Explosion (DONE untested): Enemies explode on death
+// 4Augment of Bloodpact (DONE untested): When an enemy dies, other enemies gain 10% damage.
+// 5Augment of Persistence (DONE untested): Enemies heal 5% of their health per 3 second. Bosses heal 1% of their health per second.
+// 6Augment of Resistance (DONE untested): Enemies have a 25% chance of not taking damage from hits
+// 7Augment of Dissonance (DONE untested): Dodging costs 20% curse charge, you cannot dodge if you have less than 20% curse charge.
+// 8Augment of Curse (DONE untested): Each time you attack, you lose 5% curse charge
+// 9Augment of Grace (DONE untested): When an enemy dies, all other enemies double their current and max hp.
+// 10Augment of Bombardment (DONE untested): Each time you attack, 2 enemy bombs appear around you.
 
-// 11Trial of Narinder: Each active Augment will increase the health of all enemies by 50%, Each active Trial will grant enemies a 10% chance of instantly killing you on hit, and increases the health and damage of the final boss by 5% for each enemy you have killed during the run, and whenever a non boss enemy dies, they have a 5% chance of reviving if they are not the last enemy.
-// 12Trial of Leshy: For each active Augment, whenever an enemy takes non lethal damage, there is a 5% chance for them to duplicate. For each active Trial, a copy of each enemy will spawn.
-// 13Trial of Heket (BOTH DONE): For each active Trial, whenever you take damage, you have a 10% chance of losing a tarot card, if you have no tarot cards, you lose 1 max HP. For each active Augment, each time you take damage, you lose 10% of curse charge.
-// 14Trial of Shamura: For each active Trial, each time you take damage, all enemies heals 10% health. For each active Augment, when enemies take damage, their damage increases by 5%.
-// 15Trial of Kallamar: For each active Trial, this effect speeds up by 1 second. Every 6 seconds, all enemies drop a pool of poison. For each active Augment, this effect speeds up by 1 second. Every 11 seconds, a pool of poison is spawned on your location.
-
-//(1) patch HealthPlayer.DealDamage TrapPoison.CreatePoison(base.transform.position, 1, 0f, GenerateRoom.Instance.transform, false);
-//(2) patch UnitObject.maxSpeed *= 2; UnitObject.SpeedMultiplier *= 2;
-//(3) patch Enemy.OnDie explode
-//(4) patch Enemy.OnDie give all other enemies +50% dmg
-//(5) patch Enemy.Update heal 5% per 3s, if boss then 1% per second (UnitObject.isBoss)
-//(6) patch Health.DealDamage if Enemy team, 25% chance to ignore damage
-//(7) patch Playerfarming.DodgeRoll PRE: check if curse charge is at least 20%, cannot roll without curse charge. POST: if result is true, take 20% curse charge
-//(8) patch PlayerWeapon.DoAttackRoutine take 5% curse charge
-//(9) patch Enemy.OnDie double hp of all other enemies
-//(10) patch PlayerWeapon.DoAttackRoutine spawn 2 bombs around player
-
-//(11) patch 1: Enemy.Start add 50% max hp and heal to full per active augment, patch 2: Health.DealDamage if enemy hits player, 10% chance to insta kill per active trial, patch 3: Enemy.Start if UnitObject.isBoss, boss gains 5% hp and damage per enemy kill, patch 4: Enemy.OnDie if not last enemy, 5% chance to respawn. Enemy.OnDie track enemy kills
-//(12) patch 1: Health.DealDamage if non lethal damage to enemy, 5% chance to duplicate at same health before taking damage per active augment, patch 2: Enemy.Start instantiate copy of each enemy per active trial
-//(13) patch 1: HealthPlayer.DealDamage if player is hit, for each active trial, 10% chance to lose tarot card, if no tarot card, lose 1 max hp, patch 2: Health.DealDamage if player is hit, for each active augment, lose 10% curse charge
-//(14) patch 1: HealthPlayer.DealDamage if player is hit, for each active trial, all enemies heal 10% hp, patch 2: Health.DealDamage if enemy is hit, for each active augment, enemy gains 5% damage
-//(15) patch 1: every 6 - 1 per trial seconds, TrapPoison.CreatePoison, patch 2: every 11 - 1 per augment seconds, TrapPoison.CreatePoison at player per active augment
+// 11Trial of Narinder (ALL DONE untested): Each active Augment will increase the health of all enemies by 50%, Each active Trial will grant enemies a 10% chance of instantly killing you on hit, and increases the health of the final boss by 5% for each enemy you have killed during the run.
+// 12Trial of Leshy (BOTH DONE untested): For each active Augment, whenever an enemy takes non lethal damage, there is a 5% chance for them to duplicate. For each active Trial, a copy of each enemy will spawn.
+// 13Trial of Heket (BOTH DONE untested): For each active Trial, whenever you take damage, you have a 10% chance of losing a tarot card, if you have no tarot cards, you lose 1 max HP. For each active Augment, each time you take damage, you lose 10% of curse charge.
+// 14Trial of Shamura (BOTH DONE untested): For each active Trial, each time you take damage, all enemies heals 10% health. For each active Augment, when enemies take damage, their damage increases by 5%.
+// 15Trial of Kallamar (BOTH DONE untested): For each active Trial, this effect speeds up by 1 second. Every 6 seconds, all enemies drop a pool of poison. For each active Augment, this effect speeds up by 1 second. Every 11 seconds, a pool of poison is spawned on your location.
 
 //BiomeGenerator.ChangeRoomRoutine
 //BiomeRoom.Activate gets called after that, activating the next room and setactive false to the previous room
@@ -59,19 +43,36 @@ using UnityEngine.SceneManagement;
 //EnemySpawner.CreateWithAndInitInstantiatedEnemy(component.transform.position, enemyFrogBoss.transform.parent, component.gameObject); spawns an enemy
 //we need to find component.gameObject to spawn, by prefabs
 
-
 namespace CotLTemplateMod.Patches
 {
     [HarmonyPatch]
 
     internal class TrialsOfTheGodPatch
     {
+        public static int killCount = 0;
         //Tarot Reapply when playerfarming starts again in game scene
+        //(15) patch 2: PlayerFarming.Start every 11 - 1 per augment seconds, TrapPoison.CreatePoison at player per active augment
+
         [HarmonyPatch(typeof(PlayerFarming), nameof(PlayerFarming.Start))]
         [HarmonyPostfix]
         public static void PlayerFarming_Start_(PlayerFarming __instance)
         {
             Plugin.Log.LogInfo("Scene currently is " + SceneManager.GetActiveScene().name);
+            Plugin.Log.LogInfo("Reset kill count");
+            killCount = 0;
+
+            //log active trials and augments
+            Plugin.Log.LogInfo("Active Trials: " + Plugin.proxyTrialsEnabled.Count);
+            foreach (var trial in Plugin.proxyTrialsEnabled)
+            {
+                Plugin.Log.LogInfo("Active Trial: " + trial);
+            }
+            Plugin.Log.LogInfo("Active Augments: " + Plugin.proxyAugmentsEnabled.Count);
+            foreach (var augment in Plugin.proxyAugmentsEnabled)
+            {
+                Plugin.Log.LogInfo("Active Augment: " + augment);
+            }
+
             if (!SceneManager.GetActiveScene().name.Contains("Dungeon")) //todo find the active scene for game
                 return;
             //collect the loot
@@ -119,6 +120,21 @@ namespace CotLTemplateMod.Patches
 
                 Plugin.relicData = RelicType.None;
             }
+
+            //(15) patch 2: PlayerFarming.Start every 11 - 1 per augment seconds, TrapPoison.CreatePoison at player per active augment
+            if (Plugin.proxyTrialsEnabled.Contains(Plugin.KallamarCard))
+            {
+                Plugin.Log.LogInfo("Trial of Kallamar (augment) triggered");
+                var timer = Mathf.Clamp(11 - Plugin.proxyAugmentsEnabled.Count, 1, 11);
+                __instance.StartCoroutine(PoisonTrial(timer, __instance.gameObject));
+            }
+
+        }
+
+        public static IEnumerator PoisonTrial(float duration, GameObject gameObject)
+        {
+            yield return new WaitForSeconds(duration);
+            TrapPoison.CreatePoison(gameObject.transform.position, 1, 1, gameObject.transform.parent);
         }
 
         [HarmonyPatch(typeof(UITarotChoiceOverlayController), nameof(UITarotChoiceOverlayController.Show))]
@@ -144,9 +160,12 @@ namespace CotLTemplateMod.Patches
         }
 
         //HealthPlayer.DealDamage: the player takes damage. patches for trials 13 and 14, and augment 1
+        //(1) patch HealthPlayer.DealDamage TrapPoison.CreatePoison(base.transform.position, 1, 0f, GenerateRoom.Instance.transform, false);
+        //(13) patch 1: HealthPlayer.DealDamage if player is hit, for each active trial, 10% chance to lose tarot card, if no tarot card, lose 1 max hp, patch 2: Health.DealDamage if player is hit, for each active augment, lose 10% curse charge
+        //(14) patch 1: HealthPlayer.DealDamage if player is hit, for each active trial, all enemies heal 10% hp,
         [HarmonyPatch(typeof(HealthPlayer), nameof(HealthPlayer.DealDamage))]
         [HarmonyPostfix]
-        public static void HealthPlayer_DealDamage(ref bool __result, HealthPlayer __instance, GameObject Attacker, Vector3 AttackLocation)
+        public static void HealthPlayer_DealDamage_Post(ref bool __result, HealthPlayer __instance, GameObject Attacker, Vector3 AttackLocation)
         {
             if (__result)
             {
@@ -199,12 +218,105 @@ namespace CotLTemplateMod.Patches
                     var healPercent = 0.1f * Plugin.proxyTrialsEnabled.Count;
                     Plugin.Log.LogInfo("Trial of Shamura (Trial) triggered, healing all enemies by " + (healPercent * 100) + "%");
 
+                    var enemies = GameObject.FindObjectsOfType<UnitObject>();
+                    foreach (var enemy in enemies)
+                    {
+                        if (enemy.health.team == Health.Team.Team2)
+                        {
+                            enemy.health.Heal(enemy.health.totalHP * healPercent);
+                        }
+                    }
+
                 }
 
             }
         }
 
-        //UnitObject.OnEnable: called when an enemy is enabled, for augment 2
+        //(10) patch PlayerWeapon.DoAttackRoutine spawn 2 bombs around player
+        //(6) patch Health.DealDamage if Enemy team, 25% chance to ignore damage
+        [HarmonyPatch(typeof(Health), nameof(Health.DealDamage))]
+        [HarmonyPostfix]
+        public static void Health_DealDamage_post(Health __instance, GameObject Attacker, Vector3 AttackLocation)
+        {
+            if (__instance.team != Health.Team.Team2) return;
+
+            //(10) patch PlayerWeapon.DoAttackRoutine spawn 2 bombs around player
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.BombardmentCard))
+            {
+                Plugin.Log.LogInfo("Augment of Bombardment triggered");
+                Bomb.CreateBomb(AttackLocation, __instance, __instance.playerFarming.transform.parent);
+                Bomb.CreateBomb(AttackLocation, __instance, Attacker.transform.parent);
+                AudioManager.Instance.PlayOneShot("event:/boss/spider/bomb_shoot", __instance.playerFarming.transform.position);
+            }
+
+            //(14) patch 2: Health.DealDamage if enemy is hit, for each active augment, enemy gains 0.5% damage reduction
+            if (Plugin.proxyTrialsEnabled.Contains(Plugin.ShamuraCard))
+            {
+                Plugin.Log.LogInfo("Trial of Shamura (Augment) triggered, enemy gains damage reduction");
+                var augmentDamage = 0.005f * Plugin.proxyAugmentsEnabled.Count;
+                __instance.DamageModifier = Mathf.Clamp(__instance.DamageModifier - augmentDamage, 0.1f, 1000f);
+            }
+
+
+        }
+
+        //(12) patch 1: Health.DealDamage if non lethal damage to enemy, 5% chance to duplicate at same health before taking damage per active augment,
+        //(11) patch 2: HealthPlayer.DealDamage if enemy hits player, 10% chance to insta kill per active trial
+
+        [HarmonyPatch(typeof(Health), nameof(Health.DealDamage))]
+        [HarmonyPrefix]
+        public static bool Health_DealDamage_pre(ref bool __result, Health __instance, GameObject Attacker, Vector3 AttackLocation)
+        {
+            if (__instance.team == Health.Team.PlayerTeam)
+            {
+                //(11) patch 2: HealthPlayer.DealDamage if enemy hits player, 10% chance to insta kill per active trial
+                if (Plugin.proxyTrialsEnabled.Contains(Plugin.NarinderCard))
+                {
+                    var chance = 10 * Plugin.proxyTrialsEnabled.Count;
+                    if (Random.Range(0, 100) < chance)
+                    {
+                        Plugin.Log.LogInfo("Trial of Narinder (Trial) triggered");
+                        __instance.DamageModifier = 9999f;
+                        __result = true;
+                        return false;
+                    }
+                }
+
+            }
+
+            if (__instance.team == Health.Team.Team2)
+            {
+                //(6) patch Health.DealDamage if Enemy team, 25% chance to ignore damage
+                if (Plugin.proxyAugmentsEnabled.Contains(Plugin.ResistanceCard))
+                {
+                    if (Random.Range(0, 100) < 25)
+                    {
+                        Plugin.Log.LogInfo("Augment of Resistance triggered on " + __instance.name);
+                        __result = false;
+                        return false;
+                    }
+                }
+
+                //(12) patch 1: Health.DealDamage if non lethal damage to enemy, 5% chance to duplicate at same health before taking damage per active augment, 
+                if (Plugin.proxyTrialsEnabled.Contains(Plugin.LeshyCard))
+                {
+                    var chance = 5 * Plugin.proxyAugmentsEnabled.Count;
+                    if (Random.Range(0, 100) < chance)
+                    {
+                        Plugin.Log.LogInfo("Trial of Leshy (Augment) triggered on " + __instance.name);
+                        //make a copy of this mob
+                        var newMob = GameObject.Instantiate(__instance.gameObject, __instance.transform.position, __instance.transform.rotation);
+                    }
+                }
+            }
+            return true;
+        }
+
+        //(2) patch UnitObject.maxSpeed *= 2; UnitObject.SpeedMultiplier *= 2;
+        //(5) patch Enemy.Update heal 5% per 3s, if boss then 1% per second (UnitObject.isBoss)
+        //(15) patch 1: UnitObject.OnEnable every 6 - 1 per trial seconds, TrapPoison.CreatePoison
+        //(11) patch 1: UnitObject.OnEnable add 50% max hp and heal to full per active augment,
+        //(11) patch 3: UnitObject.OnEnable if UnitObject.isBoss, boss gains 5% hp per enemy kill,
         [HarmonyPatch(typeof(UnitObject), nameof(UnitObject.OnEnable))]
         [HarmonyPostfix]
         public static void UnitObject_OnEnable(UnitObject __instance)
@@ -212,13 +324,176 @@ namespace CotLTemplateMod.Patches
             if (__instance.health.team != Health.Team.Team2)
                 return;
 
+            //(2) patch UnitObject.maxSpeed *= 2; UnitObject.SpeedMultiplier *= 2;
             if (Plugin.proxyAugmentsEnabled.Contains(Plugin.SwarmCard))
             {
                 Plugin.Log.LogInfo("Augment of Swarm triggered on " + __instance.name);
-                __instance.maxSpeed *= 5;
-                __instance.SpeedMultiplier *= 5;
+                __instance.maxSpeed *= 2;
+                __instance.SpeedMultiplier *= 2;
+            }
+
+            //(5) patch Enemy.Update heal 5% per 3s, if boss then 1% per second (UnitObject.isBoss)
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.PersistenceCard))
+            {
+                Plugin.Log.LogInfo("Augment of Persistence triggered on " + __instance.name);
+                __instance.StartCoroutine(HealthRegen(__instance));
+            }
+
+            //(11) patch 1: UnitObject.OnEnable add 50% max hp and heal to full per active augment,
+            //(11) patch 3: UnitObject.OnEnable if UnitObject.isBoss, boss gains 5% hp per enemy kill,
+            if (Plugin.proxyTrialsEnabled.Contains(Plugin.NarinderCard))
+            {
+                Plugin.Log.LogInfo("Trial of Narinder (Augment) triggered on " + __instance.name);
+                __instance.health.totalHP *= 1.5f;
+                __instance.health.Heal(__instance.health.totalHP);
+
+                if (__instance.isBoss)
+                {
+                    var totalHealthBuff = 0.05f * Plugin.proxyTrialsEnabled.Count * killCount;
+                    __instance.health.totalHP *= 1f + totalHealthBuff;
+                    __instance.health.Heal(__instance.health.totalHP);
+                    Plugin.Log.LogInfo("Trial of Narinder (Trial) triggered on Boss " + __instance.name + " now hp " + __instance.health.totalHP);
+                }
+            }
+
+            //(15) patch 1: UnitObject.OnEnable every 6 - 1 per trial seconds, TrapPoison.CreatePoison
+            if (Plugin.proxyTrialsEnabled.Contains(Plugin.KallamarCard))
+            {
+                Plugin.Log.LogInfo("Trial of Kallamar (trial) triggered");
+                var timer = Mathf.Clamp(6 - Plugin.proxyTrials.Count, 1, 6);
+                __instance.StartCoroutine(PoisonTrial(timer, __instance.gameObject));
             }
         }
-            
+
+        //(5) patch Enemy.Update heal 5% per 3s, if boss then 1% per second (UnitObject.isBoss)
+        public static IEnumerator HealthRegen(UnitObject unit)
+        {
+            yield return new WaitForSeconds(unit.isBoss ? 1f : 3f);
+            Plugin.Log.LogInfo("Healing " + unit.name);
+            unit.health.Heal(unit.health.totalHP * (unit.isBoss ? 0.01f : 0.05f));
+        }
+
+        //(8) patch PlayerWeapon.DoAttackRoutine take 5% curse charge faithammo.ammo -
+
+
+        [HarmonyPatch(typeof(PlayerWeapon), nameof(PlayerWeapon.DoAttackRoutine))]
+        [HarmonyPostfix]
+        public static void PlayerWeapon_DoAttackRoutine(PlayerWeapon __instance)
+        {
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.CurseCard))
+            {
+                __instance.playerFarming.playerSpells.faithAmmo.Ammo -= __instance.playerFarming.playerSpells.faithAmmo.Total * 0.05f;
+            }
+        }
+
+        //Enemy OnDie augment 3,4,9, trial 1
+        //(3) patch Enemy.OnDie explode
+        //(4) patch Enemy.OnDie give all other enemies +50% dmg
+        //(9) patch Enemy.OnDie double hp of all other enemies
+        //(11) Enemy.OnDie if not last enemy, 5% chance to respawn
+        [HarmonyPatch(typeof(UnitObject), nameof(UnitObject.OnDie))]
+        [HarmonyPostfix]
+        public static void UnitObject_OnDie(UnitObject __instance, Health source)
+        {
+            if (__instance.health.team != Health.Team.Team2)
+                return;
+
+            killCount++;
+
+            //(3) patch Enemy.OnDie explode
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.ExplosionCard))
+            {
+                Plugin.Log.LogInfo("Augment of Explosion triggered on " + __instance.name);
+                Explosion.CreateExplosion(__instance.transform.position, Health.Team.Team2, __instance.health, 2f, 1f, 0f);
+            }
+
+            //(9) patch Enemy.OnDie double hp of all other enemies
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.GraceCard))
+            {
+                Plugin.Log.LogInfo("Augment of Grace triggered on " + __instance.name);
+                var enemies = GameObject.FindObjectsOfType<UnitObject>();
+                foreach (var enemy in enemies)
+                {
+                    if (enemy == __instance)
+                        continue;
+
+                    var hp = enemy.health;
+                    if (hp.HP > 0)
+                    {
+                        hp.totalHP *= 2;
+                        hp.Heal(hp.totalHP / 2);
+                    }
+                }
+            }
+
+            //(4) patch Enemy.OnDie give all other enemies +10% dmg
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.BloodpactCard))
+            {
+                var enemies = GameObject.FindObjectsOfType<UnitObject>();
+                Plugin.Log.LogInfo("Augment of Bloodpact triggered on " + __instance.name);
+                foreach (var player in PlayerFarming.players)
+                {
+                    player.health.DamageModifier += 0.1f;
+                }
+            }
+
+        }
+
+        //(7) patch Playerfarming.DodgeRoll PRE: check if curse charge is at least 20%, cannot roll without curse charge. POST: if result is true, take 20% curse charge
+        [HarmonyPatch(typeof(PlayerFarming), nameof(PlayerFarming.DodgeRoll))]
+        [HarmonyPrefix]
+        public static bool PlayerFarming_DodgeRoll_Pre(PlayerFarming __instance, ref bool __result)
+        {
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.DissonanceCard))
+            {
+                if (__instance.playerSpells.faithAmmo.Ammo < 0.2f * __instance.playerSpells.faithAmmo.Total)
+                {
+                    __result = false;
+                }
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPatch(typeof(PlayerFarming), nameof(PlayerFarming.DodgeRoll))]
+        [HarmonyPostfix]
+        public static void PlayerFarming_DodgeRoll_Post(PlayerFarming __instance, ref bool __result)
+        {
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.DissonanceCard) && __result)
+            {
+                Plugin.Log.LogInfo("Augment of Dissonance triggered");
+                __instance.playerSpells.faithAmmo.Ammo = Mathf.Clamp(__instance.playerSpells.faithAmmo.Ammo - (__instance.playerSpells.faithAmmo.Total * 0.2f), 0, __instance.playerSpells.faithAmmo.Total);
+            }
+        }
+
+        //(12) patch 2: GenerateRoom.Generate postfix instantiate copy of each enemy per active trial
+        [HarmonyPatch(typeof(GenerateRoom), nameof(GenerateRoom.Generate), [])]
+        [HarmonyPostfix]
+        public static IEnumerator GenerateRoom_Generate(IEnumerator result, GenerateRoom __instance)
+        {
+            while (result.MoveNext())
+            {
+                yield return result.Current;
+            }
+
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.LeshyCard))
+            {
+                Plugin.Log.LogInfo("Trial of Leshy (Trial) triggered " + __instance.name);
+                var enemies = GameObject.FindObjectsOfType<UnitObject>();
+                foreach (var enemy in enemies)
+                {
+                    if (enemy.health.HP > 0)
+                    {
+                        for (var i = 0; i < Plugin.proxyTrialsEnabled.Count; i++)
+                        {
+                            Plugin.Log.LogInfo("New Copy of " + enemy.name);
+                            var newEnemy = GameObject.Instantiate(enemy.gameObject, enemy.transform.position, enemy.transform.rotation);
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 }
