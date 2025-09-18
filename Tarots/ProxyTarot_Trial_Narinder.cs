@@ -13,12 +13,12 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedLore()
         {
-            return "This is my.. <color=\"yellow\">Final test...</color> Little lamb....";
+            return "TRYING TO OUTRUN.. <color=\"yellow\">DEATH?</color> Poor little Lamb.... HAHAHAHA";
         }
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "Each <color=\"purple\">Active Augment</color> will increase all enemies' <color=\"yellow\">health by 50%</color>.\r\nEach <color=\"red\">Active Trial</color> will grant enemies a <color=\"yellow\">10% chance of instantly killing you on hit</color>, and increases the health of the final boss by <color=\"yellow\">5% for each enemy you have killed during the run</color>.";
+            return "Each <color=\"purple\">Active Augment</color> will increase your <color=\"yellow\">dodge cooldown by 25%</color>.\r\nEach <color=\"red\">Active Trial</color> will grant enemies a <color=\"yellow\">10% chance of instantly killing you on hit</color>, and increases your <color=\"yellow\">Vulnerability to Damage by 1% for each enemy you have killed during the run</color>.";
         }
 
         public override string Skin => "Trinkets/CoopGoodTiming";

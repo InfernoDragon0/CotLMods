@@ -299,7 +299,7 @@ namespace CotLMiniMods
                 //augments
                 var casuals = new ProxyTarot_Augment_Grace();
                 var cultists = new ProxyTarot_Augment_Bombardment();
-                var death = new ProxyTarot_Augment_Death();
+                var death = new ProxyTarot_Augment_Exhaustion();
                 var dissonance = new ProxyTarot_Augment_Dissonance();
                 var Bloodpact = new ProxyTarot_Augment_Bloodpact();
                 var healing = new ProxyTarot_Augment_Curse();

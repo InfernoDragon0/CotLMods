@@ -2,23 +2,23 @@
 
 namespace CotLMiniMods.Tarots
 {
-    public class ProxyTarot_Augment_Death : CustomTarotCard
+    public class ProxyTarot_Augment_Exhaustion : CustomTarotCard
     {
-        public override string InternalName => "ProxyTarot_Augment_Death";
+        public override string InternalName => "ProxyTarot_Augment_Exhaustion";
 
         public override string LocalisedName(int upgradeIndex)
         {
-            return "<color=\"purple\">Augment: Death</color>";
+            return "<color=\"purple\">Augment: Exhaustion</color>";
         }
 
         public override string LocalisedLore()
         {
-            return "Augment of Death";
+            return "Augment of Exhaustion";
         }
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "When an enemy hits you, they have a <color=\"yellow\">25% chance of spawning a poison puddle under them</color>.";
+            return "Each time you dodge, you lose <color=\"yellow\">0.1 movement speed</color>. Minimum 1.0 movement speed.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";

@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "Each time you attack, <color=\"yellow\">2 bombs spawn around you</color>.";
+            return "Attacking an enemy will spawn <color=\"yellow\">2 bombs</color>.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";

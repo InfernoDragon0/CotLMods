@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "When an enemy dies, all enemies <color=\"yellow\">gain 10% damage</color>.";
+            return "When an enemy dies, all enemies <color=\"yellow\">spawn a poison puddle under them</color>.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";

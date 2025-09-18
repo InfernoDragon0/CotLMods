@@ -10,25 +10,27 @@ using Sirenix.Serialization.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// 1Augment of Death (DONE): When an enemy attacks, they have a 25% chance of spawning a poison puddle under them.
+// 1Augment of Death (removed): When an enemy attacks, they have a 25% chance of spawning a poison puddle under them.
+// 4Augment of Bloodpact (removed): When an enemy dies, other enemies gain 10% damage.
+
+// 1Augment of Exhaustion (DONE): Each time you dodge, you lose 0.1 movement speed.
 // 2Augment of Swarm (DONE): Enemies move 100% faster
 // 3Augment of Explosion (DONE): Enemies explode on death
-// 4Augment of Bloodpact (DONE): When an enemy dies, other enemies gain 10% damage.
+// 4Augment of Bloodpact (DONE): When an enemy dies, other enemies spawn a poison puddle under them.
 // 5Augment of Persistence (DONE): Enemies heal 5% of their health per 3 second. Bosses heal 1% of their health per second.
 // 6Augment of Resistance (DONE): Enemies have a 25% chance of not taking damage from hits
 // 7Augment of Dissonance (DONE): Dodging costs 20% curse charge, you cannot dodge if you have less than 20% curse charge.
 // 8Augment of Curse (DONE): Each time you attack, you lose 5% curse charge
-// 9Augment of Grace (DONE): When an enemy dies, all other enemies max hp +40%, heal 25%.
+// 9Augment of Grace (DONE): When an enemy dies, all other enemies heal 25% of their Max hp.
 // 10Augment of Bombardment (DONE): Each time you attack, 2 bombs appear around you.
 
-// 11Trial of Narinder (ALL DONE): Each active Augment will increase the health of all enemies by 50%, Each active Trial will grant enemies a 10% chance of instantly killing you on hit, and increases the health of the final boss by 5% for each enemy you have killed during the run.
-// 12Trial of Leshy (BOTH DONE): For each active Augment, whenever an enemy takes non lethal damage, there is a 5% chance for them to duplicate. For each active Trial, a copy of each non-boss enemy will spawn every 10 seconds.
-// 13Trial of Heket (BOTH DONE): For each active Trial, whenever you take damage, you have a 10% chance of losing a tarot card, if you have no tarot cards, you lose 1 max HP. For each active Augment, each time you take damage, you lose 10% of curse charge.
+// 11Trial of Narinder (DONE): Each active Augment will increase your dodge cooldown by 25%, Each active Trial will grant enemies a 10% chance of instantly killing you on hit, and increases your vulnerability to damage by 1% for each enemy you have killed during the run.
+// 12Trial of Leshy (DONE): For each active Augment, whenever an enemy takes non lethal damage, there is a 5% chance for them to duplicate. For each active Trial, a copy of each non-boss enemy will spawn every 10 seconds.
+// 13Trial of Heket (DONE): For each active Trial, whenever you take damage, you have a 10% chance of losing a tarot card, if you have no tarot cards, you lose 1 max HP. For each active Augment, each time you take damage, you lose 10% of curse charge.
+// 14Trial of Shamura (DONE): For each active Trial, each time you take damage, all enemies heals 10% health. For each active Augment, when enemies take damage, their damage resistance increases by 0.5%.
+// 15Trial of Kallamar (DONE): For each active Trial, this effect speeds up by 1 second. Every 6 seconds, all enemies drop a pool of poison. For each active Augment, this effect speeds up by 1 second. Every 11 seconds, a pool of poison is spawned on your location.
 
-// 15Trial of Kallamar (BOTH DONE): For each active Trial, this effect speeds up by 1 second. Every 6 seconds, all enemies drop a pool of poison. For each active Augment, this effect speeds up by 1 second. Every 11 seconds, a pool of poison is spawned on your location.
-
-// 14Trial of Shamura (BOTH DONE untested): For each active Trial, each time you take damage, all enemies heals 10% health. For each active Augment, when enemies take damage, their damage resistance increases by 0.5%.
-
+//this.DodgeDelay = this.playerController.DodgeDelay;
 
 //BiomeGenerator.ChangeRoomRoutine
 //BiomeRoom.Activate gets called after that, activating the next room and setactive false to the previous room
@@ -153,6 +155,14 @@ namespace CotLTemplateMod.Patches
                 __instance.StartCoroutine(LeshySpawnDuplicateTrial());
             }
 
+            //(11) patch 1: dodge cooldown increase by 25% per active augment
+            if (Plugin.proxyTrialsEnabled.Contains(Plugin.NarinderCard))
+            {
+                var multiplier = 0.25f * Plugin.proxyAugmentsEnabled.Count;
+                __instance.playerController.DodgeDelay *= (1f + multiplier);
+                Plugin.Log.LogInfo("Trial of Narinder (Augment) Dodge cooldown increased to " + __instance.playerController.DodgeDelay);
+            }
+
         }
 
         public static IEnumerator PoisonTrialPlayer(float duration, GameObject gameObject)
@@ -213,14 +223,14 @@ namespace CotLTemplateMod.Patches
             if (__result)
             {
                 //augment 1: when an enemy attacks, they have a 25% chance of spawning a poison puddle under them.
-                if (Plugin.proxyAugmentsEnabled.Contains(Plugin.DeathCard))
-                {
-                    if (Random.Range(0, 100) < 25)
-                    {
-                        Plugin.Log.LogInfo("Augment of Death triggered");
-                        TrapPoison.CreatePoison(__instance.transform.position, 1, 1.5f, GenerateRoom.Instance.transform, false);
-                    }
-                }
+                // if (Plugin.proxyAugmentsEnabled.Contains(Plugin.DeathCard))
+                // {
+                //     if (Random.Range(0, 100) < 25)
+                //     {
+                //         Plugin.Log.LogInfo("Augment of Death triggered");
+                //         TrapPoison.CreatePoison(__instance.transform.position, 1, 1.5f, GenerateRoom.Instance.transform, false);
+                //     }
+                // }
                 //trial 13: for each active trial, 10% chance to lose tarot card, if no tarot card, lose 1 max hp. for each active augment, lose 10% curse charge
                 if (Plugin.proxyTrialsEnabled.Contains(Plugin.HeketCard))
                 {
@@ -282,6 +292,8 @@ namespace CotLTemplateMod.Patches
         public static void Health_DealDamage_post(Health __instance, GameObject Attacker, Vector3 AttackLocation)
         {
             if (__instance.team != Health.Team.Team2) return;
+            if (Attacker.GetComponent<Health>() == null) return;
+            if (Attacker.GetComponent<Health>().team != Health.Team.PlayerTeam) return;
 
             //(10) patch PlayerWeapon.DoAttackRoutine spawn 2 bombs around player
             if (Plugin.proxyAugmentsEnabled.Contains(Plugin.BombardmentCard))
@@ -308,7 +320,7 @@ namespace CotLTemplateMod.Patches
 
         [HarmonyPatch(typeof(Health), nameof(Health.DealDamage))]
         [HarmonyPrefix]
-        public static bool Health_DealDamage_pre(ref bool __result, Health __instance, GameObject Attacker, Vector3 AttackLocation)
+        public static bool Health_DealDamage_pre(ref bool __result, Health __instance, float Damage, GameObject Attacker, Vector3 AttackLocation)
         {
             if (__instance.team == Health.Team.PlayerTeam)
             {
@@ -343,6 +355,8 @@ namespace CotLTemplateMod.Patches
                 //(12) patch 1: Health.DealDamage if non lethal damage to enemy, 5% chance to duplicate at same health before taking damage per active augment, 
                 if (Plugin.proxyTrialsEnabled.Contains(Plugin.LeshyCard))
                 {
+                    if (__instance.HP - Damage <= 0) return true;
+
                     var enemies = GameObject.FindObjectsOfType<UnitObject>();
                     if (enemies.Length >= 20)
                     {
@@ -378,7 +392,16 @@ namespace CotLTemplateMod.Patches
 
                 foreach (var unit in enemies)
                 {
+                    var enemies2 = GameObject.FindObjectsOfType<UnitObject>();
+                    if (enemies2.Length >= 20)
+                    {
+                        Plugin.Log.LogInfo("Trial of Leshy (Trial) skipped, too many enemies to spawn duplicates");
+                        continue;
+                    }
+
                     if (unit.health.team != Health.Team.Team2) continue;
+                    if (unit.health.HP <= 1) continue;
+
                     var triggerTimes = Plugin.proxyTrialsEnabled.Count;
                     for (var i = 0; i < triggerTimes; i++)
                     {
@@ -413,20 +436,20 @@ namespace CotLTemplateMod.Patches
 
             //(11) patch 1: UnitObject.OnEnable add 50% max hp and heal to full per active augment,
             //(11) patch 3: UnitObject.OnEnable if UnitObject.isBoss, boss gains 5% hp per enemy kill,
-            if (Plugin.proxyTrialsEnabled.Contains(Plugin.NarinderCard))
-            {
-                Plugin.Log.LogInfo("Trial of Narinder (Augment) triggered on " + __instance.name);
-                __instance.health.totalHP *= 1.5f;
-                __instance.health.Heal(__instance.health.totalHP);
+            // if (Plugin.proxyTrialsEnabled.Contains(Plugin.NarinderCard))
+            // {
+            //     Plugin.Log.LogInfo("Trial of Narinder (Augment) triggered on " + __instance.name);
+            //     __instance.health.totalHP *= 1.5f;
+            //     __instance.health.Heal(__instance.health.totalHP);
 
-                if (__instance.isBoss)
-                {
-                    var totalHealthBuff = 0.05f * Plugin.proxyTrialsEnabled.Count * killCount;
-                    __instance.health.totalHP *= 1f + totalHealthBuff;
-                    __instance.health.Heal(__instance.health.totalHP);
-                    Plugin.Log.LogInfo("Trial of Narinder (Trial) triggered on Boss " + __instance.name + " now hp " + __instance.health.totalHP);
-                }
-            }
+            //     if (__instance.isBoss)
+            //     {
+            //         var totalHealthBuff = 0.05f * Plugin.proxyTrialsEnabled.Count * killCount;
+            //         __instance.health.totalHP *= 1f + totalHealthBuff;
+            //         __instance.health.Heal(__instance.health.totalHP);
+            //         Plugin.Log.LogInfo("Trial of Narinder (Trial) triggered on Boss " + __instance.name + " now hp " + __instance.health.totalHP);
+            //     }
+            // }
         }
 
         //(5) patch Enemy.Update heal 5% per 3s, if boss then 1% per second (UnitObject.isBoss)
@@ -460,7 +483,7 @@ namespace CotLTemplateMod.Patches
         //(3) patch Enemy.OnDie explode
         //(4) patch Enemy.OnDie give all other enemies +50% dmg
         //(9) patch Enemy.OnDie double hp of all other enemies
-        //(11) Enemy.OnDie if not last enemy, 5% chance to respawn
+        //(11) Enemy.OnDie give all other enemies 1% damage
         [HarmonyPatch(typeof(UnitObject), nameof(UnitObject.OnDie))]
         [HarmonyPostfix]
         public static void UnitObject_OnDie(UnitObject __instance)
@@ -493,20 +516,32 @@ namespace CotLTemplateMod.Patches
                     var hp = enemy.health;
                     if (hp.HP > 0)
                     {
-                        hp.totalHP *= 1.4f;
+                        // hp.totalHP *= 1.4f;
                         hp.Heal(hp.totalHP * 0.25f);
                     }
                 }
             }
 
-            //(4) patch Enemy.OnDie give all other enemies +10% dmg
+            //(4) patch Enemy.OnDie When an enemy dies, other enemies spawn a poison puddle under them.
             if (Plugin.proxyAugmentsEnabled.Contains(Plugin.BloodpactCard))
             {
                 var enemies = GameObject.FindObjectsOfType<UnitObject>();
                 Plugin.Log.LogInfo("Augment of Bloodpact triggered on " + __instance.name);
+                foreach (var enemy in enemies)
+                {
+                    if (enemy.health.team != Health.Team.Team2) continue;
+                    TrapPoison.CreatePoison(enemy.transform.position, 1, 1, enemy.transform.parent);
+                }
+            }
+
+            //(11)
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.NarinderCard))
+            {
+                Plugin.Log.LogInfo("Trial of Narinder (Trial) Vulnerability triggered on " + __instance.name);
+                var modifier = 0.01f * Plugin.proxyTrialsEnabled.Count;
                 foreach (var player in PlayerFarming.players)
                 {
-                    player.health.DamageModifier += 0.1f;
+                    player.health.DamageModifier += modifier;
                 }
             }
 
@@ -528,6 +563,7 @@ namespace CotLTemplateMod.Patches
             return true;
         }
 
+        //(1) Each time you dodge, you lose 0.1 movement speed.
         [HarmonyPatch(typeof(PlayerFarming), nameof(PlayerFarming.DodgeRoll))]
         [HarmonyPostfix]
         public static void PlayerFarming_DodgeRoll_Post(PlayerFarming __instance, ref bool __result)
@@ -536,6 +572,13 @@ namespace CotLTemplateMod.Patches
             {
                 Plugin.Log.LogInfo("Augment of Dissonance triggered");
                 __instance.playerSpells.faithAmmo.Ammo = Mathf.Clamp(__instance.playerSpells.faithAmmo.Ammo - (__instance.playerSpells.faithAmmo.Total * 0.2f), 0, __instance.playerSpells.faithAmmo.Total);
+            }
+
+            //(1) Each time you dodge, you lose 0.1 movement speed. minimum 1.0 move speed
+            if (Plugin.proxyAugmentsEnabled.Contains(Plugin.DeathCard) && __result)
+            {
+                Plugin.Log.LogInfo("Augment of Exhaustion triggered");
+                __instance.playerController.RunSpeed = Mathf.Clamp(__instance.playerController.RunSpeed - 0.1f, 1.0f, 9999f);
             }
         }
 
