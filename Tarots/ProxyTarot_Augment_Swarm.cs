@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "Enemies movement speed is <color=\"yellow\">doubled</color>.";
+            return "Enemies movement speed is <color=\"yellow\">increased by 20%</color>.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";

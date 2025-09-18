@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "When an enemy dies, all other enemies <color=\"yellow\"> double their current and max hp</color>.";
+            return "When an enemy dies, all other enemies have their <color=\"yellow\">Max HP increase by 40%, and heal by 25%</color>.";
         }
 
         public override string Skin => "Trinkets/NoCorruption";

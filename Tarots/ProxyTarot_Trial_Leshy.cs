@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "Each <color=\"purple\">Active Augment</color>, whenever an enemy takes non lethal damage, there is a <color=\"yellow\">5% chance they duplicate</color>.\r\nEach <color=\"red\">Active Trial</color>, an additional <color=\"yellow\">each mob spawns</color>.";
+            return "Each <color=\"purple\">Active Augment</color>, whenever an enemy takes non lethal damage, there is a <color=\"yellow\">5% chance they duplicate</color>.\r\nEach <color=\"red\">Active Trial</color>, an additional <color=\"yellow\">each mob spawns every 10 seconds</color>.";
         }
 
         public override string Skin => "Trinkets/CoopGoodTiming";
