@@ -15,37 +15,6 @@ namespace CotLMiniMods.Structures.Mines
     {
         public override string InternalName => "Bone_Mine_Structure";
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/bonemines.png"));
-        public override List<CustomStructureBuildingData> BuildingParts => [
-            new CustomStructureBuildingData() {
-                Sprite = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/bonemines.png")),
-                Offset = new Vector3(0, 0, 0),
-                Scale = new Vector3(1, 1, 1),
-                Rotation = new Vector3(300,0,0)
-            },
-            new CustomStructureBuildingData() {
-                Sprite = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/bonemines.png")),
-                Offset = new Vector3(5, 0, 0),
-                Scale = new Vector3(1, 1, 1),
-                Rotation = new Vector3(300,0,0)
-
-            },
-            new CustomStructureBuildingData() {
-                Sprite = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/bonemines.png")),
-                Offset = new Vector3(-5, 0, 0),
-                Scale = new Vector3(1, 1, 1),
-                Rotation = new Vector3(0,0,0)
-
-            },
-            new CustomStructureBuildingData() {
-                Sprite = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/bonemines.png")),
-                Offset = new Vector3(0, 5, 0),
-                Scale = new Vector3(1, 1, 1),
-                Rotation = new Vector3(0,0,0)
-
-            },
-        ];
-           
-        
         public override int BuildDurationMinutes => 30;
 
         public override string GetLocalizedName() => "Bone Mines";
