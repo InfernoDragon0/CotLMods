@@ -1,37 +1,70 @@
-![CotlMiniMods](https://i.imgur.com/YEpxd1c.png)
+![CotlMiniMods](https://raw.githubusercontent.com/InfernoDragon0/CotLMods/refs/heads/master/TOTG.png)
+
+View [full image](https://raw.githubusercontent.com/InfernoDragon0/CotLMods/refs/heads/master/TOTG.png) for better clarity
 
 # Links
 - Read more about this mod at my [Website](https://cotlminimod.infernodragon.net/)
 - Join the discord server for support, feedback, suggestions and general modding talk: [modding discord](https://discord.gg/MUjww9ndx2)
-- [Save Converter](https://cotlminimod.infernodragon.net/saveconverter) (if you are updating from 0.1.6 COTL API to 0.1.7 COTL API and above) 
+- [Save Converter](https://cotlminimod.infernodragon.net/saveconverter) (Legacy 0.1.6 COTL API to 0.1.7 COTL API and above) 
 - If you like the mod, consider donating [here](https://ko-fi.com/infernodragon0)! Thank you for checking out the mod!
 
 ### Notes
-NOTE: Some functions of the mod has changed due to the Relics of the Old Faith update, read below to find out more!
+NOTE: Some functions of the custom structures has changed, read below to find out more! Trial of the gods assets are currently placeholders.
 
-# v1.2.0: [SEASON 1 FINALE] Empowered Cult
-Brief, Finale: The cult has completed their research on the strange material. The strange material looks like it has quickly replicated itself, almost out of control, even the enemies are infected with the strange material. The Lamb has decided that it is time to take control of the strange material and harness its true potential.
-
-### 2 New Rituals!
-- **Ritual of Mass Resurrection**: Too many dead followers, no time to revive them all? Now, you can bring every one of them back at one go at the small cost of strange materials.
-- **Ritual of Exile**: Too many followers now? Snap them out of existence with a ritual of exile.
-
-### New Tarot Card
-- **Strange Extraction**: Enemies killed will drop Strange Material at a 100% chance. Note: You can only collect this card from the Wishing Well custom structure.
+# v1.3.0: [SEASON 2] Trial of the Gods
 
 ### Updated Role!
-- **Sous Chef**: Reworked from the old Chef, the Sous Chef will automatically cook signature dishes for the cult when hunger levels reach a certain point. Reduced the time required to cook by ~50%.
-- **Astrologer**: Added a config to disable giving quests, so that it only provides strange material. Reduced the time required to complete the task by 66%.
+#### Fisher
+The fisher will now use the new Custom Fishing Hut v2
 
 ### Updated Structures!
-- **Alchemy Table**: Improved the interaction for Alchemy Table. You can now select the necklace you want to cook. Complete the minigame X times successfully to cook the necklace. New necklaces have also been added. The cost of creating necklaces is now free. Increased price of creating the structure to 750 Gold, 25 Strange Material.
-- **Study Table**: Improved the interaction for Study Table. The study table now accepts investments of x1500 gold each to increase Strange Material Generation, and will no longer deplete. (Previously, was spend x100 gold to exchange for 1 Strange Material)
-- **Waiter Desk**: Reworked to collect food from the Follower Kitchen
-- **Follower Kitchen (Vanilla)**: Added interaction to collect food from the Follower Kitchen
+
+#### Improved Structure Design
+The sprites for certain custom structures has been changed.
+
+#### Infernal Infuser (Previously, Relic Infuser)
+The **Trials of the Gods** has begun. Runs are now more dangerous than ever! Challenge yourself to increased difficulties beyond the vanilla experience, at your own pace.
+
+- The interaction for this structure has changed
+- Removed: Select one relic to bring into your next run
+- New: Select any amount of trials and augments to increase the difficulty for your next run. 
+
+#### Wishing Well v2
+The long awaited wishing well is now back and improved! With the help of Strange Materials, the wishing well is fully powered and allows you to prepare for the most daunting challenges ahead!
+
+- The interaction for this structure has been changed.
+- Tarot effects no longer apply in base.
+- Removed: Pay 20 gold and select one out of two cards
+- New: At no cost, you may select any amount of Tarot cards from the vanilla + custom pool, and a relic to bring into your next run.
+
+#### Fishing Hut v2
+A New custom structure for fishing has been created. Use this instead of the vanilla Fishing Hut which will be deprecated.
+
+### Trial of The Gods
+To get started with Trial of the Gods, build a Infernal Infuser structure and interact with it. All trials and augments can be active at the same time. Need more power to overcome the Trials? Try Supercharged Tarots or Supercharged Followers!
+
+#### Trials
+- **Trial of Narinder**: Each active Augment will increase your dodge cooldown by 25%, Each active Trial will grant enemies a 10% chance of instantly killing you on hit, and increases your vulnerability to damage by 1% for each enemy you have killed during the run.
+- **Trial of Leshy**: For each active Augment, whenever a non-boss enemy takes non lethal damage, there is a 5% chance for them to duplicate at half of their current hp. For each active Trial, a copy of each non-boss enemy will spawn every 10 seconds at half of their current hp.
+- **Trial of Heket**: For each active Trial, whenever you take damage, you have a 10% chance of losing a tarot card. For each active Augment, each time you take damage, you lose 10% of curse charge.
+- **Trial of Shamura**: For each active Trial, each time you take damage, all enemies heals 10% of their health. For each active Augment, when enemies take damage, their damage resistance increases by 0.5%, up to 90%.
+- **Trial of Kallamar**: For each active Trial, this effect speeds up by 1 second. Every 10 seconds, all enemies drop a pool of poison. For each active Augment, this effect speeds up by 1 second. Every 15 seconds, a pool of poison is spawned on your location.
+
+#### Augments
+- Augment of Exhaustion: Each time you dodge, you lose 0.1 movement speed. Minimum 1.0 Speed
+- Augment of Swarm: Enemies move 20% faster
+- Augment of Explosion: Enemies explode on death
+- Augment of Bloodpact: When an enemy dies, other enemies spawn a poison puddle under them.
+- Augment of Persistence: Enemies heal 5% of their health per 3 second. Bosses heal 3% of their health per 3 second.
+- Augment of Resistance: Enemies have a 25% chance of not taking damage from hits
+- Augment of Dissonance: Dodging costs 20% curse charge, you cannot dodge if you have less than 20% curse charge.
+- Augment of Curse: Each time you attack, you lose 5% curse charge
+- Augment of Grace: When an enemy dies, all other enemies heal 25% of their Max hp
+- Augment of Bombardment: Each time you hit an enemy, 2 bombs appear around you.
+
 
 ### Removals
-- Removed Kitchen 1 and 2
-- Removed Food Storage 1 and 2
+- Removed Relic Infuser
 
 #### End of what's new
 
@@ -51,8 +84,7 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 
 ---
 
-![custom structures](https://i.imgur.com/vvpC8He.png)
-### Extra Structures
+### Custom Structures
 - Wishing Well: Wish upon the wishing well using Gold! Grants you one of two tarot cards as a reward
 - Bone / Silk / Crystal Mines: These mines allow your followers to start mining Bone / Silk / Crystals! These mines last indefinitely.
 - Food Storage I & II: Store additional food in food storages to prevent rotting!
@@ -92,13 +124,10 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 - Assign work commands remotely through the device!
 
 ---
-![custom commands](https://i.imgur.com/MuTf0Mo.png)
-### Misc Commands
+### Custom Commands
 - Knucklebones: Play knucklebones with your followers!
 - Flip Coin: Flip the coin with your followers and see if you win! (5 coins each)
 - Divorce: Too many spouses? Heres a solution!
-
-### Work Commands
 - Custom Miners
 - Sous Chef (Requires Sous Chef Desk)
 - Waiter (Requires Waiter Desk)
@@ -106,16 +135,21 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 
 ---
 
-![custom items](https://i.imgur.com/f4Uyg1g.png)
+### Custom Items
 
 - **Strange Energy**: An experimental Energy system that can be used to power futuristic structures.
 - **Strange Material**: A strange material that is used for rituals and futuristic machines
 
+### Custom Tarots
+- **Strange Extraction**: Enemies killed will drop Strange Material at a 100% chance. Note: You can only collect this card from the Wishing Well custom structure.
+
 ---
 
-![custom rituals](https://i.imgur.com/UKTgUza.png)
+### Custom Rituals
 
 ![text](https://i.imgur.com/NbHJTgh.png)
+- **Ritual of Mass Resurrection**: Too many dead followers, no time to revive them all? Now, you can bring every one of them back at one go at the small cost of strange materials.
+- **Ritual of Exile**: Too many followers now? Snap them out of existence with a ritual of exile.
 - **Fusion Ritual**: Sacrifice the first selected Follower. The second selected follower gains all of the first follower's traits. Note that traits are mutually exclusive of negative and positives, so stack them wisely (overrides if exist)
 - **Distribution Frenzy**: Instantly level up all your followers, at the cost of gold
 - **Ritual Frenzy**: Clears all ritual cooldowns immediately, at the cost of gold
@@ -128,7 +162,6 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 
 
 ---
-![text](https://i.imgur.com/3jmokTt.png)
 ### Narinder Devotion Role
 - Narinder Devotion: Increases faith of the cult when a follower devotes to this statue.
 
@@ -178,11 +211,13 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 
 ### Requirements
 - BepInEx Pack
-- COTL API 0.1.17 and above
+- COTL API 0.1.28 and above
 
 ---
 # Previous Lore Entries
 ### Season 1 Lore
+Brief, Finale: The cult has completed their research on the strange material. The strange material looks like it has quickly replicated itself, almost out of control, even the enemies are infected with the strange material. The Lamb has decided that it is time to take control of the strange material and harness its true potential.
+
 Brief, Episode 3: The followers have continued their research into the Strange Material, it seems to be some form of circuit that can react and turned into energy using gold and other methods. The lamb decides to take advantage of this Strange Material and came up with several different types of exotic machines to be built. It can also be used to perform rituals, infusing the material into followers. Would there be consequences?
 
 Brief, Episode 2: After several months of extraction and research, the followers have found that the strange materials are appearing more often. It seems that the strange material reacts strongly to gold, and sometimes followers as well. The Lamb wishes to use this material to improve the Cult. But what could the strange material be?

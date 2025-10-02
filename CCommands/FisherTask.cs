@@ -131,8 +131,8 @@ namespace CotLMiniMods.CustomFollowerCommands
 
         public override Vector3 UpdateDestination(Follower follower)
         {
-            FishingHut fishingHut = this.FindFishingHut();
-            return !(fishingHut == null) ? fishingHut.FollowerPosition.transform.position : follower.transform.position;
+            
+            return this._fishingHut.Data.Position + new Vector3(1.0f, 0.0f);
         }
 
         public override void Setup(Follower follower)
@@ -170,19 +170,6 @@ namespace CotLMiniMods.CustomFollowerCommands
             }));
         }
 
-        private FishingHut FindFishingHut()
-        {
-            FishingHut fishingHut1 = (FishingHut)null;
-            foreach (FishingHut fishingHut2 in FishingHut.FishingHuts)
-            {
-                if (fishingHut2.StructureInfo.ID == this._fishingHutID)
-                {
-                    fishingHut1 = fishingHut2;
-                    break;
-                }
-            }
-            return fishingHut1;
-        }
 
         public override void SimDoingBegin(SimFollower simFollower) => this.SetState(FollowerTaskState.Idle);
     }
