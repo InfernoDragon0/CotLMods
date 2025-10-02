@@ -12,6 +12,7 @@ View [full image](https://raw.githubusercontent.com/InfernoDragon0/CotLMods/refs
 NOTE: Some functions of the custom structures has changed, read below to find out more! Trial of the gods assets are currently placeholders.
 
 # v1.3.0: [SEASON 2] Trial of the Gods
+![main](https://raw.githubusercontent.com/InfernoDragon0/CotLMods/refs/heads/master/main.jpeg)
 
 ### Updated Role!
 #### Fisher
