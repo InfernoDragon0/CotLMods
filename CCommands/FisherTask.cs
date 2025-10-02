@@ -132,7 +132,7 @@ namespace CotLMiniMods.CustomFollowerCommands
         public override Vector3 UpdateDestination(Follower follower)
         {
             
-            return this._fishingHut.Data.Position + new Vector3(1.0f, 0.0f);
+            return this._fishingHut.Data.Position + new Vector3(0.0f, -1.3f);
         }
 
         public override void Setup(Follower follower)
