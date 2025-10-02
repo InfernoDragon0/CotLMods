@@ -25,10 +25,10 @@ using UnityEngine.SceneManagement;
 // 10Augment of Bombardment (DONE): Each time you attack, 2 bombs appear around you.
 
 // 11Trial of Narinder (DONE): Each active Augment will increase your dodge cooldown by 25%, Each active Trial will grant enemies a 10% chance of instantly killing you on hit, and increases your vulnerability to damage by 1% for each enemy you have killed during the run.
-// 12Trial of Leshy (DONE): For each active Augment, whenever an enemy takes non lethal damage, there is a 5% chance for them to duplicate. For each active Trial, a copy of each non-boss enemy will spawn every 10 seconds.
+// 12Trial of Leshy (DONE): For each active Augment, whenever an enemy takes non lethal damage, there is a 5% chance for them to duplicate. For each active Trial, a copy of each enemy will spawn every 10 seconds.
 // 13Trial of Heket (DONE): For each active Trial, whenever you take damage, you have a 10% chance of losing a tarot card, if you have no tarot cards, you lose 1 max HP. For each active Augment, each time you take damage, you lose 10% of curse charge.
 // 14Trial of Shamura (DONE): For each active Trial, each time you take damage, all enemies heals 10% health. For each active Augment, when enemies take damage, their damage resistance increases by 0.5%.
-// 15Trial of Kallamar (DONE): For each active Trial, this effect speeds up by 1 second. Every 6 seconds, all enemies drop a pool of poison. For each active Augment, this effect speeds up by 1 second. Every 11 seconds, a pool of poison is spawned on your location.
+// 15Trial of Kallamar (DONE): For each active Trial, this effect speeds up by 1 second. Every 10 seconds, all enemies drop a pool of poison. For each active Augment, this effect speeds up by 1 second. Every 15 seconds, a pool of poison is spawned on your location.
 
 //this.DodgeDelay = this.playerController.DodgeDelay;
 
@@ -57,7 +57,9 @@ namespace CotLTemplateMod.Patches
         public static int killCount = 0;
         public static int timer = 0;
 
-        public static int mobLimit = 20;
+        public static int mobLimit = 12;
+        public static float previousLeshyAugmentTrigger = 0f;
+        public static float minLeshyAugmentDelay = 3f;
         //Tarot Reapply when playerfarming starts again in game scene
         //(15) patch 2: PlayerFarming.Start every 11 - 1 per augment seconds, TrapPoison.CreatePoison at player per active augment
 
@@ -129,13 +131,13 @@ namespace CotLTemplateMod.Patches
                 Plugin.relicData = RelicType.None;
             }
 
-            //(15) patch 2: PlayerFarming.Start every 11 - 1 per augment seconds, TrapPoison.CreatePoison at player per active augment
-            //(15) patch 1: UnitObject.OnEnable every 6 - 1 per trial seconds, TrapPoison.CreatePoison
+            //(15) patch 2: PlayerFarming.Start every 15 - 1 per augment seconds, TrapPoison.CreatePoison at player per active augment
+            //(15) patch 1: UnitObject.OnEnable every 10 - 1 per trial seconds, TrapPoison.CreatePoison
             if (Plugin.proxyTrialsEnabled.Contains(Plugin.KallamarCard))
             {
                 Plugin.Log.LogInfo("Trial of Kallamar (augment) triggered");
-                var timer = Mathf.Clamp(11 - Plugin.proxyAugmentsEnabled.Count, 1, 11);
-                var timer2 = Mathf.Clamp(6 - Plugin.proxyTrialsEnabled.Count, 1, 6);
+                var timer = Mathf.Clamp(15 - Plugin.proxyAugmentsEnabled.Count, 1, 15);
+                var timer2 = Mathf.Clamp(10 - Plugin.proxyTrialsEnabled.Count, 1, 10);
                 __instance.StartCoroutine(PoisonTrialPlayer(timer, __instance.gameObject));
                 __instance.StartCoroutine(PoisonTrial(timer2));
 
@@ -277,6 +279,10 @@ namespace CotLTemplateMod.Patches
                         if (enemy.health.team == Health.Team.Team2)
                         {
                             enemy.health.Heal(enemy.health.totalHP * healPercent);
+                            enemy.health.showHpBar?.OnHit(enemy.gameObject, new Vector3(0, 0, 0), Health.AttackTypes.NoReaction, false);
+                            //find UIBossHUD if exists
+                            var uiBossHUD = GameObject.FindObjectOfType<UIBossHUD>();
+                            uiBossHUD?.OnBossHit(enemy.gameObject, new Vector3(0, 0, 0), Health.AttackTypes.NoReaction, false);
                         }
                     }
 
@@ -355,10 +361,24 @@ namespace CotLTemplateMod.Patches
                 //(12) patch 1: Health.DealDamage if non lethal damage to enemy, 5% chance to duplicate at same health before taking damage per active augment, 
                 if (Plugin.proxyTrialsEnabled.Contains(Plugin.LeshyCard))
                 {
+                    if (Time.time - previousLeshyAugmentTrigger < minLeshyAugmentDelay)
+                    {
+                        Plugin.Log.LogInfo("Trial of Leshy (Augment) skipped, too soon since last trigger");
+                        return true;
+                    }
+
+                    previousLeshyAugmentTrigger = Time.time;
+
                     if (__instance.HP - Damage <= 0) return true;
 
+                    if (__instance.gameObject.TryGetComponent<EnemyFollower>(out var enemyFollower))
+                    {
+                        Plugin.Log.LogInfo("Trial of Leshy (Augment) skipped because it is a follower " + __instance.name);
+                        return true;
+                    }
+
                     var enemies = GameObject.FindObjectsOfType<UnitObject>();
-                    if (enemies.Length >= 20)
+                    if (enemies.Length >= mobLimit)
                     {
                         Plugin.Log.LogInfo("Trial of Leshy (Augment) skipped, too many enemies to spawn duplicates");
                     }
@@ -369,7 +389,33 @@ namespace CotLTemplateMod.Patches
                         {
                             Plugin.Log.LogInfo("Trial of Leshy (Augment) triggered on " + __instance.name);
                             //make a copy of this mob
+                            UnitObject myUnitObject = null;
+                            var totalBosses = 0;
+                            foreach (var enemy in enemies)
+                            {
+                                if (enemy.health == __instance)
+                                {
+                                    myUnitObject = enemy;
+                                }
+                                // if (enemy.isBoss)
+                                // {
+                                //     Plugin.Log.LogInfo("Found boss " + enemy.name);
+                                //     totalBosses++;
+                                // }
+                            }
+
+                            if (myUnitObject != null && myUnitObject.isBoss)
+                            {
+                                Plugin.Log.LogInfo("Trial of Leshy (Augment) boss spawn skipped");
+                                return true;
+                            }
+
+
+                            //duplicates has less health than original
                             var newMob = GameObject.Instantiate(__instance.gameObject, __instance.transform.parent);
+                            var newHealth = newMob.GetComponent<Health>();
+                            newHealth.totalHP /= 2f;
+                            newHealth.HP = Mathf.Clamp(__instance.HP / 2f, 1, newHealth.totalHP);
                         }
                     }
 
@@ -384,7 +430,7 @@ namespace CotLTemplateMod.Patches
             {
                 yield return new WaitForSeconds(10f);
                 var enemies = GameObject.FindObjectsOfType<UnitObject>();
-                if (enemies.Length >= 20)
+                if (enemies.Length >= mobLimit)
                 {
                     Plugin.Log.LogInfo("Trial of Leshy (Trial) skipped, too many enemies to spawn duplicates");
                     continue;
@@ -392,21 +438,34 @@ namespace CotLTemplateMod.Patches
 
                 foreach (var unit in enemies)
                 {
+
+                    if (unit.gameObject.TryGetComponent<EnemyFollower>(out var enemyFollower))
+                    {
+                        Plugin.Log.LogInfo("Trial of Leshy (Trial) skipped because it is a follower " + unit.name);
+                        continue;
+                    }
+
                     var enemies2 = GameObject.FindObjectsOfType<UnitObject>();
-                    if (enemies2.Length >= 20)
+                    if (enemies2.Length >= mobLimit)
                     {
                         Plugin.Log.LogInfo("Trial of Leshy (Trial) skipped, too many enemies to spawn duplicates");
-                        continue;
+                        break;
                     }
 
                     if (unit.health.team != Health.Team.Team2) continue;
                     if (unit.health.HP <= 1) continue;
+                    if (unit.isBoss) continue;
 
                     var triggerTimes = Plugin.proxyTrialsEnabled.Count;
+                    var limit = mobLimit - enemies2.Length;
+                    triggerTimes = Mathf.Clamp(triggerTimes, 0, limit);
                     for (var i = 0; i < triggerTimes; i++)
                     {
                         Plugin.Log.LogInfo("Trial of Leshy (Trial) triggered on " + unit.name);
-                        var newMob = GameObject.Instantiate(unit.gameObject, unit.transform.parent);
+                        var newMob = GameObject.Instantiate(unit.gameObject, unit.transform.parent, true);
+                        var newHealth = newMob.GetComponent<Health>();
+                        newHealth.totalHP /= 2f;
+                        newHealth.HP = Mathf.Clamp(unit.health.HP / 2f, 1, newHealth.totalHP);
                     }
                 }
             }
@@ -431,8 +490,6 @@ namespace CotLTemplateMod.Patches
                 __instance.maxSpeed *= 1.2f;
                 __instance.SpeedMultiplier *= 1.2f;
             }
-
-
 
             //(11) patch 1: UnitObject.OnEnable add 50% max hp and heal to full per active augment,
             //(11) patch 3: UnitObject.OnEnable if UnitObject.isBoss, boss gains 5% hp per enemy kill,
@@ -464,6 +521,11 @@ namespace CotLTemplateMod.Patches
                     if (unit.health.team != Health.Team.Team2) continue;
                     Plugin.Log.LogInfo("Healing " + unit.name);
                     unit.health.Heal(unit.health.totalHP * (unit.isBoss ? 0.03f : 0.05f));
+                    unit.health.showHpBar?.OnHit(unit.gameObject, new Vector3(0, 0, 0), Health.AttackTypes.NoReaction, false);
+
+                    //find UIBossHUD if exists
+                    var uiBossHUD = GameObject.FindObjectOfType<UIBossHUD>();
+                    uiBossHUD?.OnBossHit(unit.gameObject, new Vector3(0, 0, 0), Health.AttackTypes.NoReaction, false);
                 }
             }
         }
@@ -518,6 +580,12 @@ namespace CotLTemplateMod.Patches
                     {
                         // hp.totalHP *= 1.4f;
                         hp.Heal(hp.totalHP * 0.25f);
+                        hp.showHpBar?.OnHit(hp.gameObject, new Vector3(0, 0, 0), Health.AttackTypes.NoReaction, false);
+
+                        //find UIBossHUD if exists
+                        var uiBossHUD = GameObject.FindObjectOfType<UIBossHUD>();
+                        uiBossHUD?.OnBossHit(hp.gameObject, new Vector3(0, 0, 0), Health.AttackTypes.NoReaction, false);
+                        
                     }
                 }
             }

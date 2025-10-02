@@ -18,7 +18,7 @@ namespace CotLMiniMods.Tarots
 
         public override string LocalisedDescription(int upgradeIndex)
         {
-            return "Each <color=\"purple\">Active Augment</color>, this effect speeds up by 1 second. Every 6 seconds, <color=\"yellow\">all enemies drop a pool of poison</color>.\r\nEach <color=\"red\">Active Trial</color>, this effect speeds up by 1 second. Every 11 seconds, <color=\"yellow\">a pool of poison is spawned on your location</color>.";
+            return "Each <color=\"purple\">Active Augment</color>, this effect speeds up by 1 second. Every 15 seconds, <color=\"yellow\">a pool of poison is spawned on your location</color>. \r\nEach <color=\"red\">Active Trial</color>, this effect speeds up by 1 second. Every 10 seconds, <color=\"yellow\">all enemies drop a pool of poison</color>. ";
         }
 
         public override string Skin => "Trinkets/CoopGoodTiming";
