@@ -70,5 +70,3 @@
 "FollowerInteractions/InfernoDragon0.cotl.CotLChef.Command_ForIHaveSinned", "For I Have Sinned"
 "FollowerInteractions/InfernoDragon0.cotl.CotLChef.Command_ForIHaveSinned/Description", "Infuse 20 Strange Materials into your follower to exchange for a sin."
 "FollowerInteractions/InfernoDragon0.cotl.CotLChef.Command_ForIHaveSinned/NotAvailable", "You have already sinned today. Only a little sinning is allowed everyday."
-"FollowerInteractions/InfernoDragon0.cotl.CotLChef.BoneMine_Command", "Mine Bone"
-"FollowerInteractions/InfernoDragon0.cotl.CotLChef.BoneMine_Command/Description", "Mines Bone"
