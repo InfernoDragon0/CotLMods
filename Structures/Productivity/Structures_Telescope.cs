@@ -15,11 +15,6 @@ namespace CotLMiniMods.Structures.Productivity
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/telescope.png")); //TODO: change icon
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Telescope";
-        
-        //SEASON 1: v1.1.0 only. v1.1.1 will change to provide strange material along with loyalty.
-        public override string GetLocalizedDescription() => "Allows your followers to see the stars, and gain inspiration.";
-
         public bool CheckOverrideComplete() => true;
 
         public bool UsedForTheDay = false;

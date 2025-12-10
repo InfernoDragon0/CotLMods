@@ -16,17 +16,6 @@ namespace CotLMiniMods.CustomFollowerCommands
         public override Sprite CommandIcon => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fishing_hut_ROD.png"));
         public override List<FollowerCommandCategory> Categories { get; } = new List<FollowerCommandCategory> { FollowerCommandCategory.GIVE_WORKER_COMMAND };
 
-
-        public override string GetTitle(Follower follower)
-        {
-            return "Fisher";
-        }
-
-        public override string GetDescription(Follower follower)
-        {
-            return "Go fishing in the fishing hut";
-        }
-
         public override void Execute(interaction_FollowerInteraction interaction,
             FollowerCommands finalCommand)
         {

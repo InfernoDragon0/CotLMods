@@ -17,16 +17,6 @@ namespace CotLMiniMods.CustomFollowerCommands
         public override Sprite CommandIcon => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/waiter.png"));
         public override List<FollowerCommandCategory> Categories { get; } = new List<FollowerCommandCategory> { FollowerCommandCategory.GIVE_WORKER_COMMAND };
 
-        public override string GetTitle(Follower follower)
-        {
-            return "Waiter";
-        }
-
-        public override string GetDescription(Follower follower)
-        {
-            return "Serves food to other followers";
-        }
-
         public override void Execute(interaction_FollowerInteraction interaction,
             FollowerCommands finalCommand)
         {

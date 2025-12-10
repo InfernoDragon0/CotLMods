@@ -20,21 +20,6 @@ namespace CotLMiniMods.CustomFollowerCommands
             return true;//!Plugin.SinnedToday;
         }
 
-        public override string GetLockedDescription(Follower follower)
-        {
-            return "You have already sinned today. Only a little sinning is allowed everyday.";
-        }
-
-        public override string GetTitle(Follower follower)
-        {
-            return "For I Have Sinned";
-        }
-
-        public override string GetDescription(Follower follower)
-        {
-            return "Infuse 20 Strange Materials into your follower to exchange for a sin.";
-        }
-
         public override void Execute(interaction_FollowerInteraction interaction,
             FollowerCommands finalCommand)
         {

@@ -56,9 +56,6 @@ namespace CotLMiniMods.Structures.Mines
         
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "MiniMod's Fishing Hut";
-        public override string GetLocalizedDescription() => "A place to farm lots of fishies of various types.";
-
         public int ResourceMax = 150;
 
         public bool CheckOverrideComplete() => true;

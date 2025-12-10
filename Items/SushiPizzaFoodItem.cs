@@ -10,9 +10,6 @@ namespace CotLMiniMods.Items
     internal class SushiPizzaFoodItem : CustomFoodItem
     {
         public override string InternalName => "Sushi_Pizza";
-        public override string LocalizedName() { return "Sushi Pizza"; }
-        public override string LocalizedDescription() { return "its sushi and also pizza, smells of death"; }
-        
 
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));
         public override Sprite InventoryIcon { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));

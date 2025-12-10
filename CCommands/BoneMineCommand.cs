@@ -17,16 +17,6 @@ namespace CotLMiniMods.CustomFollowerCommands
         public override Sprite CommandIcon => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/bonemines.png"));
         public override List<FollowerCommandCategory> Categories { get; } = new List<FollowerCommandCategory> { FollowerCommandCategory.GIVE_WORKER_COMMAND };
 
-        public override string GetTitle(Follower follower)
-        {
-            return "Mine Bone";
-        }
-
-        public override string GetDescription(Follower follower)
-        {
-            return "Mines Bone";
-        }
-
         public override void Execute(interaction_FollowerInteraction interaction,
             FollowerCommands finalCommand)
         {

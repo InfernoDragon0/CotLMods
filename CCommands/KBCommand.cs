@@ -21,16 +21,6 @@ namespace CotLMiniMods.CustomFollowerCommands
 
         public UIKnuckleBonesController _knuckleBonesInstance;
 
-        public override string GetTitle(Follower follower)
-        {
-            return "Knucklebones";
-        }
-
-        public override string GetDescription(Follower follower)
-        {
-            return "Play a casual game of Knucklebones with me!";
-        }
-
         public override void Execute(interaction_FollowerInteraction interaction,
             FollowerCommands finalCommand)
         {

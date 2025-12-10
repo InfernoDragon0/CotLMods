@@ -18,9 +18,6 @@ namespace CotLMiniMods.Structures.Proxies
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/chefdesk.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Sous Chef Desk";
-        public override string GetLocalizedDescription() => "A Desk for the Sous Chef to create Signature Dishes.";
-
         public bool CheckOverrideComplete() => true;
 
 

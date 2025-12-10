@@ -17,9 +17,6 @@ namespace CotLMiniMods.Structures
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cotlpc.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Follower Manager";
-        public override string GetLocalizedDescription() => "A modern device to manage your followers remotely.";
-
         public override List<StructuresData.ItemCost> Cost => new()
         {
             new(InventoryItem.ITEM_TYPE.BLACK_GOLD, 30),

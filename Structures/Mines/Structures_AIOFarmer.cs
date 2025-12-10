@@ -18,9 +18,6 @@ namespace CotLMiniMods.Structures.Mines
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/aiofarm.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Incubation Chamber";
-        public override string GetLocalizedDescription() => "A machine powered by Strange Energy to incubate seeds.";
-
         public int ResourceMax = 1000;
 
         public bool CheckOverrideComplete() => true;

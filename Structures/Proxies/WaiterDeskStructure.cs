@@ -15,9 +15,6 @@ namespace CotLMiniMods.Structures.Proxies
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/waiterdesk.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Waiter Desk";
-        public override string GetLocalizedDescription() => "A Desk to allow followers to serve food to other followers.";
-
         public bool CheckOverrideComplete() => true;
 
 

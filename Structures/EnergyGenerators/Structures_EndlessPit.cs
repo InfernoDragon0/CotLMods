@@ -14,9 +14,6 @@ namespace CotLMiniMods.Structures
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/endlesspit.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Endless Pit of Gluttony";
-        public override string GetLocalizedDescription() => "A pit that emits Strange Energy from dead followers. Max 10000 Energy Stored";
-
         public override List<StructuresData.ItemCost> Cost => new()
         {
             new(InventoryItem.ITEM_TYPE.BLACK_GOLD, 20),

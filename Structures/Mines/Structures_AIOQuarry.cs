@@ -18,9 +18,6 @@ namespace CotLMiniMods.Structures.Mines
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/aio.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "AIO Quarry";
-        public override string GetLocalizedDescription() => "A machine powered by Strange Energy to generate your preferred output.";
-
         public int ResourceMax = 1000;
 
         public bool CheckOverrideComplete() => true;

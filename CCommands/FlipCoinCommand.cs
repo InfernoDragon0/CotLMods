@@ -15,17 +15,6 @@ namespace CotLMiniMods.CustomFollowerCommands
         public override Sprite CommandIcon => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/flipcoin.png"));
         public override List<FollowerCommandCategory> Categories { get; } = new List<FollowerCommandCategory> { FollowerCommandCategory.DEFAULT_COMMAND };
 
-
-        public override string GetTitle(Follower follower)
-        {
-            return "Flip Coin";
-        }
-
-        public override string GetDescription(Follower follower)
-        {
-            return "Flip a coin and win gold!";
-        }
-
         public override void Execute(interaction_FollowerInteraction interaction,
             FollowerCommands finalCommand)
         {

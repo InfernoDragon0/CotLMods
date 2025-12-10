@@ -17,9 +17,6 @@ namespace CotLMiniMods.Structures
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cauldron.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Augment Table";
-        public override string GetLocalizedDescription() => "A machine that helps infuse The Lamb with Strange Material.";
-
         public override List<StructuresData.ItemCost> Cost => new()
         {
             new(InventoryItem.ITEM_TYPE.BLACK_GOLD, 500),

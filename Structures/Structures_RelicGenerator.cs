@@ -17,9 +17,6 @@ namespace CotLMiniMods.Structures
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/Icon_Pond.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Infernal Infuser";
-        public override string GetLocalizedDescription() => "Trials of the Gods: Activate trials and augments to make your runs more challenging! Can you rise up to be the ultimate lamb?";
-
         public override List<StructuresData.ItemCost> Cost => new()
         {
             new(InventoryItem.ITEM_TYPE.BLACK_GOLD, 666),

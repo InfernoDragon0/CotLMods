@@ -15,11 +15,6 @@ namespace CotLMiniMods.Structures.Productivity
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/luckynarinder.png")); //TODO: change icon
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Lucky Narinder Statue";
-        
-        //SEASON 1: v1.1.0 only. v1.1.1 will change to provide strange material additionaly
-        public override string GetLocalizedDescription() => "Follower can admire this statue and pray to it. Provides Faith.";
-
         public bool CheckOverrideComplete() => true;
 
         public override List<StructuresData.ItemCost> Cost => new()

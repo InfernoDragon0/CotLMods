@@ -15,9 +15,6 @@ namespace CotLMiniMods.Structures.Mines
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/GiftTree.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "The Boutique";
-        public override string GetLocalizedDescription() => "Followers can create Gifts to pass to other followers to improve their relationship.";
-
         public bool CheckOverrideComplete() => true;
 
         public override List<StructuresData.ItemCost> Cost => new()

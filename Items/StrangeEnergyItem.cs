@@ -12,9 +12,6 @@ namespace CotLMiniMods.Items
     internal class StrangeEnergyItem : CustomInventoryItem
     {
         public override string InternalName => "Strange_Energy";
-        public override string LocalizedName() { return "Strange Energy"; }
-        public override string LocalizedDescription() { return "Unstable Energy harvested from Strange Material. This is a Proxy Item and not meant to be collected."; }
-
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));
         public override Sprite InventoryIcon { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/fish.png"));
 

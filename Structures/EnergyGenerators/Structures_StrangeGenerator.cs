@@ -14,9 +14,6 @@ namespace CotLMiniMods.Structures
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/generator.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Strange Generator";
-        public override string GetLocalizedDescription() => "A machine that converts Strange Material to Strange Energy on demand. Max 10000 Energy Stored.";
-
         public override List<StructuresData.ItemCost> Cost => new()
         {
             new(InventoryItem.ITEM_TYPE.BLACK_GOLD, 200),

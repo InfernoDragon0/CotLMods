@@ -18,9 +18,6 @@ namespace CotLMiniMods.Structures.Mines
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/crystalmines.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Crystal Mines";
-        public override string GetLocalizedDescription() => "A place to mine crystals.";
-
         public int ResourceMax = 150;
 
         public bool CheckOverrideComplete() => true;

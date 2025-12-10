@@ -15,9 +15,6 @@ namespace CotLMiniMods.Structures
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/endlesspit.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Custom Energy Structure";
-        public override string GetLocalizedDescription() => "Structure that uses or generates Strange Energy";
-        
         public int EnergyCurrent { get => currentEnergy; set => this.currentEnergy = value; }
         public virtual int EnergyMax { get => maxEnergy; set => this.maxEnergy = value; }
         public virtual int EnergyRegenRate { get => 1; set => this.regenRate = value; }

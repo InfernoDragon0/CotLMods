@@ -15,17 +15,6 @@ namespace CotLMiniMods.CustomFollowerCommands
         public override Sprite CommandIcon => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/divorce.png"));
         public override List<FollowerCommandCategory> Categories { get; } = new List<FollowerCommandCategory> { FollowerCommandCategory.DEFAULT_COMMAND };
 
-
-        public override string GetTitle(Follower follower)
-        {
-            return "Divorce";
-        }
-
-        public override string GetDescription(Follower follower)
-        {
-            return "Unmarry your follower";
-        }
-
         public override void Execute(interaction_FollowerInteraction interaction,
             FollowerCommands finalCommand)
         {
@@ -57,7 +46,7 @@ namespace CotLMiniMods.CustomFollowerCommands
 
                     });
                 }
-                
+
             }));
             interaction.Close(true, reshowMenu: false);
         }

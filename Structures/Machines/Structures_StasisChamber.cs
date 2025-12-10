@@ -17,9 +17,6 @@ namespace CotLMiniMods.Structures
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/stasis.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Stasis Chamber";
-        public override string GetLocalizedDescription() => "An exotic machine that uses Strange Material to freeze time.";
-
         public override List<StructuresData.ItemCost> Cost => new()
         {
             new(InventoryItem.ITEM_TYPE.BLACK_GOLD, 150),

@@ -18,9 +18,6 @@ namespace CotLMiniMods.Structures
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/wireless.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Energy Controller";
-        public override string GetLocalizedDescription() => "A device that collects and transfers Strange Energy. Stores up to 10000 Strange Energy";
-
         public override List<StructuresData.ItemCost> Cost => new()
         {
             new(InventoryItem.ITEM_TYPE.BLACK_GOLD, 1000),

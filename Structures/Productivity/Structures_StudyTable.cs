@@ -15,11 +15,6 @@ namespace CotLMiniMods.Structures.Productivity
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/study.png")); //TODO: change icon
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Study Table";
-        
-        //SEASON 1: v1.1.0 only. v1.1.1 will change to provide strange material along with a quest.
-        public override string GetLocalizedDescription() => "Allows your followers to research in Strange Materials. Invest Gold to increase generation. The follower will gain loyalty as well.";
-
         public bool CheckOverrideComplete() => true;
 
         public override List<StructuresData.ItemCost> Cost => new()

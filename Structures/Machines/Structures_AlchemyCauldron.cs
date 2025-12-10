@@ -17,9 +17,6 @@ namespace CotLMiniMods.Structures
         public override Sprite Sprite => TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "Assets/cauldron.png"));
         public override int BuildDurationMinutes => 30;
 
-        public override string GetLocalizedName() => "Alchemy Cauldron";
-        public override string GetLocalizedDescription() => "A Cauldron that allows you to fabricate necklaces using the power of Strange Materials.";
-
         public override List<StructuresData.ItemCost> Cost => new()
         {
             //new cost as you can now focus the necklace
