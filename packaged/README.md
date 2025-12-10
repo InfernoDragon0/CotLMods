@@ -75,7 +75,7 @@ To get started with Trial of the Gods, build an Infernal Infuser structure and i
 - [InfernoDragon0](https://github.com/InfernoDragon0)
 
 ### Testers
-- 
+- [Myceliuhm](https://github.com/UnderwoodMyceliuhm)
 
 ### Artists
 - Hallejr: Fishing Hut v2, Silk Mines, Study table, Alchemy Cauldron, Follower Manager, Generator & Wireless, Gift Tree, Endless Pit
@@ -217,7 +217,7 @@ Feel free to provide more art for any parts of the mod! DM me on Discord: Infern
 
 ### Requirements
 - BepInEx Pack
-- COTL API 0.2.1 and above
+- COTL API 0.2.12 and above
 
 ---
 # Previous Lore Entries

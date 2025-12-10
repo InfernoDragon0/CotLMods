@@ -93,7 +93,6 @@ namespace CotLMiniMods
         internal static ConfigEntry<bool> relicNoReset;
 
         internal static ConfigEntry<bool> NoExhaustMating;
-        internal static ConfigEntry<string> localizationConfig;
 
         internal static bool SinnedToday = false;
         
@@ -153,13 +152,23 @@ namespace CotLMiniMods
             telescopeGivesQuest = Config.Bind("", "telescopeGivesQuest", true, "Set to true if the telescope should give quests in the morning. False will provide Strange Material at a lower rate in the day.");
             relicNoReset = Config.Bind("", "relicNoReset", true, "Set to true for the Relic Infuser to work, and getting to keep relics after runs.");
             NoExhaustMating = Config.Bind("", "NoExhaustMating", true, "Set to true to allow mating without exhausting the follower.");
-            localizationConfig = Config.Bind("", "Localization", "English", "Set to your preferred language (you must have localization files for this mod)");
-
 
             ConfigListener.AddConfigEntries();
             TimeManager.OnNewDayStarted += new System.Action(this.OnNewDayStarted);
-            CustomLocalizationManager.LoadLocalization("English", Path.Combine(Plugin.PluginPath, "Assets/Localization/" + localizationConfig.Value + ".language"));
-
+            //todo: make this search the assets/localization folder for available languages
+            
+            var folder = Path.Combine(PluginPath, "Assets/Localization/");
+            if (Directory.Exists(folder))
+            {
+                //get each file name without extension
+                var files = Directory.GetFiles(folder, "*.language");
+                foreach (var file in files)
+                {
+                    Log.LogInfo("Localization load: " + file);
+                    var language = Path.GetFileNameWithoutExtension(file);
+                    CustomLocalizationManager.LoadLocalization(language, Path.Combine(folder, file));
+                }
+            }
 
             if (waiterJob.Value)
             {
