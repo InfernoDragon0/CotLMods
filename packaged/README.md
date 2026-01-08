@@ -6,10 +6,11 @@
 - [Save Converter](https://cotlminimod.infernodragon.net/saveconverter) (Legacy 0.1.6 COTL API to 0.1.7 COTL API and above) 
 - If you like the mod, consider donating [here](https://ko-fi.com/infernodragon0)! Thank you for checking out the mod!
 
-### Notes
-NOTE: Some functions of the custom structures has changed, read below to find out more! Trial of the gods assets are currently placeholders.
+## v1.3.1: Localization Support & Wishing Well Relic Fix
+- Localization for the mod is now supported. For translations, go to [NexusMods](https://www.nexusmods.com/cultofthelamb/mods/12?tab=files) to download them.
+- Minor fix to powdered boxes not generating random relics when selected from wishing well.
 
-# v1.3.0: [SEASON 2] Trial of the Gods
+# [SEASON 2] Trial of the Gods
 ![CotlMiniMods](https://raw.githubusercontent.com/InfernoDragon0/CotLMods/refs/heads/master/TOTG.png)
 
 View [full image](https://raw.githubusercontent.com/InfernoDragon0/CotLMods/refs/heads/master/TOTG.png) for better clarity
