@@ -108,19 +108,67 @@ namespace CotLTemplateMod.Patches
                 if (CoopManager.CoopActive)
                 {
                     //wishing well will add to both players
+                    Plugin.Log.LogInfo("Equipping relic to multiplayer");
                     PlayerFarming.players[0].currentRelicType = Plugin.relicData;
-                    PlayerFarming.players[0].playerRelic.EquipRelic(relicData, false);
                     PlayerFarming.players[1].currentRelicType = Plugin.relicData;
-                    PlayerFarming.players[1].playerRelic.EquipRelic(relicData, false);
+
+                    try
+                    {
+                        PlayerFarming.players[0].playerRelic.EquipRelic(relicData, false, true);
+                        PlayerFarming.players[1].playerRelic.EquipRelic(relicData, false, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Plugin.Log.LogError("Error equipping relic to players: " + ex);
+                    }
+
+                    EquipRelic(relicData, PlayerFarming.players[0]);
+                    EquipRelic(relicData, PlayerFarming.players[1]);
+
                 }
                 else
                 {
+                    Plugin.Log.LogInfo("Equipping relic to singleplayer");
                     __instance.currentRelicType = Plugin.relicData;
-                    __instance.playerRelic.EquipRelic(relicData, true);
+                    try
+                    {
+                        __instance.playerRelic.EquipRelic(relicData, false, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Plugin.Log.LogError("Error equipping relic to players: " + ex);
+                    }
+
+                    EquipRelic(relicData, __instance);
+                    Plugin.Log.LogInfo("after equip relic");
                 }
 
                 Plugin.relicData = RelicType.None;
             }
+        }
+
+        public static void EquipRelic(RelicData relicData, PlayerFarming player)
+        {
+            Plugin.Log.LogInfo("Manual equipping relic to player " + player);
+            var playerRelic = player.playerRelic;
+            playerRelic.CurrentRelic = relicData;
+            // playerRelic.ChargedAmount = Mathf.Clamp(float.MaxValue, 0.0f, playerRelic.RequiredChargeAmount);
+            switch (relicData.RelicType)
+                {
+                    case RelicType.UseRandomRelic:
+                        EquipmentManager.PickRandomRelicData(true);
+                        Plugin.Log.LogInfo("Picked random relic");
+                        break;
+                    case RelicType.UseRandomRelic_Blessed:
+                        EquipmentManager.PickRandomRelicData(true, RelicSubType.Blessed);
+                        Plugin.Log.LogInfo("Picked random blessed relic");
+                        break;
+                    case RelicType.UseRandomRelic_Dammed:
+                        EquipmentManager.PickRandomRelicData(true, RelicSubType.Dammed);
+                        Plugin.Log.LogInfo("Picked random dammed relic");
+                        break;
+                }
+
         }
 
         [HarmonyPatch(typeof(UITarotChoiceOverlayController), nameof(UITarotChoiceOverlayController.Show))]
