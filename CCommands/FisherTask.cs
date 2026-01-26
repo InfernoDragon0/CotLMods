@@ -26,7 +26,7 @@ namespace CotLMiniMods.CustomFollowerCommands
 
         public override string InternalName => "Fisher_Task";
 
-        public override bool BlockTaskChanges => true;
+        // public override bool BlockTaskChanges => true;
 
         public override PriorityCategory GetPriorityCategory(
           FollowerRole FollowerRole,

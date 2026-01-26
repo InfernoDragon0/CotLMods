@@ -35,7 +35,12 @@ namespace CotLMiniMods.Structures
             InventoryItem.ITEM_TYPE.Necklace_Gold_Skull,
             InventoryItem.ITEM_TYPE.Necklace_Light,
             InventoryItem.ITEM_TYPE.Necklace_Loyalty,
-            InventoryItem.ITEM_TYPE.Necklace_Missionary
+            InventoryItem.ITEM_TYPE.Necklace_Missionary,
+            InventoryItem.ITEM_TYPE.Necklace_Deaths_Door,
+            InventoryItem.ITEM_TYPE.Necklace_Winter,
+            InventoryItem.ITEM_TYPE.Necklace_Frozen,
+            InventoryItem.ITEM_TYPE.Necklace_Weird,
+            InventoryItem.ITEM_TYPE.Necklace_Targeted
 
         };
 

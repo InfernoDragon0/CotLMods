@@ -7,6 +7,11 @@
 - [Save Converter](https://cotlminimod.infernodragon.net/saveconverter) (Legacy 0.1.6 COTL API to 0.1.7 COTL API and above)
 - If you like the mod, consider donating [here](https://ko-fi.com/infernodragon0)! Thank you for checking out the mod!
 
+## v1.3.3: Minor Fix & Alchemy Cauldron Update
+
+- Fixed an issue where the alchemy cauldron would softlock the player
+- Fixed an issue where fishing followers became overly attached to the fishing hut
+- Added new necklaces to the alchemy cauldron
 
 ## v1.3.2: Woolhaven Support
 

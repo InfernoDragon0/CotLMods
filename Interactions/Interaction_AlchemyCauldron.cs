@@ -1,18 +1,8 @@
-﻿using CotLTemplateMod;
-using Lamb.UI.FollowerSelect;
-using Lamb.UI;
-using System;
+﻿using Lamb.UI;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using src.Extensions;
-using Lamb.UI.FollowerInteractionWheel;
-using Unity.Mathematics;
-using Random = UnityEngine.Random;
-using CotLMiniMods.Structures.Proxies;
 using CotLMiniMods.Structures;
 using System.Collections;
-using UnityEngine.XR;
 
 namespace CotLMiniMods.Interactions
 {
@@ -24,7 +14,7 @@ namespace CotLMiniMods.Interactions
         public Structures_AlchemyCauldron cCauldron => this.Structure.Brain as Structures_AlchemyCauldron;
 
         public int CurrentSuccesses = 0;
-        public int maxSuccesses = 20;
+        public int maxSuccesses = 5;
 
         public UICookingMinigameOverlayController _uiCookingMinigameOverlayController;
 
@@ -79,32 +69,34 @@ namespace CotLMiniMods.Interactions
                     PlayerFarming.Instance.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
                     PlayerFarming.Instance.Spine.UseDeltaTime = false;
                     PlayerFarming.Instance.Spine.skeleton.Update(Time.deltaTime);
-                    PlayerFarming.Instance.simpleSpineAnimator.Animate("actions/dig", 0, true);
+                    PlayerFarming.Instance.simpleSpineAnimator.Animate("action", 0, true);
+
+                    SuccessfulMinigame();
 
                     /*PlayerFarming.Instance.GoToAndStop(this.StructureInfo.Position + new Vector3(0.1f, 2.5f), this.transform.parent.gameObject, GoToCallback: ((System.Action)(() =>
                     {*/
-                    var tempQueueMeal = new Interaction_Kitchen.QueuedMeal();
-                    tempQueueMeal.MealType = this.cCauldron.SelectedCookItem;
-                    this.StructureInfo.QueuedMeals.Clear();
-                    this.maxSuccesses = this.cCauldron.CookItems.IndexOf(this.cCauldron.SelectedCookItem) + 1;
+                    // var tempQueueMeal = new Interaction_Kitchen.QueuedMeal
+                    // {
+                    //     MealType = cCauldron.SelectedCookItem
+                    // };
+                    // StructureInfo.QueuedMeals.Clear();
+                    // maxSuccesses = Random.Range(1,6);
 
-                    for (int i = 0; i < this.cCauldron.CookItems.IndexOf(this.cCauldron.SelectedCookItem) + 1; i++)
-                    {
-                        this.StructureInfo.QueuedMeals.Add(tempQueueMeal);
-                    }
+                    // for (int i = 0; i < maxSuccesses; i++)
+                    // {
+                    //     StructureInfo.QueuedMeals.Add(tempQueueMeal);
+                    // }
                     
-                    try
-                    {
-                        _uiCookingMinigameOverlayController = MonoSingleton<UIManager>.Instance.CookingMinigameOverlayControllerTemplate.Instantiate<UICookingMinigameOverlayController>();
-                        _uiCookingMinigameOverlayController.Initialise(this.StructureInfo, Interaction_Kitchen.Kitchens[0]);
-                        _uiCookingMinigameOverlayController.OnCook += new System.Action(this.SuccessfulMinigame);
-                        _uiCookingMinigameOverlayController.OnUnderCook += new System.Action(this.FailedMinigame);
-                        _uiCookingMinigameOverlayController.OnBurn += new System.Action(this.FailedMinigame);
-                    }
-                    catch (Exception e)
-                    {
-                        Plugin.Log.LogInfo("You need a cooking fire or a follower kitchen first to cook necklaces too, you know?");
-                    }
+                    // Plugin.Log.LogInfo("Starting cooking minigame for " + cCauldron.SelectedCookItem + " requiring " + maxSuccesses + " successes");
+                    // _uiCookingMinigameOverlayController = MonoSingleton<UIManager>.Instance.CookingMinigameOverlayControllerTemplate.Instantiate();
+                    // Plugin.Log.LogInfo("intializing" + _uiCookingMinigameOverlayController);
+                    // _uiCookingMinigameOverlayController.Initialise(StructureInfo, this);
+
+                    // Plugin.Log.LogInfo("adding callbacks");
+                    // _uiCookingMinigameOverlayController.OnCook += new Action(SuccessfulMinigame);
+                    // _uiCookingMinigameOverlayController.OnUnderCook += new Action(FailedMinigame);
+                    // _uiCookingMinigameOverlayController.OnBurn += new Action(FailedMinigame);
+                    
 
                     /*})));*/
                     HUD_Manager.Instance.Show(0);
@@ -133,27 +125,27 @@ namespace CotLMiniMods.Interactions
         public void SuccessfulMinigame()
         {
             //the selected necklace requires x amount of successes, where x is the index of the necklace.
-            CurrentSuccesses++;
-            Plugin.Log.LogInfo("Succeeded " + CurrentSuccesses + " / " + maxSuccesses + " times");
+            // CurrentSuccesses++;
+            // Plugin.Log.LogInfo("Succeeded " + CurrentSuccesses + " / " + maxSuccesses + " times");
 
-            if (this.StructureInfo.QueuedMeals.Count > 1)
-            {
-                this.StructureInfo.QueuedMeals.RemoveAt(0);
-            }
+            // if (this.StructureInfo.QueuedMeals.Count > 1)
+            // {
+            //     this.StructureInfo.QueuedMeals.RemoveAt(0);
+            // }
 
-            if (CurrentSuccesses >= maxSuccesses)
-            {
-                PlayerFarming.Instance.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
-                PlayerFarming.Instance.Spine.UseDeltaTime = false;
-                PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
-                PlayerFarming.Instance.Spine.UseDeltaTime = false;
-                PlayerFarming.Instance.Spine.skeleton.Update(Time.deltaTime);
-                PlayerFarming.Instance.simpleSpineAnimator.Animate("reactions/react-happy2", 0, false);
-                
-                
-                InventoryItem.Spawn(this.cCauldron.SelectedCookItem, 1, this.Position);
-                this.StartCoroutine(this.EndCooking());
-            }
+            // if (CurrentSuccesses >= maxSuccesses)
+            // {
+            PlayerFarming.Instance.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
+            PlayerFarming.Instance.Spine.UseDeltaTime = false;
+            PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
+            PlayerFarming.Instance.Spine.UseDeltaTime = false;
+            PlayerFarming.Instance.Spine.skeleton.Update(Time.deltaTime);
+            PlayerFarming.Instance.simpleSpineAnimator.Animate("reactions/react-happy2", 0, false);
+            
+            
+            InventoryItem.Spawn(this.cCauldron.SelectedCookItem, 1, PlayerFarming.Instance.transform.position);
+            this.StartCoroutine(this.EndCooking());
+            // }
 
         }
 
@@ -176,19 +168,17 @@ namespace CotLMiniMods.Interactions
         private IEnumerator EndCooking()
         {
             Plugin.Log.LogInfo("ending cooking");
-            this._uiCookingMinigameOverlayController.OnCook -= new System.Action(this.SuccessfulMinigame);
-            this._uiCookingMinigameOverlayController.OnUnderCook -= new System.Action(this.FailedMinigame);
-            this._uiCookingMinigameOverlayController.OnBurn -= new System.Action(this.FailedMinigame);
-            this._uiCookingMinigameOverlayController.Close();
-            this._uiCookingMinigameOverlayController = null;
+            // this._uiCookingMinigameOverlayController.OnCook -= new System.Action(this.SuccessfulMinigame);
+            // this._uiCookingMinigameOverlayController.OnUnderCook -= new System.Action(this.FailedMinigame);
+            // this._uiCookingMinigameOverlayController.OnBurn -= new System.Action(this.FailedMinigame);
+            // this._uiCookingMinigameOverlayController.Close();
+            // this._uiCookingMinigameOverlayController = null;
 
-            yield return new WaitForSeconds(2.4f);
+            yield return new WaitForSeconds(1.0f);
             Plugin.Log.LogInfo("ending animation");
             GameManager.GetInstance().OnConversationEnd();
             PlayerFarming.Instance.Spine.UseDeltaTime = true;
             CurrentSuccesses = 0;
-
-
         }
 
 
